@@ -22,3 +22,9 @@
 `npm run check` + `npm run browser:audit` en 10 resoluciones, revisión manual de capturas 320px y desktop, comprobación de lista de textos SVG y ruta idénticas. No publicar en la V1 ni sobreescribir el preview previo de V2 sin aprobación.
 
 **Restricciones:** no autorizar compras, pagos, formularios, operaciones reales ni cambios de marca. La validez legal de la imagen heredada permanece pendiente de cierre documental.
+
+## Criterios visuales explícitos
+- La etiqueta **CUSTOMER / SOLICITA** debe quedar completa por encima del pie «MOVIMIENTO / SISTEMA» en el viewport de 1440×900.
+- La ruta roja debe conectar los cuatro nodos originales sin cambiar su trazado, solo su grosor.
+- El lema «NO SOLO ENTREGAMOS. MOVEMOS LA CIUDAD.» y la flecha del pie deben conservarse visibles en escritorio; en móvil se mantiene el comportamiento previamente aprobado.
+- Ninguna tarjeta o texto externo al hero puede cambiar.
