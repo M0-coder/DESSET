@@ -37,3 +37,19 @@ test("los datos operativos quedan rotulados como previstos",()=>{
   assert.match(DETAILS.status.body,/prototipo/);
   assert.match(DETAILS.company.body,/trámite de constitución/);
 });
+test("full-bleed elimina max-width, padding y márgenes exteriores",()=>{
+  const css=read("styles.css");
+  assert.match(css,/body\{background:var\(--outer\);/);
+  assert.match(css,/\.site\{width:100%;height:100dvh;min-height:0;margin:0;padding:0;/);
+  assert.match(css,/\.board\{width:100%;height:100%;/);
+  assert.match(css,/\.board\{[^}]*border-radius:0;/);
+  assert.doesNotMatch(css,/width:min\(100%,1600px\)/);
+  assert.match(css,/@media\(max-width:640px\)\{\s*\.site\{padding:0;[^}]*gap:0\}/);
+});
+test("la web no ejecuta scripts ajenos ni utiliza enlaces externos",()=>{
+  const html=read("index.html");
+  assert.doesNotMatch(html,/<script[^>]+src="https?:/i);
+  assert.doesNotMatch(html,/target="_blank"/i);
+  assert.match(html,/<html lang="es">/);
+  assert.match(html,/<dialog class="detail-dialog"/);
+});
