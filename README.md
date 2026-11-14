@@ -48,7 +48,3 @@ Verificación Figma y titularidad; pruebas visuales y de teclado con Chrome en e
 La V2 concentra la identidad donde aporta significado sin alterar la cuadrícula Bento V1: se conserva el PNG de logotipo y el SVG del ecosistema sin editar, se elimina el filtro monocromático **solo** de la tarjeta visual, se resalta «LOGÍSTICA» con azul documentado, se utiliza la frase «No solo entregamos. Movemos la ciudad» del perfil DESSET aportado por el fundador, y se reservan los acentos rojo/azul/amarillo para detalles funcionales o roles. El contenido marca expresamente el carácter institucional de la web, sin pedidos ni compras.
 
 **Rama de publicación protegida:** `release/bento-v1-approved` permanece intacta. La V2 se prueba mediante CI y capturas antes de cualquier promoción.
-
-## V2.1 — Acabado editorial (borrador revisable)
-
-Rama `feat/editorial-finish-v2-1`, derivada de V2 `896678787054`. Retiene logo PNG y SVG originales byte a byte, tablero Bento full-bleed y navegación sin scroll. Puliendo jerarquía tipográfica, detalle editorial del hero, controles, textos institucionales, tipografía en móvil compacto y movimiento reducido. La información empresarial permanece condicionada a verificación. **Sin compras web ni formularios de pedidos.** La rama protegida `release/bento-v1-approved` no se modifica. Para evidencia: ejecutar `npm run check` y `npm run browser:audit`, consultar CI y revisar capturas antes de aceptar.

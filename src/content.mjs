@@ -42,10 +42,10 @@ export const DETAILS = Object.freeze({
     points:["Verificación de identidad visual y derechos de uso.","Pruebas, seguridad y revisión de código antes de publicar.","Registro de decisiones técnicas y comerciales."]
   },
   model:{
-    kicker:"VISIÓN INSTITUCIONAL",
-    title:"Huacho. Punto de partida.",
-    body:"El proyecto previsto toma Huacho como punto de partida para una identidad vinculada al comercio, la tecnología y el movimiento urbano. Esta web presenta la visión institucional, no un servicio de pedidos.",
-    points:["La sede empresarial prevista se encuentra en Huacho, Lima, Perú.","La presencia institucional no acredita el inicio de operaciones comerciales.","Los pedidos y cobros previstos pertenecen a la aplicación, no a esta web."]
+    kicker:"MODELO COMERCIAL",
+    title:"Tarifa por envío.",
+    body:"El fundador definió el cobro por envío como ingreso principal previsto del servicio.",
+    points:["Las tarifas y condiciones finales siguen sujetas a validación.","No existen precios públicos confirmados para esta interfaz.","Los pedidos y cobros previstos pertenecen a la aplicación, no a esta web."]
   },
   apps:{
     kicker:"PLATAFORMA EN DESARROLLO",
