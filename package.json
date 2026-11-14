@@ -1,0 +1,15 @@
+{
+  "name": "desset-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Web institucional de DELIVER ASSETS, prototipo Bento Grid sin scroll",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/app.mjs && node --check src/content.mjs && npm test && node scripts/verify.mjs"
+  },
+  "license": "UNLICENSED"
+}
