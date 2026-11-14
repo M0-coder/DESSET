@@ -16,9 +16,21 @@ jobs:
       - name: Node
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
-          node-version: '22'
+          node-version: '22.16.0'
           cache: npm
       - name: Install exact dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Static validation and unit tests
         run: npm run check
+      - name: Chrome/Chromium availability
+        run: google-chrome --version
+      - name: Browser integration, zero-scroll and responsive screenshots
+        run: npm run browser:audit
+      - name: Upload screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-browser-evidence
+          path: reports/browser/
+          if-no-files-found: warn
+          retention-days: 14
