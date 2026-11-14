@@ -144,8 +144,8 @@ function checkMetrics(metrics, label) {
   assert.deepEqual(metrics.clipped, [], label + ": contenido recortado");
 }
 const viewports = [
-  [1440, 900], [1280, 720], [1024, 768], [768, 900],
-  [390, 844], [360, 740], [320, 568]
+  [1920, 1080], [1440, 900], [1280, 720], [1280, 600], [1024, 768], [768, 900],
+  [390, 844], [375, 667], [360, 740], [320, 568]
 ];
 const output = new URL("../reports/browser/", import.meta.url);
 let server, browser, ws, temporary;
@@ -184,6 +184,15 @@ try {
     const modal = await evalBrowser(send, "(function(){document.querySelector('[data-detail=services]').click();const d=document.querySelector('#detailDialog');const p=d.querySelector('.dialog-content');return {open:d.open,body:document.querySelector('#detailBody').textContent.length,clipped:p.scrollHeight>p.clientHeight+2};})()");
     if (!modal.open || !modal.body || modal.clipped) failures.push(label + ": diálogo vacío o contenido recortado");
     await evalBrowser(send, "document.querySelector('#dialogBack').click()");
+    const closeButton = await evalBrowser(send, "(function(){document.querySelector('[data-detail=services]').click();const d=document.querySelector('#detailDialog');document.querySelector('.close-button').click();return !d.open;})()");
+    if (!closeButton) failures.push(label + ": botón de cerrar diálogo no funciona");
+    const dialogOverflow = await evalBrowser(send, "(function(){const bad=[];for(const trigger of document.querySelectorAll('[data-detail]')){trigger.click();const d=document.querySelector('#detailDialog');const p=d.querySelector('.dialog-content');if(!d.open||p.scrollHeight>p.clientHeight+2)bad.push(trigger.dataset.detail);d.close();}return bad;})()");
+    if (dialogOverflow.length) failures.push(label + ": diálogos recortados: " + dialogOverflow.join(","));
+    await evalBrowser(send, "document.querySelector('[data-detail=company]').click()");
+    await send("Input.dispatchKeyEvent", { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
+    await send("Input.dispatchKeyEvent", { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
+    const escapeClosed = await evalBrowser(send, "!document.querySelector('#detailDialog').open");
+    if (!escapeClosed) failures.push(label + ": Escape no cierra el diálogo");
     if (width <= 640) {
       const switched = await evalBrowser(send, "(function(){document.querySelector('[data-view-button=sections]').click();return document.querySelector('#board').dataset.view==='sections' && getComputedStyle(document.querySelector('.tile--journal')).display!=='none';})()");
       if (!switched) failures.push(label + ": navegación móvil no funciona");
