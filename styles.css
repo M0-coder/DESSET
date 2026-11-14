@@ -243,3 +243,10 @@ body[data-theme="dark"] .tile--button:focus-visible{outline-color:#b8caff}
   .tile--visual:is(:hover,:focus-visible) img{transform:none!important}
   .tile--button:is(:hover,:focus-visible) .tile-arrow{transform:none!important}
 }
+
+/* Contrato de legibilidad del hero en teléfonos estrechos: mismo significado, sin rótulo partido. */
+.caption-short{display:none}
+@media(max-width:360px){
+  .visual-caption .caption-full{display:none}
+  .visual-caption .caption-short{display:inline;white-space:nowrap}
+}

@@ -97,3 +97,10 @@ test("V2.1 conserva accesibilidad básica de controles y reduce efectos animados
   assert.match(DETAILS.model.body,/previsto/);
   assert.match(DETAILS.model.points.join(" "),/la aplicación, no a esta web/);
 });
+
+test("V2.1 mantiene el pie del hero en una línea para teléfonos estrechos",()=>{
+  const html=read("index.html"),css=read("styles.css");
+  assert.match(html,/class="caption-full">MOVIMIENTO \/ SISTEMA/);
+  assert.match(html,/class="caption-short">FLUJO \/ SISTEMA/);
+  assert.match(css,/@media\(max-width:360px\)\{\s*\.visual-caption \.caption-full\{display:none\}/);
+});
