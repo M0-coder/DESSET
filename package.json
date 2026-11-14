@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "node --test",
-    "check": "node --check src/app.mjs && node --check src/content.mjs && npm test && node scripts/verify.mjs"
+    "check": "node --check src/app.mjs && node --check src/content.mjs && npm test && node scripts/verify.mjs",
+    "browser:audit": "node scripts/browser-audit.mjs"
   },
   "license": "UNLICENSED"
 }
