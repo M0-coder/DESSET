@@ -2,13 +2,13 @@ export const DETAILS = Object.freeze({
   project:{
     kicker:"PRESENTACIÓN",
     title:"DELIVER ASSETS / DESSET",
-    body:"Proyecto empresarial y tecnológico en preparación. La web informará sobre su planteamiento comercial y el desarrollo de sus herramientas.",
+    body:"Proyecto empresarial y tecnológico en preparación. Esta web presenta identidad, visión y evolución institucional; las operaciones comerciales corresponden exclusivamente a las aplicaciones.",
     points:["Denominación social propuesta: DELIVER ASSETS E.I.R.L.","DESSET es el signo comercial previsto; su registro no está acreditado.","Huacho, Huaura, Lima: ubicación empresarial propuesta."]
   },
   ecosystem:{
     kicker:"ARQUITECTURA CONCEPTUAL",
     title:"Cuatro funciones, una visión.",
-    body:"El gráfico procede del sitio corporativo anterior. Representa una arquitectura proyectada y no operaciones reales.",
+    body:"El gráfico procede del diseño corporativo anterior. Representa una visión de movimiento urbano y arquitectura conectada, no una red logística operativa acreditada.",
     points:["Customer: experiencia prevista para clientes.","Business: herramientas proyectadas para comercios.","Rider y Control: reparto y supervisión sujetos a desarrollo y validación."]
   },
   contact:{
@@ -27,7 +27,7 @@ export const DETAILS = Object.freeze({
     kicker:"SERVICIOS PREVISTOS",
     title:"Pedidos y entregas.",
     body:"La propuesta inicial de DESSET combina coordinación de pedidos y envíos, con WhatsApp previsto como canal de primera etapa.",
-    points:["El ingreso principal previsto es una tarifa por envío.","La operación requiere controles legales, comerciales y técnicos antes de iniciar.","Esta web no procesa pedidos."]
+    points:["El ingreso principal previsto es una tarifa por envío.","La operación requiere controles legales, comerciales y técnicos antes de iniciar.","Esta web es institucional: no admite compras, pedidos ni pagos."]
   },
   company:{
     kicker:"SITUACIÓN EMPRESARIAL",
@@ -45,7 +45,7 @@ export const DETAILS = Object.freeze({
     kicker:"MODELO COMERCIAL",
     title:"Tarifa por envío.",
     body:"El fundador definió el cobro por envío como ingreso principal previsto del servicio.",
-    points:["Las tarifas y condiciones finales siguen sujetas a validación.","No existen precios públicos confirmados para esta interfaz.","La operativa comercial aún no está habilitada."]
+    points:["Las tarifas y condiciones finales siguen sujetas a validación.","No existen precios públicos confirmados para esta interfaz.","Los pedidos y cobros previstos pertenecen a la aplicación, no a esta web."]
   },
   apps:{
     kicker:"PLATAFORMA EN DESARROLLO",

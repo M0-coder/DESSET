@@ -29,7 +29,7 @@ themeButton.addEventListener("click",()=>{
   document.body.dataset.theme=dark?"dark":"light";
   themeButton.setAttribute("aria-pressed",String(dark));
   themeButton.setAttribute("aria-label",dark?"Activar el modo claro":"Activar el modo oscuro");
-  themeButton.querySelector(".theme-caption").textContent=dark?"CAMBIAR A MODO CLARO.":"CAMBIAR A MODO OSCURO.";
+  themeButton.querySelector(".theme-caption").textContent=dark?"ACTIVAR MODO CLARO.":"ACTIVAR MODO OSCURO.";
 });
 
 document.getElementById("dialogBack").addEventListener("click",()=>dialog.close());

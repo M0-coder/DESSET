@@ -145,3 +145,44 @@ body[data-theme="dark"] .tile--visual img{filter:grayscale(1) brightness(.83)}
 @media(max-height:630px) and (min-width:641px){.intro-main h1{font-size:clamp(20px,2.4vw,35px)}.intro-lead{font-size:11px}.tile{padding:10px}.tile-title{font-size:clamp(14px,1.4vw,21px)}.tile--model .tile-sub{display:none}.tile--journal .mini-strip{max-height:62px}}
 @media(max-height:565px){.dialog-content ul{font-size:10px;gap:2px}.dialog-content h2{font-size:22px}.dialog-content p:not(.dialog-eyebrow){font-size:11px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* DESSET BRAND CHARACTER V2 — aportes exclusivos de identidad sin cambiar el Bento */
+:root{--brand-blue:#1551D8;--brand-red:#FF3328;--brand-yellow:#FFC62F;--brand-blue-ink:#1551D8}
+.brand-word{color:var(--brand-blue-ink)}
+.tile--visual img{filter:none;opacity:1}
+.visual-statement{position:absolute;z-index:1;left:clamp(9px,1.2vw,18px);top:clamp(9px,1.2vw,18px);display:flex;flex-direction:column;gap:3px;max-width:calc(100% - 26px);padding:clamp(8px,.9vw,14px) clamp(10px,1.05vw,16px);border-left:3px solid var(--brand-red);border-radius:0 8px 8px 0;background:rgba(12,15,22,.87);color:#fff;font-size:clamp(10px,1.06vw,16px);line-height:1.17;letter-spacing:-.045em;box-shadow:0 7px 22px rgba(0,0,0,.13)}
+.visual-statement strong{font-weight:800;color:#fff}
+.visual-caption{z-index:2;border-left:3px solid var(--brand-blue);font-weight:600}
+.tile--button:hover .tile-arrow,.tile--button:focus-visible .tile-arrow{color:var(--brand-blue);border-color:var(--brand-blue)}
+.tile--visual:hover .visual-caption,.tile--visual:focus-visible .visual-caption{border-left-color:var(--brand-red)}
+.text-action:hover,.text-action:focus-visible{color:var(--brand-blue)}
+.tile--theme .theme-symbol{color:#d2dfff}
+.tile-sub--services{font-size:clamp(9px,.85vw,13px);line-height:1.2;max-width:calc(100% - 45px)}
+.mini-strip span:nth-child(2){background:linear-gradient(145deg,color-mix(in srgb,var(--brand-blue) 21%,#d6d6d6),#c5c5c5);color:#101010}
+.mini-strip span:nth-child(3){border-bottom:3px solid var(--brand-yellow)}
+.app-strip span:nth-child(1){background:#c1c1c1;color:#101010}
+.app-strip span:nth-child(2){background:color-mix(in srgb,var(--brand-blue) 25%,#d3d3d3);color:#101010}
+.app-strip span:nth-child(3){background:color-mix(in srgb,var(--brand-red) 22%,#d3d3d3);color:#101010}
+.app-strip span:nth-child(4){background:#393939;color:#fff;border-bottom:3px solid var(--brand-yellow)}
+.mobile-nav button[aria-current="page"]{box-shadow:inset 0 -3px 0 var(--brand-blue)}
+body[data-theme="dark"]{--brand-blue-ink:#a8c1ff}
+body[data-theme="dark"] .tile--visual img{filter:brightness(.87) saturate(.95);opacity:1}
+body[data-theme="dark"] .visual-caption{background:rgba(38,38,38,.94);color:#fff}
+body[data-theme="dark"] .tile--button:hover .tile-arrow,body[data-theme="dark"] .tile--button:focus-visible .tile-arrow{color:#b8caff;border-color:#b8caff}
+body[data-theme="dark"] .text-action:hover,body[data-theme="dark"] .text-action:focus-visible{color:#b8caff}
+body[data-theme="dark"] .app-strip span:nth-child(2){background:color-mix(in srgb,var(--brand-blue) 45%,#d3d3d3)}
+body[data-theme="dark"] .app-strip span:nth-child(3){background:color-mix(in srgb,var(--brand-red) 37%,#d3d3d3)}
+@media(max-width:1000px) and (min-width:641px){
+ .tile-sub--services{display:none}
+ .visual-statement{font-size:clamp(10px,1.12vw,13px);padding:8px 10px}
+}
+@media(max-width:640px){
+ .visual-statement{display:none}
+ .tile-sub--services{font-size:9px;max-width:calc(100% - 29px);line-height:1.15}
+}
+@media(max-width:360px) and (max-height:640px){
+ .tile-sub--services{display:none}
+}
+@media(max-height:740px) and (min-width:641px){
+ .tile-sub--services{display:none}
+}

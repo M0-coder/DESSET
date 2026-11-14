@@ -53,3 +53,25 @@ test("la web no ejecuta scripts ajenos ni utiliza enlaces externos",()=>{
   assert.match(html,/<html lang="es">/);
   assert.match(html,/<dialog class="detail-dialog"/);
 });
+
+test("carácter V2 respeta el origen y la jerarquía de marca",()=>{
+  const html=read("index.html");
+  const css=read("styles.css");
+  assert.match(html,/class="brand-word">LOGÍSTICA<\/span>/);
+  assert.match(html,/NO SOLO ENTREGAMOS\./);
+  assert.match(html,/MOVEMOS LA CIUDAD\./);
+  assert.match(html,/MOVIMIENTO \/ SISTEMA/);
+  assert.match(css,/--brand-blue:#1551D8/);
+  assert.match(css,/--brand-red:#FF3328/);
+  assert.match(css,/--brand-yellow:#FFC62F/);
+  assert.match(css,/\.tile--visual img\{filter:none;opacity:1\}/);
+  assert.match(css,/@media\(max-width:640px\)\{\s*\.visual-statement\{display:none\}/);
+});
+test("la presencia institucional no crea compras, pagos ni contacto ficticio",()=>{
+  const html=read("index.html");
+  assert.match(html,/IDENTIDAD\./);
+  assert.match(html,/ACTIVAR MODO OSCURO\./);
+  assert.doesNotMatch(html,/comprar ahora|añadir al carrito|checkout|pay now/i);
+  assert.match(DETAILS.services.points.join(" "),/no admite compras, pedidos ni pagos/);
+  assert.match(DETAILS.model.points.join(" "),/la aplicación, no a esta web/);
+});

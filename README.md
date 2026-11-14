@@ -42,3 +42,9 @@ Verificación Figma y titularidad; pruebas visuales y de teclado con Chrome en e
 - `npm run check`: pruebas de unidad/estructura y contratos de seguridad del prototipo.
 - `npm run browser:audit`: Chrome headless instrumentado (DevTools Protocol) en 7 tamaños, comprueba margen cero, scroll inexistente, recortes de texto, carga de PNG/SVG, diálogos, modo oscuro y vistas móviles. Guarda capturas en `reports/browser/`.
 - El CI ejecuta ambas verificaciones y adjunta las capturas para inspección humana. **Aprobar el CI no sustituye revisión visual, legal ni pruebas exhaustivas de accesibilidad.**
+
+## DESSET · Carácter visual V2 (propuesta sin publicar)
+
+La V2 concentra la identidad donde aporta significado sin alterar la cuadrícula Bento V1: se conserva el PNG de logotipo y el SVG del ecosistema sin editar, se elimina el filtro monocromático **solo** de la tarjeta visual, se resalta «LOGÍSTICA» con azul documentado, se utiliza la frase «No solo entregamos. Movemos la ciudad» del perfil DESSET aportado por el fundador, y se reservan los acentos rojo/azul/amarillo para detalles funcionales o roles. El contenido marca expresamente el carácter institucional de la web, sin pedidos ni compras.
+
+**Rama de publicación protegida:** `release/bento-v1-approved` permanece intacta. La V2 se prueba mediante CI y capturas antes de cualquier promoción.
