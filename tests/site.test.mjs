@@ -75,3 +75,25 @@ test("la presencia institucional no crea compras, pagos ni contacto ficticio",()
   assert.match(DETAILS.services.points.join(" "),/no admite compras, pedidos ni pagos/);
   assert.match(DETAILS.model.points.join(" "),/la aplicación, no a esta web/);
 });
+
+test("V2.1 conserva cuadrícula Bento y los tokens canónicos",()=>{
+  const css=read("styles.css"), html=read("index.html");
+  assert.match(css,/grid-template-columns:repeat\(12,minmax\(0,1fr\)\)/);
+  assert.match(css,/\.board\{width:100%;height:100%;/);
+  assert.match(css,/--brand-blue:#1551D8/);
+  assert.match(css,/--brand-red:#FF3328/);
+  assert.match(css,/--brand-yellow:#FFC62F/);
+  assert.match(html,/DA — VISIÓN 01/);
+  assert.match(html,/HUACHO\.<br>PUNTO DE PARTIDA\./);
+  assert.match(html,/CANALES<br>OFICIALES\./);
+  assert.doesNotMatch(html,/COBRO<br>POR ENVÍO\./);
+});
+test("V2.1 conserva accesibilidad básica de controles y reduce efectos animados",()=>{
+  const css=read("styles.css"),html=read("index.html");
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+  assert.match(css,/\.tile--button:focus-visible\{outline:/);
+  assert.match(html,/aria-label="Conocer la visión del ecosistema DELIVER ASSETS"/);
+  assert.match(html,/meta name="robots" content="noindex,nofollow"/);
+  assert.match(DETAILS.model.body,/previsto/);
+  assert.match(DETAILS.model.points.join(" "),/la aplicación, no a esta web/);
+});
