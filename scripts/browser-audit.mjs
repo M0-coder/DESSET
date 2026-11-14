@@ -14,7 +14,8 @@ const files = new Map([
   ["/src/app.mjs", ["src/app.mjs", "text/javascript; charset=utf-8"]],
   ["/src/content.mjs", ["src/content.mjs", "text/javascript; charset=utf-8"]],
   ["/assets/deliver-assets-mark.png", ["assets/deliver-assets-mark.png", "image/png"]],
-  ["/assets/city-network.svg", ["assets/city-network.svg", "image/svg+xml"]]
+  ["/assets/city-network.svg", ["assets/city-network.svg", "image/svg+xml"]],
+  ["/assets/city-network-refined.svg", ["assets/city-network-refined.svg", "image/svg+xml"]]
 ]);
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 function findChrome() {
