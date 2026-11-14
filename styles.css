@@ -191,3 +191,36 @@ body[data-theme="dark"] .app-strip span:nth-child(3){background:color-mix(in srg
 .visual-statement{font-size:clamp(9px,.65vw,12px);padding:8px 9px}
 @media(min-width:1001px) and (max-width:1150px){.visual-statement{display:none}}
 @media(min-width:641px) and (max-width:1000px){.visual-statement{font-size:10px;padding:8px 9px}}
+
+/* DESSET V2 HERO POLISH · solo tarjeta visual, NO cambiar narrativa ni Bento */
+.tile--visual{background:#FFF9E9}
+.tile--visual img{object-position:center center}
+.visual-statement{
+  background:rgba(14,17,23,.91);
+  border-left-width:3px;
+  border-radius:0 7px 7px 0;
+  box-shadow:0 3px 11px rgba(0,0,0,.14);
+  letter-spacing:0;
+  padding:8px 10px;
+}
+.visual-caption{
+  align-items:center;
+  gap:10px;
+  background:rgba(20,23,29,.91);
+  color:#FFF;
+  border:1px solid rgba(255,255,255,.09);
+  border-left:3px solid var(--brand-blue);
+  border-radius:8px;
+  padding:10px 12px;
+  line-height:1.2;
+  box-shadow:0 2px 8px rgba(0,0,0,.09);
+}
+.visual-caption span[aria-hidden="true"]{flex:0 0 auto;display:inline-grid;place-items:center;min-width:20px;font-size:15px}
+body[data-theme="dark"] .visual-caption{background:rgba(20,23,29,.94);color:#FFF}
+@media(max-width:640px){
+ .visual-caption{padding:6px 8px;gap:4px}
+ .visual-caption span[aria-hidden="true"]{font-size:13px;min-width:15px}
+}
+@media(prefers-reduced-motion:reduce){
+ .tile--visual img,.visual-caption,.visual-statement{transition:none!important}
+}

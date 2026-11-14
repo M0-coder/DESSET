@@ -75,3 +75,26 @@ test("la presencia institucional no crea compras, pagos ni contacto ficticio",()
   assert.match(DETAILS.services.points.join(" "),/no admite compras, pedidos ni pagos/);
   assert.match(DETAILS.model.points.join(" "),/la aplicación, no a esta web/);
 });
+
+test("el pulido del hero conserva el texto original y la ruta del ecosistema",()=>{
+  const before=read("assets/city-network.svg");
+  const after=read("assets/city-network-refined.svg");
+  const labels=s=>[...s.matchAll(/<text\b[^>]*>([^<]*)<\/text>/g)].map(m=>m[1]);
+  assert.deepEqual(labels(after),labels(before),"Ningún nombre, subtítulo o lema del SVG puede cambiar");
+  const trajectory=s=>s.match(/<path d="(M116 548C[^"]+)"/)?.[1];
+  assert.equal(trajectory(after),trajectory(before),"La trayectoria central no debe cambiar");
+  assert.match(after,/translate\(72 360\)/);
+  assert.doesNotMatch(after,/<script|<foreignObject|onload\s*=/i);
+  assert.match(read("index.html"),/assets\/city-network-refined\.svg/);
+  assert.match(read("index.html"),/NO SOLO ENTREGAMOS\./);
+  assert.match(read("index.html"),/MOVEMOS LA CIUDAD\./);
+  assert.match(read("index.html"),/MOVIMIENTO \/ SISTEMA/);
+  assert.match(read("index.html"),/COBRO<br>POR ENVÍO\./);
+});
+test("el hero permanece dentro del Bento y sin cambio de tipografía global",()=>{
+  const css=read("styles.css");
+  assert.match(css,/\.tile--visual\{background:#FFF9E9\}/);
+  assert.match(css,/\.visual-caption\{/);
+  assert.match(css,/\.site\{width:100%;height:100dvh;/);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+});
