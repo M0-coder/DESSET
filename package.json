@@ -22,7 +22,8 @@
     "launch:guard": "node scripts/launch-gate-guard.mjs",
     "cloudflare:release-candidate": "node scripts/cloudflare-release-candidate.mjs",
     "cloudflare:release-gate": "node scripts/cloudflare-release-gate.mjs",
-    "cloudflare:release-negative": "node scripts/cloudflare-release-negative.mjs"
+    "cloudflare:release-negative": "node scripts/cloudflare-release-negative.mjs",
+    "visual:propose": "node scripts/visual-proposal-report.mjs"
   },
   "license": "UNLICENSED"
 }

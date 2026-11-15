@@ -6,6 +6,14 @@
 **Estado:** web institucional publicada y operativa; el negocio, aplicaciones, cobros y pedidos siguen **sin lanzamiento comercial acreditado**.  
 **Repositorio exclusivo de implementación:** `M0-coder/DESSET`.  
 
+## Cambios visuales autorizados
+
+La publicación actual es una **referencia aprobada**, no una prohibición permanente de rediseño. El gate de identidad carga ahora los hashes desde `config/visual-baseline-approved.json` y mantiene el Bento vigente protegido.
+
+Para experimentar en una rama sin alterar producción, ejecutar `npm run visual:propose`: el comando **solo informa** diferencias y hashes; no aprueba ni publica. Tras revisión visual, **la aprobación de futuras versiones exige un comentario verificable del propietario `M0-coder` en un issue GitHub que incluya el SHA-256 exacto del diseño**. La comprobación es obligatoria en CI y publicación; la referencia actual se acepta por su hash histórico. Actualizar el manifiesto y los contratos necesarios mediante PR, exigir CI/CodeQL y publicar solo mediante autorización aparte. Véase [VISUAL-CHANGE-01](docs/VISUAL-CHANGE-01.md).
+
+**Advertencia:** añadir fotografías o nuevos recursos también requiere actualizar el empaquetado allowlist, las auditorías de navegador y los tests específicos del diseño. El comando de propuestas por sí solo no resuelve esos contratos.
+
 ## Bento Grid — v0.1
 
 Diseño inspirado en la **estructura** de la referencia gráfica proporcionada por el fundador: tarjetas monocromáticas, separación negra, radios amplios y **cero desplazamiento horizontal o vertical**. El contenido se muestra con un diálogo accesible, y en móvil mediante dos vistas sin scroll. Las tarjetas son interactivas; no procesan pedidos ni datos personales.
