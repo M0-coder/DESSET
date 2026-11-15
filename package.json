@@ -1,0 +1,28 @@
+{
+  "name": "desset-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Web institucional de DELIVER ASSETS, prototipo Bento Grid sin scroll",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/app.mjs && node --check src/content.mjs && npm test && node scripts/verify.mjs",
+    "browser:audit": "node scripts/browser-audit.mjs",
+    "security:audit": "node scripts/security-audit.mjs",
+    "mutation:smoke": "node scripts/mutation-smoke.mjs",
+    "test:coverage": "node --experimental-test-coverage --test",
+    "release:package": "node scripts/release-package.mjs",
+    "release:negative": "node scripts/release-negative-tests.mjs",
+    "cloudflare:stage": "node scripts/cloudflare-stage-package.mjs",
+    "cloudflare:negative": "node scripts/cloudflare-stage-negative.mjs",
+    "cloudflare:gate": "node scripts/cloudflare-stage-gate.mjs",
+    "launch:guard": "node scripts/launch-gate-guard.mjs",
+    "cloudflare:release-candidate": "node scripts/cloudflare-release-candidate.mjs",
+    "cloudflare:release-gate": "node scripts/cloudflare-release-gate.mjs",
+    "cloudflare:release-negative": "node scripts/cloudflare-release-negative.mjs"
+  },
+  "license": "UNLICENSED"
+}

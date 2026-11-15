@@ -1,0 +1,53 @@
+/* DESSET A11Y-COMPACT-01
+ * Fallback exclusivo para ventanas de altura <= 400 CSS px.
+ * Sin efecto sobre el Bento aprobado en alturas normales.
+ * La altura de la ventana no se usa como sustituto de pruebas reales de zoom WCAG.
+ */
+@media screen and (max-height: 400px) {
+  html, body {
+    height: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+  }
+  .site {
+    display: block;
+    height: auto;
+    min-height: 100dvh;
+  }
+  .board {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    grid-template-rows: repeat(10, minmax(80px, auto));
+  }
+  /* El diálogo puede crecer por encima del viewport, pero nunca pierde su contenido. */
+  .detail-dialog {
+    height: calc(100dvh - 16px);
+    max-height: calc(100dvh - 16px);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .dialog-shell { max-height: none; min-height: 100%; }
+  .dialog-content { flex: 0 0 auto; justify-content: flex-start; }
+
+  @media (max-width: 640px) {
+    .board {
+      grid-template-rows: repeat(12, minmax(54px, auto));
+      padding-bottom: 54px;
+    }
+    .mobile-nav {
+      position: fixed;
+      z-index: 10;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 47px;
+    }
+    .tile--intro { padding: 10px; }
+    .intro-top__tag, .intro-lead, .intro-bottom, .text-action {
+      font-size: max(10px, 1em);
+    }
+  }
+}

@@ -1,0 +1,94 @@
+name: DESSET Web Checks
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - name: Install exact dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Static validation and unit tests
+        run: npm run check
+      - name: Security static guard
+        run: npm run security:audit
+      - name: Role palette mutation smoke
+        run: npm run mutation:smoke
+      - name: Coverage diagnostic (partial, no production coverage claim)
+        run: npm run test:coverage
+      - name: Immutable visual and content gate
+        run: node scripts/approved-baseline-gate.mjs
+      - name: Hosting policy and SEO staging gate
+        run: node scripts/hosting-policy-gate.mjs
+      - name: Negative tests for package safety (fail closed)
+        run: npm run release:negative
+      - name: Ensayo local del paquete para desset.lat (sin despliegue)
+        env:
+          DESSET_PACKAGE_MODE: "LOCAL_TEST_ONLY"
+          DESSET_OFFICIAL_ORIGIN: "https://desset.lat"
+        run: |
+          npm run release:package
+          node scripts/release-package-gate.mjs
+      - name: Chrome/Chromium availability
+        run: google-chrome --version
+      - name: Browser integration, zero-scroll and responsive screenshots
+        run: npm run browser:audit
+      - name: Browser integration of the production-shaped local artifact
+        env:
+          DESSET_BROWSER_DIST: "1"
+        run: npm run browser:audit
+      - name: LAUNCH-GATE-01 no deploy nor publication controls
+        run: npm run launch:guard
+      - name: Cloudflare fail-closed tests (no deployment)
+        run: npm run cloudflare:negative
+      - name: Cloudflare local-only staging package and allowlist gate
+        env:
+          DESSET_CLOUDFLARE_STAGE: "LOCAL_TEST_ONLY"
+          DESSET_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          npm run cloudflare:stage
+          npm run cloudflare:gate
+      - name: Cloudflare packaged HTML/CSS/JS browser tests (local server only)
+        env:
+          DESSET_BROWSER_CLOUDFLARE: "1"
+        run: npm run browser:audit
+      - name: Cloudflare release-shape negative tests, local only
+        run: npm run cloudflare:release-negative
+      - name: Cloudflare release-shape allowlist and SEO gate, local only
+        env:
+          DESSET_CF_RELEASE_MODE: "LOCAL_TEST_ONLY"
+          DESSET_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          npm run cloudflare:release-candidate
+          npm run cloudflare:release-gate
+      - name: Cloudflare production-shaped local browser test (no deploy)
+        env:
+          DESSET_BROWSER_CF_RELEASE: "1"
+        run: npm run browser:audit
+      - name: Upload screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-browser-evidence
+          path: |
+            reports/browser/
+            reports/browser-dist/
+            reports/browser-cloudflare-stage/
+            reports/browser-cloudflare-release/
+            reports/cloudflare-stage-manifest.json
+            reports/cloudflare-release-manifest.json
+          if-no-files-found: warn
+          retention-days: 14

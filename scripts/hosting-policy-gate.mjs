@@ -1,0 +1,14 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
+const v=JSON.parse(read("vercel.json"));
+const headers=v.headers?.[0]?.headers??[];
+const kv=Object.fromEntries(headers.map(x=>[x.key.toLowerCase(),x.value]));
+for(const k of ["content-security-policy","x-content-type-options","x-frame-options","referrer-policy","permissions-policy"])assert.ok(kv[k],"Falta header "+k);
+for(const directive of ["default-src 'self'","frame-ancestors 'none'","script-src 'self'","object-src 'none'"])assert.ok(kv["content-security-policy"].includes(directive),directive);
+assert.equal(kv["x-frame-options"],"DENY");
+assert.equal(kv["x-content-type-options"],"nosniff");
+const html=read("index.html");
+assert.match(html,/noindex,nofollow/);
+assert.doesNotMatch(html,/<link[^>]*rel="canonical"/);
+console.log("GATE HOSTING: cabeceras listas para Vercel; robots permanece NOINDEX y canonical pendiente de dominio verificado.");
