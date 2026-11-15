@@ -6,7 +6,8 @@ import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-const root = process.env.DESSET_BROWSER_DIST === "1" ? new URL("../dist/", import.meta.url) : new URL("../", import.meta.url);
+if (process.env.DESSET_BROWSER_DIST === "1" && process.env.DESSET_BROWSER_CLOUDFLARE === "1") throw Error("Modos de navegador incompatibles");
+const root = process.env.DESSET_BROWSER_CLOUDFLARE === "1" ? new URL("../dist-cloudflare-stage/", import.meta.url) : process.env.DESSET_BROWSER_DIST === "1" ? new URL("../dist/", import.meta.url) : new URL("../", import.meta.url);
 const files = new Map([
   ["/", ["index.html", "text/html; charset=utf-8"]],
   ["/index.html", ["index.html", "text/html; charset=utf-8"]],
@@ -163,7 +164,7 @@ const viewports = [
   [390, 844], [375, 667], [360, 740], [320, 568],
   [768, 320], [390, 320], [320, 256]
 ];
-const output = new URL(process.env.DESSET_BROWSER_DIST === "1" ? "../reports/browser-dist/" : "../reports/browser/", import.meta.url);
+const output = new URL(process.env.DESSET_BROWSER_CLOUDFLARE === "1" ? "../reports/browser-cloudflare-stage/" : process.env.DESSET_BROWSER_DIST === "1" ? "../reports/browser-dist/" : "../reports/browser/", import.meta.url);
 let server, browser, ws, temporary;
 const failures = [];
 try {

@@ -1,0 +1,5 @@
+dist/
+dist-cloudflare-stage/
+reports/
+.env
+.env.*

@@ -50,6 +50,18 @@ jobs:
         env:
           DESSET_BROWSER_DIST: "1"
         run: npm run browser:audit
+      - name: Cloudflare fail-closed tests (no deployment)
+        run: npm run cloudflare:negative
+      - name: Cloudflare local-only staging package and allowlist gate
+        env:
+          DESSET_CLOUDFLARE_STAGE: "LOCAL_TEST_ONLY"
+        run: |
+          npm run cloudflare:stage
+          npm run cloudflare:gate
+      - name: Cloudflare packaged HTML/CSS/JS browser tests (local server only)
+        env:
+          DESSET_BROWSER_CLOUDFLARE: "1"
+        run: npm run browser:audit
       - name: Upload screenshot evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -58,5 +70,7 @@ jobs:
           path: |
             reports/browser/
             reports/browser-dist/
+            reports/browser-cloudflare-stage/
+            reports/cloudflare-stage-manifest.json
           if-no-files-found: warn
           retention-days: 14
