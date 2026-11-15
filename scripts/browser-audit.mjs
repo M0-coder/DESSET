@@ -195,6 +195,9 @@ try {
     const escapeClosed = await evalBrowser(send, "!document.querySelector('#detailDialog').open");
     if (!escapeClosed) failures.push(label + ": Escape no cierra el diálogo");
     if (width <= 640) {
+      const legend = await evalBrowser(send, "(function(){const tile=document.querySelector('.tile--visual'),cap=tile.querySelector('.visual-caption'),el=tile.querySelector('.role-legend'),labels=[...el.children];const a=el.getBoundingClientRect(),b=cap.getBoundingClientRect();return {count:labels.length,display:getComputedStyle(el).display,minFont:Math.min(...labels.map(x=>parseFloat(getComputedStyle(x).fontSize))),truncated:labels.some(x=>x.scrollWidth>x.clientWidth+2||x.scrollHeight>x.clientHeight+2),overlap:a.bottom>b.top+2,tileOverflow:a.left<tile.getBoundingClientRect().left-1||a.right>tile.getBoundingClientRect().right+1};})()");
+      if(legend.count!==4||legend.display!=="grid"||legend.minFont<10||legend.truncated||legend.overlap||legend.tileOverflow) failures.push(label+": leyenda móvil ilegible o solapada: "+JSON.stringify(legend));
+      console.log(JSON.stringify({label:label+"-roles",...legend}));
       const switched = await evalBrowser(send, "(function(){document.querySelector('[data-view-button=sections]').click();return document.querySelector('#board').dataset.view==='sections' && getComputedStyle(document.querySelector('.tile--journal')).display!=='none';})()");
       if (!switched) failures.push(label + ": navegación móvil no funciona");
       const secondary = await evalBrowser(send, "(" + measure.toString() + ")()");

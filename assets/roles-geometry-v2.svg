@@ -8,8 +8,8 @@
   <path d="M272 368H448V294L360 212L272 294Z" fill="#111111"/>
   <text x="40" y="188" fill="#FFFFFF" font-size="17" font-weight="700" font-family="Arial,sans-serif">CUSTOMER</text>
   <text x="40" y="208" fill="#FFFFFF" font-size="10" font-family="Arial,sans-serif" letter-spacing="2">SOLICITA</text>
-  <text x="535" y="188" fill="#FFFFFF" font-size="17" font-weight="700" font-family="Arial,sans-serif">CONTROL</text>
-  <text x="535" y="208" fill="#FFC62F" font-size="10" font-family="Arial,sans-serif" letter-spacing="2">SUPERVISA</text>
+  <text x="535" y="188" fill="#111111" font-size="17" font-weight="700" font-family="Arial,sans-serif">CONTROL</text>
+  <text x="535" y="208" fill="#111111" font-size="10" font-family="Arial,sans-serif" letter-spacing="2">SUPERVISA</text>
   <text x="360" y="45" text-anchor="middle" fill="#111111" font-size="17" font-weight="700" font-family="Arial,sans-serif">BUSINESS</text>
   <text x="360" y="62" text-anchor="middle" fill="#111111" font-size="10" font-family="Arial,sans-serif" letter-spacing="2">PREPARA</text>
   <text x="360" y="326" text-anchor="middle" fill="#FFFFFF" font-size="17" font-weight="700" font-family="Arial,sans-serif">RIDER</text>

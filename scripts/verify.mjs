@@ -12,7 +12,7 @@ try{
   const svg=readFileSync(new URL("assets/city-network.svg",root),"utf8");
   if(!svg.includes("<svg")||/<script|<foreignObject|onload\s*=/i.test(svg))failures.push("SVG sospechoso o mal formado");
   const hero=readFileSync(new URL("assets/roles-geometry-v2.svg",root),"utf8");
-  if(!hero.includes("<svg")||/<script|<foreignObject|onload\\s*=/i.test(hero)) failures.push("Arte SVG no válido o sospechoso");
+  if(!hero.includes("<svg")||/<\s*(?:script|foreignObject)\b|\bon[a-z]+\s*=/i.test(hero)) failures.push("Arte SVG no válido o sospechoso");
   const pack=JSON.parse(readFileSync(new URL("package.json",root),"utf8"));
   const lock=JSON.parse(readFileSync(new URL("package-lock.json",root),"utf8"));
   if(pack.name!==lock.name||pack.version!==lock.version)failures.push("Lockfile no corresponde al paquete");

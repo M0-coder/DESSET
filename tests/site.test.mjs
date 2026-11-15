@@ -105,3 +105,24 @@ test("chips del ecosistema usan la misma identidad cromática del hero",()=>{
     assert.match(css,new RegExp("\\.app-strip span:nth-child\\("+role+"\\),body\\[data-theme=\"dark\"\\] \\.app-strip span:nth-child\\("+role+"\\)\\{background:"+hex));
   }
 });
+
+test("Prelaunch: el hero conserva geometría y texto con contraste de CONTROL corregido",()=>{
+  const svg=read("assets/roles-geometry-v2.svg");
+  const html=read("index.html");
+  const css=read("styles.css");
+  assert.match(svg,/d="M702 102H485L393 190L485 278H702Z" fill="#FF3328"/);
+  assert.match(svg,/d="M272 368H448V294L360 212L272 294Z" fill="#111111"/);
+  assert.match(svg,/x="535" y="188" fill="#111111"/);
+  assert.match(svg,/x="535" y="208" fill="#111111"/);
+  assert.match(html,/class="role-legend" aria-hidden="true"/);
+  for(const role of ["CUSTOMER","BUSINESS","RIDER","CONTROL"]){
+    assert.match(html,new RegExp("role-legend--"+role.toLowerCase()));
+  }
+  assert.match(css,/@media\(max-width:640px\)\{[\s\S]*?\.role-legend\{display:grid/);
+});
+test("Prelaunch: ningún texto institucional aprobado se sustituye",()=>{
+  const html=read("index.html");
+  for(const fragment of ["UNA MISMA VISIÓN.","MOVEMOS LA CIUDAD.","COBRO<br>POR ENVÍO.","CANALES OFICIALES<br>EN PREPARACIÓN."]){
+    assert.ok(html.includes(fragment),"Falta contenido autorizado: "+fragment);
+  }
+});

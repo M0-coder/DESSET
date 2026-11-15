@@ -203,3 +203,16 @@ body[data-theme="dark"] .tile--visual img{filter:none;opacity:1}
 .app-strip span:nth-child(2),body[data-theme="dark"] .app-strip span:nth-child(2){background:#FFC62F;color:#111111}
 .app-strip span:nth-child(3),body[data-theme="dark"] .app-strip span:nth-child(3){background:#111111;color:#FFFFFF}
 .app-strip span:nth-child(4),body[data-theme="dark"] .app-strip span:nth-child(4){background:#FF3328;color:#FFFFFF;border-bottom:0}
+
+/* PRELAUNCH-01 · Conserva paleta, cuatro siluetas y Bento; añade rotulación móvil legible. */
+.role-legend{display:none}
+@media(max-width:640px){
+  .tile--visual{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch}
+  .tile--visual img{width:100%;height:auto;max-height:43%;flex:0 1 auto;object-fit:contain}
+  .role-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(21px,auto));gap:3px;margin:3px 6px 34px;min-height:0}
+  .role-legend span{display:grid;place-items:center;min-width:0;min-height:21px;padding:3px 1px;border-radius:4px;font-size:clamp(10px,3.1vw,12px);font-weight:700;letter-spacing:-.045em;white-space:nowrap;line-height:1}
+  .role-legend--customer{background:#1551D8;color:#FFF}
+  .role-legend--business{background:#FFC62F;color:#111}
+  .role-legend--rider{background:#111;color:#FFF}
+  .role-legend--control{background:#FF3328;color:#111}
+}

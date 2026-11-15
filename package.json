@@ -10,7 +10,10 @@
   "scripts": {
     "test": "node --test",
     "check": "node --check src/app.mjs && node --check src/content.mjs && npm test && node scripts/verify.mjs",
-    "browser:audit": "node scripts/browser-audit.mjs"
+    "browser:audit": "node scripts/browser-audit.mjs",
+    "security:audit": "node scripts/security-audit.mjs",
+    "mutation:smoke": "node scripts/mutation-smoke.mjs",
+    "test:coverage": "node --experimental-test-coverage --test"
   },
   "license": "UNLICENSED"
 }

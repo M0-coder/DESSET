@@ -22,6 +22,12 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Static validation and unit tests
         run: npm run check
+      - name: Security static guard
+        run: npm run security:audit
+      - name: Role palette mutation smoke
+        run: npm run mutation:smoke
+      - name: Coverage diagnostic (partial, no production coverage claim)
+        run: npm run test:coverage
       - name: Chrome/Chromium availability
         run: google-chrome --version
       - name: Browser integration, zero-scroll and responsive screenshots
