@@ -124,6 +124,7 @@ function measure() {
   }
   return {
     viewport: [innerWidth, innerHeight],
+    usableWidth: document.documentElement.clientWidth,
     pageScroll: [document.documentElement.scrollWidth, document.documentElement.scrollHeight, document.body.scrollWidth, document.body.scrollHeight],
     site: rect(site),
     board: rect(board),
@@ -149,9 +150,9 @@ function checkCompactMetrics(metrics, label) {
   const [width, height] = metrics.viewport;
   const tolerance = 2;
   assert.ok(Math.abs(metrics.site.x) <= tolerance, label + ": el contenedor horizontal se movió");
-  assert.ok(Math.abs(metrics.site.width - width) <= tolerance, label + ": contenedor no cubre el ancho");
-  assert.ok(Math.abs(metrics.board.x) <= tolerance && Math.abs(metrics.board.right-width) <= tolerance, label + ": Bento deja márgenes externos");
-  assert.ok(metrics.pageScroll[0] <= width+tolerance && metrics.pageScroll[2] <= width+tolerance, label + ": scroll horizontal");
+  assert.ok(Math.abs(metrics.site.width - metrics.usableWidth) <= tolerance, label + ": contenedor no cubre el ancho disponible");
+  assert.ok(Math.abs(metrics.board.x) <= tolerance && Math.abs(metrics.board.right-metrics.usableWidth) <= tolerance, label + ": Bento deja márgenes externos");
+  assert.ok(metrics.pageScroll[0] <= metrics.usableWidth+tolerance && metrics.pageScroll[2] <= metrics.usableWidth+tolerance, label + ": scroll horizontal");
   assert.ok(Math.max(metrics.pageScroll[1],metrics.pageScroll[3]) > height+48, label + ": no hay desplazamiento vertical para recuperar contenido");
   assert.ok(metrics.board.height > height+48, label + ": altura de contenido insuficiente");
   assert.deepEqual(metrics.brokenImages, [], label + ": activos no cargados");
