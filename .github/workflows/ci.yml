@@ -33,12 +33,11 @@ jobs:
         run: node scripts/approved-baseline-gate.mjs
       - name: Hosting policy and SEO staging gate
         run: node scripts/hosting-policy-gate.mjs
-      - name: Release safety gate (must refuse without authorization)
-        run: |
-          if npm run release:package; then echo "ERROR: no se debe empaquetar sin autorización" && exit 1; fi
+      - name: Negative tests for package safety (fail closed)
+        run: npm run release:negative
       - name: Ensayo local del paquete para desset.lat (sin despliegue)
         env:
-          DESSET_RELEASE_APPROVED: "YES"
+          DESSET_PACKAGE_MODE: "LOCAL_TEST_ONLY"
           DESSET_OFFICIAL_ORIGIN: "https://desset.lat"
         run: |
           npm run release:package
@@ -47,11 +46,17 @@ jobs:
         run: google-chrome --version
       - name: Browser integration, zero-scroll and responsive screenshots
         run: npm run browser:audit
+      - name: Browser integration of the production-shaped local artifact
+        env:
+          DESSET_BROWSER_DIST: "1"
+        run: npm run browser:audit
       - name: Upload screenshot evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: desset-browser-evidence
-          path: reports/browser/
+          path: |
+            reports/browser/
+            reports/browser-dist/
           if-no-files-found: warn
           retention-days: 14

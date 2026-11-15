@@ -14,7 +14,8 @@
     "security:audit": "node scripts/security-audit.mjs",
     "mutation:smoke": "node scripts/mutation-smoke.mjs",
     "test:coverage": "node --experimental-test-coverage --test",
-    "release:package": "node scripts/release-package.mjs"
+    "release:package": "node scripts/release-package.mjs",
+    "release:negative": "node scripts/release-negative-tests.mjs"
   },
   "license": "UNLICENSED"
 }

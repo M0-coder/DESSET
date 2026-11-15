@@ -6,7 +6,7 @@ import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-const root = new URL("../", import.meta.url);
+const root = process.env.DESSET_BROWSER_DIST === "1" ? new URL("../dist/", import.meta.url) : new URL("../", import.meta.url);
 const files = new Map([
   ["/", ["index.html", "text/html; charset=utf-8"]],
   ["/index.html", ["index.html", "text/html; charset=utf-8"]],
@@ -148,7 +148,7 @@ const viewports = [
   [1920, 1080], [1440, 900], [1280, 720], [1280, 600], [1024, 768], [768, 900],
   [390, 844], [375, 667], [360, 740], [320, 568]
 ];
-const output = new URL("../reports/browser/", import.meta.url);
+const output = new URL(process.env.DESSET_BROWSER_DIST === "1" ? "../reports/browser-dist/" : "../reports/browser/", import.meta.url);
 let server, browser, ws, temporary;
 const failures = [];
 try {
@@ -176,6 +176,13 @@ try {
     await delay(120);
     const primary = await evalBrowser(send, "(" + measure.toString() + ")()");
     const label = width + "x" + height + "-home";
+    const seo = await evalBrowser(send,"(function(){const canonical=document.querySelector('link[rel=canonical]');const robots=document.querySelector('meta[name=robots]');return {canonical:canonical?.href??null,robots:robots?.content??null};})()");
+    if(process.env.DESSET_BROWSER_DIST==="1"){
+      if(seo.canonical!=="https://desset.lat/"||seo.robots?.includes("noindex"))failures.push(label+": paquete publicado con canonical o robots incorrecto "+JSON.stringify(seo));
+    }else{
+      if(seo.canonical!==null||seo.robots!=="noindex,nofollow")failures.push(label+": previsualización indexable por error "+JSON.stringify(seo));
+    }
+
     try { checkMetrics(primary, label); } catch (error) { failures.push(error.message); }
     console.log(JSON.stringify({ label, ...primary }));
     const capture = await send("Page.captureScreenshot", { format: "png", fromSurface: true });

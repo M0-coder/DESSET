@@ -24,3 +24,10 @@ El cuerpo HTML, CSS, SVG, logo y aplicación JS están protegidos por `scripts/a
 
 ## Restricciones operativas
 No se ha pagado el dominio, ni modificado DNS, ni fusionado PR, ni activado publicación. `DESSET_RELEASE_APPROVED=YES` en CI es la bandera **de prueba de generación local**, no la autorización real de release. No declarar GO hasta evidencias externas completas.
+
+## SEC-FINAL-01 — Contratos adicionales sin cambios visuales
+- Variable ambigua `DESSET_RELEASE_APPROVED=YES` eliminada del empaquetador. El único modo admisible es `DESSET_PACKAGE_MODE=LOCAL_TEST_ONLY` para ensayo local en CI; no existe despliegue automático ni autoridad derivada.
+- Pruebas negativas rechazan seis clases de intento de empaquetado incorrecto; ejecutar **antes** del ensayo válido.
+- Auditoría Chrome también se ejecuta sobre `dist/` (paquete local) con 10 resoluciones, manteniendo la auditoría original sobre las fuentes. La prueba comprueba `canonical` y ausencia de `noindex` en el paquete, y `noindex` en la fuente.
+- Para seguridad de control plane, las reglas de protección de `main` deben activarse en GitHub Settings por una cuenta administradora; el conector no puede hacerlo. Mientras `main.protected=false` y no haya rulesets, estado `NOT_VERIFIED` y decisión de release `BLOCKED`.
+- No se cambia ningún archivo HTML, CSS, imagen, SVG o `src/*.mjs`; el candado de identidad `scripts/approved-baseline-gate.mjs` permanece obligatorio.

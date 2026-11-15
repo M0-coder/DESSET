@@ -4,8 +4,8 @@ import {fileURLToPath} from "node:url";
 const root=fileURLToPath(new URL("../",import.meta.url));
 const output=resolve(root,"dist");
 const origin=process.env.DESSET_OFFICIAL_ORIGIN;
-if(process.env.DESSET_RELEASE_APPROVED!=="YES"||!origin){
- console.error("NO-GO: exige DESSET_RELEASE_APPROVED=YES y DESSET_OFFICIAL_ORIGIN=https://dominio-controlado.tld");
+if(process.env.DESSET_PACKAGE_MODE!=="LOCAL_TEST_ONLY"||process.env.DESSET_RELEASE_APPROVED||!origin){
+ console.error("NO-GO: solo se permite generar un paquete local mediante DESSET_PACKAGE_MODE=LOCAL_TEST_ONLY y DESSET_OFFICIAL_ORIGIN=https://desset.lat");
  process.exit(2);
 }
 let url;
@@ -30,4 +30,4 @@ writeFileSync(resolve(dst,"index.html"),html);
 writeFileSync(resolve(dst,"robots.txt"),"User-agent: *\nAllow: /\nSitemap: "+site+"/sitemap.xml\n");
 writeFileSync(resolve(dst,"sitemap.xml"),'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>'+site+'/</loc></url></urlset>\n');
 cpSync(resolve(root,"vercel.json"),resolve(dst,"vercel.json"));
-console.log("Paquete local listo en dist/. NO se ha publicado, comprado dominio ni fusionado rama.");
+console.log("PAQUETE LOCAL DE PRUEBA en dist/. No hay autorización ni mecanismo de despliegue en este script.");
