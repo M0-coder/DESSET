@@ -13,7 +13,9 @@ assert.ok(html.includes("UNA MISMA VISIÓN.")&&html.includes("MOVEMOS LA CIUDAD.
 assert.match(read("robots.txt"),/User-agent: \*\nAllow: \//);
 assert.ok(read("robots.txt").includes(origin+"/sitemap.xml"));
 assert.ok(read("sitemap.xml").includes("<loc>"+origin+"/</loc>"));
-for(const file of ["styles.css","src/app.mjs","src/content.mjs","assets/roles-geometry-v2.svg","assets/deliver-assets-mark.png"]){
+assert.match(source,/styles-compact\.css" media="screen and \(max-height: 400px\)"/);
+assert.ok(html.includes('styles-compact.css" media="screen and (max-height: 400px)"'));
+for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/roles-geometry-v2.svg","assets/deliver-assets-mark.png"]){
  const a=readFileSync(new URL("../"+file,import.meta.url)),b=readFileSync(path(file));
  const h=x=>createHash("sha256").update(x).digest("hex");
  assert.equal(h(a),h(b),"Copiado no reproducible: "+file);

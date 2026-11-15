@@ -11,6 +11,7 @@ const files = new Map([
   ["/", ["index.html", "text/html; charset=utf-8"]],
   ["/index.html", ["index.html", "text/html; charset=utf-8"]],
   ["/styles.css", ["styles.css", "text/css; charset=utf-8"]],
+  ["/styles-compact.css", ["styles-compact.css", "text/css; charset=utf-8"]],
   ["/src/app.mjs", ["src/app.mjs", "text/javascript; charset=utf-8"]],
   ["/src/content.mjs", ["src/content.mjs", "text/javascript; charset=utf-8"]],
   ["/assets/deliver-assets-mark.png", ["assets/deliver-assets-mark.png", "image/png"]],
@@ -144,9 +145,22 @@ function checkMetrics(metrics, label) {
   assert.deepEqual(metrics.brokenImages, [], label + ": imágenes no cargadas");
   assert.deepEqual(metrics.clipped, [], label + ": contenido recortado");
 }
+function checkCompactMetrics(metrics, label) {
+  const [width, height] = metrics.viewport;
+  const tolerance = 2;
+  assert.ok(Math.abs(metrics.site.x) <= tolerance, label + ": el contenedor horizontal se movió");
+  assert.ok(Math.abs(metrics.site.width - width) <= tolerance, label + ": contenedor no cubre el ancho");
+  assert.ok(Math.abs(metrics.board.x) <= tolerance && Math.abs(metrics.board.right-width) <= tolerance, label + ": Bento deja márgenes externos");
+  assert.ok(metrics.pageScroll[0] <= width+tolerance && metrics.pageScroll[2] <= width+tolerance, label + ": scroll horizontal");
+  assert.ok(Math.max(metrics.pageScroll[1],metrics.pageScroll[3]) > height+48, label + ": no hay desplazamiento vertical para recuperar contenido");
+  assert.ok(metrics.board.height > height+48, label + ": altura de contenido insuficiente");
+  assert.deepEqual(metrics.brokenImages, [], label + ": activos no cargados");
+  assert.deepEqual(metrics.clipped, [], label + ": hay contenido recortado dentro de tarjetas");
+}
 const viewports = [
   [1920, 1080], [1440, 900], [1280, 720], [1280, 600], [1024, 768], [768, 900],
-  [390, 844], [375, 667], [360, 740], [320, 568]
+  [390, 844], [375, 667], [360, 740], [320, 568],
+  [768, 320], [390, 320], [320, 256]
 ];
 const output = new URL(process.env.DESSET_BROWSER_DIST === "1" ? "../reports/browser-dist/" : "../reports/browser/", import.meta.url);
 let server, browser, ws, temporary;
@@ -175,6 +189,10 @@ try {
     }
     await delay(120);
     const primary = await evalBrowser(send, "(" + measure.toString() + ")()");
+    if(height<=400){
+      const compact=await evalBrowser(send,"(function(){const sheet=[...document.styleSheets].find(s=>s.href?.includes('styles-compact.css'));const nav=document.querySelector('.mobile-nav');return {loaded:!!sheet,overflow:getComputedStyle(document.documentElement).overflowY,nav:getComputedStyle(nav).position};})()");
+      if(!compact.loaded||compact.overflow!=="auto"||(width<=640&&compact.nav!=="fixed"))failures.push(width+"x"+height+": modo compacto no operativo: "+JSON.stringify(compact));
+    }
     const label = width + "x" + height + "-home";
     const seo = await evalBrowser(send,"(function(){const canonical=document.querySelector('link[rel=canonical]');const robots=document.querySelector('meta[name=robots]');return {canonical:canonical?.href??null,robots:robots?.content??null};})()");
     if(process.env.DESSET_BROWSER_DIST==="1"){
@@ -183,7 +201,7 @@ try {
       if(seo.canonical!==null||seo.robots!=="noindex,nofollow")failures.push(label+": previsualización indexable por error "+JSON.stringify(seo));
     }
 
-    try { checkMetrics(primary, label); } catch (error) { failures.push(error.message); }
+    try { (height<=400?checkCompactMetrics:checkMetrics)(primary, label); } catch (error) { failures.push(error.message); }
     console.log(JSON.stringify({ label, ...primary }));
     const capture = await send("Page.captureScreenshot", { format: "png", fromSurface: true });
     await writeFile(new URL(label + ".png", output), Buffer.from(capture.data, "base64"));
@@ -191,6 +209,10 @@ try {
     if (!changed) failures.push(label + ": modo oscuro no se activó");
     const modal = await evalBrowser(send, "(function(){document.querySelector('[data-detail=services]').click();const d=document.querySelector('#detailDialog');const p=d.querySelector('.dialog-content');return {open:d.open,body:document.querySelector('#detailBody').textContent.length,clipped:p.scrollHeight>p.clientHeight+2};})()");
     if (!modal.open || !modal.body || modal.clipped) failures.push(label + ": diálogo vacío o contenido recortado");
+    if(height<=400){
+      const modalScroll=await evalBrowser(send,"(function(){const d=document.querySelector('#detailDialog');return {scrollable:d.scrollHeight>d.clientHeight+3,overflow:getComputedStyle(d).overflowY};})()");
+      if(!modalScroll.scrollable||!["auto","scroll"].includes(modalScroll.overflow))failures.push(label+": diálogo no recuperable mediante desplazamiento "+JSON.stringify(modalScroll));
+    }
     await evalBrowser(send, "document.querySelector('#dialogBack').click()");
     const closeButton = await evalBrowser(send, "(function(){document.querySelector('[data-detail=services]').click();const d=document.querySelector('#detailDialog');document.querySelector('.close-button').click();return !d.open;})()");
     if (!closeButton) failures.push(label + ": botón de cerrar diálogo no funciona");
@@ -222,7 +244,7 @@ try {
       const switched = await evalBrowser(send, "(function(){document.querySelector('[data-view-button=sections]').click();return document.querySelector('#board').dataset.view==='sections' && getComputedStyle(document.querySelector('.tile--journal')).display!=='none';})()");
       if (!switched) failures.push(label + ": navegación móvil no funciona");
       const secondary = await evalBrowser(send, "(" + measure.toString() + ")()");
-      try { checkMetrics(secondary, width + "x" + height + "-sections"); } catch (error) { failures.push(error.message); }
+      try { (height<=400?checkCompactMetrics:checkMetrics)(secondary, width + "x" + height + "-sections"); } catch (error) { failures.push(error.message); }
       console.log(JSON.stringify({ label: width + "x" + height + "-sections", ...secondary }));
       const secondCapture = await send("Page.captureScreenshot", { format: "png", fromSurface: true });
       await writeFile(new URL(width + "x" + height + "-sections.png", output), Buffer.from(secondCapture.data, "base64"));

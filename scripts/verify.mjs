@@ -1,6 +1,6 @@
 import {statSync,readFileSync} from "node:fs";
 const root=new URL("../",import.meta.url);
-const required=["index.html","styles.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/city-network.svg","assets/roles-geometry-v2.svg","package.json","package-lock.json",".github/workflows/ci.yml","scripts/browser-audit.mjs","tests/site.test.mjs"];
+const required=["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/city-network.svg","assets/roles-geometry-v2.svg","package.json","package-lock.json",".github/workflows/ci.yml","scripts/browser-audit.mjs","tests/site.test.mjs"];
 const failures=[];
 for(const path of required){
   try{if(statSync(new URL(path,root)).size===0)failures.push("Archivo vacío: "+path);}
