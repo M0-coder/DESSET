@@ -1,0 +1,186 @@
+name: DESSET - Cloudflare Pages Production
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "styles-compact.css"
+      - "src/**"
+      - "assets/**"
+      - "scripts/**"
+      - "tests/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/cloudflare-pages-production.yml"
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Escribe PUBLICAR_DESSET; solo la rama main puede publicar"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: desset-cloudflare-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (
+        (github.event_name == 'workflow_dispatch' && inputs.confirm == 'PUBLICAR_DESSET') ||
+        (github.event_name == 'push' && vars.DESSET_AUTO_DEPLOY == 'true')
+      )
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: desset-production
+      url: https://desset.lat
+    steps:
+      - name: Checkout approved main
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+
+      - name: Node 22 exact version
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: "22.16.0"
+          cache: npm
+
+      - name: Reproducible install
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Source checks and safety contracts
+        run: |
+          set -euo pipefail
+          npm run check
+          npm run security:audit
+          npm run mutation:smoke
+          npm run test:coverage
+          node scripts/approved-baseline-gate.mjs
+          node scripts/hosting-policy-gate.mjs
+          npm run launch:guard
+          npm run release:negative
+          npm run cloudflare:release-negative
+
+      - name: Build production-shaped local artifact (no credentials)
+        env:
+          DESSET_PACKAGE_MODE: LOCAL_TEST_ONLY
+          DESSET_OFFICIAL_ORIGIN: https://desset.lat
+        run: |
+          set -euo pipefail
+          npm run release:package
+          node scripts/release-package-gate.mjs
+
+      - name: Build Cloudflare-only static artifact (no credentials)
+        env:
+          DESSET_CF_RELEASE_MODE: LOCAL_TEST_ONLY
+          DESSET_CANDIDATE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          npm run cloudflare:release-candidate
+          npm run cloudflare:release-gate
+
+      - name: Chrome availability
+        run: google-chrome --version
+
+      - name: Browser audit of source
+        run: npm run browser:audit
+
+      - name: Browser audit of production-shaped artifact
+        env:
+          DESSET_BROWSER_CF_RELEASE: "1"
+        run: npm run browser:audit
+
+      - name: Save release hashes and evidence
+        run: |
+          set -euo pipefail
+          find dist-cloudflare-release-candidate -type f -print0 |
+            LC_ALL=C sort -z | xargs -0 sha256sum > reports/release-file-hashes.txt
+          printf "Git SHA: %s\n" "$GITHUB_SHA" > reports/release-source-sha.txt
+          test "$(find dist-cloudflare-release-candidate -type f | wc -l)" -eq 11
+
+      - name: Upload reproducibility evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-cloudflare-release-evidence
+          path: |
+            reports/cloudflare-release-manifest.json
+            reports/release-file-hashes.txt
+            reports/release-source-sha.txt
+            reports/browser/
+            reports/browser-cloudflare-release/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Validate Cloudflare credentials and destination
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: "5a1fbee5f06b8dcec986caa4e080c8d9"
+        run: |
+          set -euo pipefail
+          if [ -z "$CF_TOKEN" ]; then
+            echo "::error::Falta el secret CLOUDFLARE_API_TOKEN en el entorno desset-production o en el repositorio."
+            exit 1
+          fi
+          response="$(curl --fail-with-body -fsS \
+            -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/desset-institucional")"
+          printf '%s' "$response" | jq -e \
+            '.success == true and .result.name == "desset-institucional" and .result.production_branch == "release-approved"' > /dev/null
+          echo "Proyecto y rama de destino comprobados. Sin cambiar DNS."
+
+      - name: Deploy validated static assets to existing Pages project
+        id: deploy
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: "5a1fbee5f06b8dcec986caa4e080c8d9"
+          wranglerVersion: "4.136.3"
+          command: >-
+            pages deploy dist-cloudflare-release-candidate
+            --project-name=desset-institucional
+            --branch=release-approved
+            --commit-hash=${{ github.sha }}
+
+      - name: Verify Cloudflare published exact commit and static mode
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: "5a1fbee5f06b8dcec986caa4e080c8d9"
+        run: |
+          set -euo pipefail
+          response="$(curl --fail-with-body -fsS \
+            -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/desset-institucional")"
+          printf '%s' "$response" | jq -e --arg sha "$GITHUB_SHA" \
+            '.success == true and
+             .result.canonical_deployment.environment == "production" and
+             .result.canonical_deployment.latest_stage.status == "success" and
+             .result.canonical_deployment.deployment_trigger.metadata.commit_hash == $sha and
+             .result.canonical_deployment.uses_functions == false' > /dev/null
+
+      - name: Live HTTPS smoke after deployment
+        run: |
+          set -euo pipefail
+          curl --retry 3 --retry-delay 3 --fail-with-body -fsS https://desset.lat/ |
+            grep -Fq "DELIVER ASSETS / DESSET"
+          curl --retry 3 --retry-delay 3 --fail-with-body -fsS https://www.desset.lat/ |
+            grep -Fq "DELIVER ASSETS / DESSET"
+          curl --fail-with-body -fsS https://desset.lat/robots.txt |
+            grep -Fq "Sitemap: https://desset.lat/sitemap.xml"
+          curl --fail-with-body -fsS https://desset.lat/sitemap.xml |
+            grep -Fq "https://desset.lat/"
+          curl --fail-with-body -fsS https://desset.lat/assets/deliver-assets-mark.png \
+            -o /tmp/desset-public-logo.png
+          cmp -s assets/deliver-assets-mark.png /tmp/desset-public-logo.png
+          curl --silent --show-error -o /dev/null -w '%{http_code}' \
+            https://desset.lat/__desset_missing_audit_path__ |
+            grep -Fxq "404"
+          curl -fsSI https://desset.lat/ | grep -iq '^content-security-policy:'
+          echo "LIVE SMOKE PASS: dominios, recursos, logotipo idéntico y cabeceras."
