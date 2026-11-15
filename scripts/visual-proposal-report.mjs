@@ -1,5 +1,6 @@
 // Read-only proposal inspector. It never updates the approved identity manifest.
 import { inspectVisualBaseline, loadApprovedVisualBaseline } from "./visual-baseline.mjs";
+import { visualApprovalDigest, visualApprovalSentence } from "./visual-approval.mjs";
 
 const approved = loadApprovedVisualBaseline();
 const candidate = inspectVisualBaseline(approved);
@@ -11,6 +12,8 @@ console.log(JSON.stringify({
   changed_files: candidate.diffs,
   candidate_git_blobs: candidate.actualFiles,
   candidate_html_body_fnv64: candidate.bodySignature,
+  current_manifest_design_sha256: visualApprovalDigest(approved),
+  github_approval_sentence_if_this_manifest_is_proposed: visualApprovalSentence(approved),
   approval_required_before_updating_manifest: true,
   publication_authorized: false,
 }, null, 2));
