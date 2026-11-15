@@ -198,7 +198,7 @@ try {
       const focused = await evalBrowser(send, "(function(){const b=document.querySelector('[data-detail=project]');b.focus();return document.activeElement===b})()");
       if (!focused) failures.push(label+": el control Proyecto no recibe foco");
       await send("Input.dispatchKeyEvent",{type:"rawKeyDown",key:"Enter",code:"Enter",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});
-      await send("Input.dispatchKeyEvent",{type:"char",text:"\\r",unmodifiedText:"\\r",key:"Enter",code:"Enter",windowsVirtualKeyCode:13});
+      await send("Input.dispatchKeyEvent",{type:"char",text:"\r",unmodifiedText:"\r",key:"Enter",code:"Enter",windowsVirtualKeyCode:13});
       await send("Input.dispatchKeyEvent",{type:"keyUp",key:"Enter",code:"Enter",windowsVirtualKeyCode:13});
       const keyboardOpened=await evalBrowser(send,"document.querySelector('#detailDialog').open");
       if(!keyboardOpened) failures.push(label+": Enter no abre el diálogo del proyecto");
