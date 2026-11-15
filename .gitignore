@@ -1,5 +1,6 @@
 dist/
 dist-cloudflare-stage/
+dist-cloudflare-release-candidate/
 reports/
 .env
 .env.*

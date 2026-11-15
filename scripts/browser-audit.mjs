@@ -6,8 +6,9 @@ import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-if (process.env.DESSET_BROWSER_DIST === "1" && process.env.DESSET_BROWSER_CLOUDFLARE === "1") throw Error("Modos de navegador incompatibles");
-const root = process.env.DESSET_BROWSER_CLOUDFLARE === "1" ? new URL("../dist-cloudflare-stage/", import.meta.url) : process.env.DESSET_BROWSER_DIST === "1" ? new URL("../dist/", import.meta.url) : new URL("../", import.meta.url);
+const browserModes = ["DESSET_BROWSER_DIST","DESSET_BROWSER_CLOUDFLARE","DESSET_BROWSER_CF_RELEASE"].filter(key=>process.env[key]==="1");
+if(browserModes.length>1)throw Error("Modos de navegador incompatibles");
+const root = process.env.DESSET_BROWSER_CF_RELEASE === "1" ? new URL("../dist-cloudflare-release-candidate/", import.meta.url) : process.env.DESSET_BROWSER_CLOUDFLARE === "1" ? new URL("../dist-cloudflare-stage/", import.meta.url) : process.env.DESSET_BROWSER_DIST === "1" ? new URL("../dist/", import.meta.url) : new URL("../", import.meta.url);
 const files = new Map([
   ["/", ["index.html", "text/html; charset=utf-8"]],
   ["/index.html", ["index.html", "text/html; charset=utf-8"]],
@@ -164,7 +165,7 @@ const viewports = [
   [390, 844], [375, 667], [360, 740], [320, 568],
   [768, 320], [390, 320], [320, 256]
 ];
-const output = new URL(process.env.DESSET_BROWSER_CLOUDFLARE === "1" ? "../reports/browser-cloudflare-stage/" : process.env.DESSET_BROWSER_DIST === "1" ? "../reports/browser-dist/" : "../reports/browser/", import.meta.url);
+const output = new URL(process.env.DESSET_BROWSER_CF_RELEASE === "1" ? "../reports/browser-cloudflare-release/" : process.env.DESSET_BROWSER_CLOUDFLARE === "1" ? "../reports/browser-cloudflare-stage/" : process.env.DESSET_BROWSER_DIST === "1" ? "../reports/browser-dist/" : "../reports/browser/", import.meta.url);
 let server, browser, ws, temporary;
 const failures = [];
 try {
@@ -199,7 +200,7 @@ try {
     }
     const label = width + "x" + height + "-home";
     const seo = await evalBrowser(send,"(function(){const canonical=document.querySelector('link[rel=canonical]');const robots=document.querySelector('meta[name=robots]');return {canonical:canonical?.href??null,robots:robots?.content??null};})()");
-    if(process.env.DESSET_BROWSER_DIST==="1"){
+    if(process.env.DESSET_BROWSER_DIST==="1"||process.env.DESSET_BROWSER_CF_RELEASE==="1"){
       if(seo.canonical!=="https://desset.lat/"||seo.robots?.includes("noindex"))failures.push(label+": paquete publicado con canonical o robots incorrecto "+JSON.stringify(seo));
     }else{
       if(seo.canonical!==null||seo.robots!=="noindex,nofollow")failures.push(label+": previsualización indexable por error "+JSON.stringify(seo));

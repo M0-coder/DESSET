@@ -65,6 +65,19 @@ jobs:
         env:
           DESSET_BROWSER_CLOUDFLARE: "1"
         run: npm run browser:audit
+      - name: Cloudflare release-shape negative tests, local only
+        run: npm run cloudflare:release-negative
+      - name: Cloudflare release-shape allowlist and SEO gate, local only
+        env:
+          DESSET_CF_RELEASE_MODE: "LOCAL_TEST_ONLY"
+          DESSET_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          npm run cloudflare:release-candidate
+          npm run cloudflare:release-gate
+      - name: Cloudflare production-shaped local browser test (no deploy)
+        env:
+          DESSET_BROWSER_CF_RELEASE: "1"
+        run: npm run browser:audit
       - name: Upload screenshot evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -74,6 +87,8 @@ jobs:
             reports/browser/
             reports/browser-dist/
             reports/browser-cloudflare-stage/
+            reports/browser-cloudflare-release/
             reports/cloudflare-stage-manifest.json
+            reports/cloudflare-release-manifest.json
           if-no-files-found: warn
           retention-days: 14
