@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
 import { createServer } from "node:http";
-import { readFile, mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
+import { readFile, mkdtemp, mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { finishBrowserAudit } from "./browser-cleanup.mjs";
 
 const browserModes = ["DESSET_BROWSER_DIST","DESSET_BROWSER_CLOUDFLARE","DESSET_BROWSER_CF_RELEASE"].filter(key=>process.env[key]==="1");
 if(browserModes.length>1)throw Error("Modos de navegador incompatibles");
@@ -166,6 +167,7 @@ const viewports = [
 ];
 const output = new URL(process.env.DESSET_BROWSER_CF_RELEASE === "1" ? "../reports/browser-cloudflare-release/" : process.env.DESSET_BROWSER_CLOUDFLARE === "1" ? "../reports/browser-cloudflare-stage/" : process.env.DESSET_BROWSER_DIST === "1" ? "../reports/browser-dist/" : "../reports/browser/", import.meta.url);
 let server, browser, ws, temporary;
+let primaryError;
 const failures = [];
 try {
   const local = await serve(); server = local.server;
@@ -275,9 +277,8 @@ try {
     console.error("AUDITORÍA VISUAL: FALLÓ\n" + failures.join("\n"));
     process.exitCode = 1;
   } else console.log("AUDITORÍA VISUAL: APROBADA (" + viewports.length + " tamaños, modalidades y capturas)");
+} catch (error) {
+  primaryError = error;
 } finally {
-  ws?.close();
-  if (browser) browser.kill("SIGKILL");
-  if (server) await new Promise(resolve => server.close(resolve));
-  if (temporary) await rm(temporary, { recursive: true, force: true });
+  await finishBrowserAudit({ ws, browser, server, temporary }, primaryError);
 }
