@@ -29,5 +29,4 @@ for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.
 writeFileSync(resolve(dst,"index.html"),html);
 writeFileSync(resolve(dst,"robots.txt"),"User-agent: *\nAllow: /\nSitemap: "+site+"/sitemap.xml\n");
 writeFileSync(resolve(dst,"sitemap.xml"),'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>'+site+'/</loc></url></urlset>\n');
-cpSync(resolve(root,"vercel.json"),resolve(dst,"vercel.json"));
 console.log("PAQUETE LOCAL DE PRUEBA en dist/. No hay autorización ni mecanismo de despliegue en este script.");

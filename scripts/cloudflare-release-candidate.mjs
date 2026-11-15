@@ -4,6 +4,7 @@ import {readFileSync,writeFileSync,rmSync,mkdirSync,lstatSync} from "node:fs";
 import {resolve,dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 import {createHash} from "node:crypto";
+import {CLOUDFLARE_RELEASE_HEADERS} from "./cloudflare-headers.mjs";
 const root=fileURLToPath(new URL("../",import.meta.url));
 const dist=resolve(root,"dist"),target=resolve(root,"dist-cloudflare-release-candidate");
 if(process.env.DESSET_CF_RELEASE_MODE!=="LOCAL_TEST_ONLY"||
@@ -14,7 +15,7 @@ if(process.env.DESSET_CF_RELEASE_MODE!=="LOCAL_TEST_ONLY"||
  process.exit(2);
 }
 const allow=["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","404.html","robots.txt","sitemap.xml"];
-const header="/*\n  Content-Security-Policy: default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n  Referrer-Policy: no-referrer\n  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()\n";
+const header=CLOUDFLARE_RELEASE_HEADERS;
 const html=readFileSync(resolve(dist,"index.html"),"utf8");
 if(!html.includes('<link rel="canonical" href="https://desset.lat/">')||
    !html.includes('<meta property="og:url" content="https://desset.lat/">')||
