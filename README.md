@@ -10,7 +10,7 @@
 
 Diseño inspirado en la **estructura** de la referencia gráfica proporcionada por el fundador: tarjetas monocromáticas, separación negra, radios amplios y **cero desplazamiento horizontal o vertical**. El contenido se muestra con un diálogo accesible, y en móvil mediante dos vistas sin scroll. Las tarjetas son interactivas; no procesan pedidos ni datos personales.
 
-La identidad reutilizada tiene procedencia rastreable: `assets/deliver-assets-mark.png` procede del commit `f3a075b...` del repo previo `DELIVER-ASESSET-pro`, ruta `public/brand/deliver-assets-mark.png` (nodo de Figma documentado `277:5`). `assets/city-network.svg` procede del mismo commit y directorio. **La aprobación legal y gráfica definitiva de esos activos todavía necesita reconciliarse con Notion.** No están autorizados para campañas o publicación oficial sin cierre del gate de marca.
+La identidad reutilizada tiene procedencia rastreable: `assets/deliver-assets-mark.png` procede del commit `f3a075b...` del repo previo `DELIVER-ASESSET-pro`, ruta `public/brand/deliver-assets-mark.png` (nodo de Figma documentado `277:5`). El gráfico histórico `assets/city-network.svg` procedía del mismo commit, pero se conserva únicamente en el historial Git por no ser utilizado en el diseño aprobado. **La aprobación legal y gráfica definitiva de esos activos todavía necesita reconciliarse con Notion.** No están autorizados para campañas o publicación oficial sin cierre del gate de marca.
 
 ## Ejecución local
 
