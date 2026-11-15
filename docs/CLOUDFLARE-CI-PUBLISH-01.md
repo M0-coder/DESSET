@@ -15,9 +15,7 @@
 
 Workflow: `.github/workflows/cloudflare-pages-production.yml`.
 
-1. Solo ejecuta publicación desde `refs/heads/main`, con dos formas controladas:
-   - Manual: **Actions → DESSET - Cloudflare Pages Production → Run workflow** desde `main`, introducir exactamente `PUBLICAR_DESSET`.
-   - Automática: después de una fusión aprobada en `main`, **únicamente** cuando una variable del repositorio `DESSET_AUTO_DEPLOY` tenga el valor `true`. Por defecto no existe y no despliega.
+1. Solo ejecuta publicación **MANUAL** desde `refs/heads/main`: **Actions → DESSET - Cloudflare Pages Production → Run workflow** desde `main`, introducir exactamente `PUBLICAR_DESSET`. El workflow no contiene evento `push` ni escucha una variable `DESSET_AUTO_DEPLOY`: incluso si tal variable existiera, **no podría activar el despliegue automático**.
 2. Instala Node 22, ejecuta validación estática, pruebas unitarias, chequeo de seguridad, smoke mutation, cobertura diagnóstica, candado visual y pruebas negativas.
 3. Construye el paquete en modo `LOCAL_TEST_ONLY` **sin credenciales**; verifica hashes SHA-256 y 11 rutas permitidas; ejecuta auditorías Chrome de fuente y de artefacto.
 4. Almacena manifiesto SHA-256/capturas como artefactos de GitHub Actions durante 30 días.
@@ -34,7 +32,7 @@ El workflow no se ejecuta en PR externos. Tiene permisos GitHub mínimos (`conte
 3. En el entorno `desset-production` guardar un **environment secret** llamado `CLOUDFLARE_API_TOKEN` con el token. Alternativamente, usar Repository Actions Secret https://github.com/M0-coder/DESSET/settings/secrets/actions (preferir entorno).
 4. No se necesita pegar el Account ID como secreto: el workflow usa el identificador de cuenta **no confidencial** ya verificado `5a1fbee5f06b8dcec986caa4e080c8d9`.
 5. Tras la revisión y los checks exitosos, integrar el PR de este workflow en `main` conforme a la protección de rama. **No fusionar simultáneamente el PR #13** sin resolver la superposición de commits.
-6. La primera ejecución debe ser **manual** con `PUBLICAR_DESSET`, inspeccionar artefactos y comprobar `https://desset.lat/` y `https://www.desset.lat/`. Si se quiere publicar automáticamente después de cada merge aprobado, crear la variable GitHub Actions `DESSET_AUTO_DEPLOY=true`; si no, dejarla ausente.
+6. Toda ejecución de producción debe ser **manual** con `PUBLICAR_DESSET`; inspeccionar artefactos y comprobar `https://desset.lat/` y `https://www.desset.lat/`. Para introducir auto-deploy en el futuro se requiere **otro PR explícito y una autorización independiente**; crear `DESSET_AUTO_DEPLOY` no hará nada por sí solo.
 
 **No se ha generado ni conocido un API Token en este trabajo.** No aceptar credenciales por DM ni en commits, issues o capturas.
 
