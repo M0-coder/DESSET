@@ -8,9 +8,10 @@ const workflow = readFileSync(
 );
 
 function extractCurlCommands(source) {
-  // GitHub Actions shell scripts may continue curl commands with backslash + newline.
-  return [...source.matchAll(/\bcurl[^\n]*(?:\\\r?\n[^\n]*)*/g)]
-    .map(([command]) => command.replace(/\\\r?\n\s*/g, " ").trim());
+  // Unfold shell line continuations before inspecting flags on a whole command.
+  const unfolded = source.replace(/\\\r?\n[ \t]*/g, " ");
+  return [...unfolded.matchAll(/\bcurl[^\n]*/g)]
+    .map(([command]) => command.trim());
 }
 
 function hasIncompatibleCurlFlags(command) {
@@ -22,6 +23,11 @@ function hasIncompatibleCurlFlags(command) {
 
 test("curl guard rejects -f together with --fail-with-body", () => {
   assert.equal(hasIncompatibleCurlFlags("curl --fail-with-body -fsS https://example.com"), true);
+  assert.equal(
+    hasIncompatibleCurlFlags(extractCurlCommands("curl --fail-with-body \\\n  -sSf https://example.com")[0]),
+    true,
+    "Regression guard must recognize options on continued shell lines",
+  );
   assert.equal(hasIncompatibleCurlFlags("curl -sSf --fail-with-body https://example.com"), true);
   assert.equal(hasIncompatibleCurlFlags("curl --fail-with-body -sS https://example.com"), false);
   assert.equal(hasIncompatibleCurlFlags("curl -fsSI https://example.com"), false);
