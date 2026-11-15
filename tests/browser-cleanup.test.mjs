@@ -99,7 +99,7 @@ test("unexpected remove errors do not retry and are not swallowed", async () => 
   assert.equal(tries, 1);
 });
 
-test("resource cleanup continues after a child termination failure", async () => {
+test("child termination failure preserves the profile but closes other resources", async () => {
   let websocketClosed = false, serverClosed = false, profileRemoved = false;
   await assert.rejects(closeBrowserResources({
     ws: { close() { websocketClosed = true; } },
@@ -108,10 +108,25 @@ test("resource cleanup continues after a child termination failure", async () =>
   }, {
     stop: async () => { throw new Error("chrome still alive"); },
     remove: async () => { profileRemoved = true; },
-  }), AggregateError);
+  }), error => error instanceof AggregateError && error.errors[0].message === "chrome still alive");
   assert.equal(websocketClosed, true);
   assert.equal(serverClosed, true);
-  assert.equal(profileRemoved, true);
+  assert.equal(profileRemoved, false, "Do not delete a profile while Chrome could still be alive");
+});
+
+test("browser profile is removed only after browser exit is confirmed", async () => {
+  let chromeClosed = false, removed = false;
+  const chrome = new FakeChrome((signal, child) => {
+    setTimeout(() => { chromeClosed = true; child.finish(signal); }, 7);
+  });
+  await closeBrowserResources({ browser: chrome, temporary: "/temporary/profile" }, {
+    stop: async child => stopChrome(child, { gracefulMs: 70, forcedMs: 30 }),
+    remove: async () => {
+      assert.equal(chromeClosed, true);
+      removed = true;
+    },
+  });
+  assert.equal(removed, true);
 });
 
 test("primary browser audit failure is preserved after cleanup", async () => {
@@ -121,6 +136,23 @@ test("primary browser audit failure is preserved after cleanup", async () => {
     temporary: "/temporary/profile",
   }, primary, { remove: async () => { removed = true; } }), error => error === primary);
   assert.equal(removed, true);
+});
+
+test("primary visual audit error wins even if profile cleanup also fails", async () => {
+  const primary = new Error("visual audit failed, must be preserved");
+  const previous = console.error;
+  let secondaryLogged = false;
+  console.error = (...args) => { secondaryLogged = String(args[0]).includes("secundario"); };
+  try {
+    await assert.rejects(finishBrowserAudit({
+      temporary: "/temporary/profile",
+    }, primary, {
+      remove: async () => { throw Object.assign(new Error("busy"), { code: "ENOTEMPTY" }); },
+    }), error => error === primary);
+    assert.equal(secondaryLogged, true);
+  } finally {
+    console.error = previous;
+  }
 });
 
 test("cleanup failure propagates if the visual audit itself passed", async () => {
