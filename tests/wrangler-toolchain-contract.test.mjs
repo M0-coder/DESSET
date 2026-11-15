@@ -41,3 +41,15 @@ test("deploy uses the isolated CLI, approved SHA, and a clean Git checkout", () 
   assert.match(deploy, /--branch=release-approved/);
   assert.match(deploy, /--commit-hash="\$GITHUB_SHA"/);
 });
+
+test("post-deployment Cloudflare metadata must prove a clean published commit", () => {
+  const begin = workflow.indexOf("      - name: Verify Cloudflare published exact commit and static mode");
+  const end = workflow.indexOf("      - name: Live HTTPS smoke after deployment");
+  assert.ok(begin > 0 && end > begin, "Expected post-deployment verification before public smoke");
+  const verification = workflow.slice(begin, end);
+  assert.match(verification, /\.result\.canonical_deployment\.latest_stage\.status == "success"/);
+  assert.match(verification, /\.result\.canonical_deployment\.deployment_trigger\.metadata\.commit_hash == \$sha/);
+  assert.match(verification, /\.result\.canonical_deployment\.deployment_trigger\.metadata\.commit_dirty == false/);
+  assert.match(verification, /\.result\.canonical_deployment\.uses_functions == false/);
+  assert.doesNotMatch(workflow, /--commit-dirty(?:=|\s+)false/, "No forged clean commit flag");
+});
