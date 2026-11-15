@@ -1,18 +1,5 @@
 name: DESSET - Cloudflare Pages Production
 on:
-  push:
-    branches: [main]
-    paths:
-      - "index.html"
-      - "styles.css"
-      - "styles-compact.css"
-      - "src/**"
-      - "assets/**"
-      - "scripts/**"
-      - "tests/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/cloudflare-pages-production.yml"
   workflow_dispatch:
     inputs:
       confirm:
@@ -32,10 +19,8 @@ jobs:
   publish:
     if: >-
       github.ref == 'refs/heads/main' &&
-      (
-        (github.event_name == 'workflow_dispatch' && inputs.confirm == 'PUBLICAR_DESSET') ||
-        (github.event_name == 'push' && vars.DESSET_AUTO_DEPLOY == 'true')
-      )
+      github.event_name == 'workflow_dispatch' &&
+      inputs.confirm == 'PUBLICAR_DESSET'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment:
