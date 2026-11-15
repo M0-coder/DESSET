@@ -4,6 +4,7 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -28,6 +29,13 @@ jobs:
         run: npm run mutation:smoke
       - name: Coverage diagnostic (partial, no production coverage claim)
         run: npm run test:coverage
+      - name: Immutable visual and content gate
+        run: node scripts/approved-baseline-gate.mjs
+      - name: Hosting policy and SEO staging gate
+        run: node scripts/hosting-policy-gate.mjs
+      - name: Release safety gate (must refuse without authorization)
+        run: |
+          if npm run release:package; then echo "ERROR: no se debe empaquetar sin autorización" && exit 1; fi
       - name: Chrome/Chromium availability
         run: google-chrome --version
       - name: Browser integration, zero-scroll and responsive screenshots

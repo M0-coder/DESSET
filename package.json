@@ -13,7 +13,8 @@
     "browser:audit": "node scripts/browser-audit.mjs",
     "security:audit": "node scripts/security-audit.mjs",
     "mutation:smoke": "node scripts/mutation-smoke.mjs",
-    "test:coverage": "node --experimental-test-coverage --test"
+    "test:coverage": "node --experimental-test-coverage --test",
+    "release:package": "node scripts/release-package.mjs"
   },
   "license": "UNLICENSED"
 }

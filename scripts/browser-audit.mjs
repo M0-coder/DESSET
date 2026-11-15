@@ -194,6 +194,19 @@ try {
     await send("Input.dispatchKeyEvent", { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
     const escapeClosed = await evalBrowser(send, "!document.querySelector('#detailDialog').open");
     if (!escapeClosed) failures.push(label + ": Escape no cierra el diálogo");
+    if ((width === 1440 && height === 900) || (width === 390 && height === 844)) {
+      const focused = await evalBrowser(send, "(function(){const b=document.querySelector('[data-detail=project]');b.focus();return document.activeElement===b})()");
+      if (!focused) failures.push(label+": el control Proyecto no recibe foco");
+      await send("Input.dispatchKeyEvent",{type:"keyDown",key:"Enter",code:"Enter",windowsVirtualKeyCode:13});
+      await send("Input.dispatchKeyEvent",{type:"keyUp",key:"Enter",code:"Enter",windowsVirtualKeyCode:13});
+      const keyboardOpened=await evalBrowser(send,"document.querySelector('#detailDialog').open");
+      if(!keyboardOpened) failures.push(label+": Enter no abre el diálogo del proyecto");
+      await send("Input.dispatchKeyEvent",{type:"keyDown",key:"Escape",code:"Escape",windowsVirtualKeyCode:27});
+      await send("Input.dispatchKeyEvent",{type:"keyUp",key:"Escape",code:"Escape",windowsVirtualKeyCode:27});
+      const keyboardClosed=await evalBrowser(send,"!document.querySelector('#detailDialog').open");
+      if(!keyboardClosed) failures.push(label+": Escape no cierra el diálogo");
+      console.log(JSON.stringify({label:label+"-keyboard",focus:focused,enter:keyboardOpened,escape:keyboardClosed}));
+    }
     if (width <= 640) {
       const legend = await evalBrowser(send, "(function(){const tile=document.querySelector('.tile--visual'),cap=tile.querySelector('.visual-caption'),el=tile.querySelector('.role-legend'),labels=[...el.children];const a=el.getBoundingClientRect(),b=cap.getBoundingClientRect();return {count:labels.length,display:getComputedStyle(el).display,minFont:Math.min(...labels.map(x=>parseFloat(getComputedStyle(x).fontSize))),truncated:labels.some(x=>x.scrollWidth>x.clientWidth+2||x.scrollHeight>x.clientHeight+2),overlap:a.bottom>b.top+2,tileOverflow:a.left<tile.getBoundingClientRect().left-1||a.right>tile.getBoundingClientRect().right+1};})()");
       if(legend.count!==4||legend.display!=="grid"||legend.minFont<10||legend.truncated||legend.overlap||legend.tileOverflow) failures.push(label+": leyenda móvil ilegible o solapada: "+JSON.stringify(legend));

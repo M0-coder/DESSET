@@ -126,3 +126,12 @@ test("Prelaunch: ningún texto institucional aprobado se sustituye",()=>{
     assert.ok(html.includes(fragment),"Falta contenido autorizado: "+fragment);
   }
 });
+
+test("los metadatos nuevos permanecen limitados a HEAD y no indexan una vista preliminar",()=>{
+ const html=read("index.html");
+ assert.match(html,/<meta property="og:type" content="website">/);
+ assert.match(html,/<meta property="og:locale" content="es_PE">/);
+ assert.match(html,/<meta name="robots" content="noindex,nofollow">/);
+ assert.doesNotMatch(html,/<link rel="canonical"/);
+ assert.match(html,/UNA MISMA VISIÓN/);
+});
