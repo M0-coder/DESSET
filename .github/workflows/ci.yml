@@ -55,6 +55,7 @@ jobs:
       - name: Cloudflare local-only staging package and allowlist gate
         env:
           DESSET_CLOUDFLARE_STAGE: "LOCAL_TEST_ONLY"
+          DESSET_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           npm run cloudflare:stage
           npm run cloudflare:gate

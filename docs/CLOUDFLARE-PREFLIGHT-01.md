@@ -6,7 +6,7 @@
 Arquitectura estática, compilación (empaquetado, sin transpilar), pruebas unitarias e instrumentadas, cobertura parcial, análisis estático, CI, seguridad, reproducibilidad por SHA-256, micro-mutation testing, deuda técnica y evidencia.
 
 - Cloudflare: cuenta existente; proyecto `desset-institucional`, rama configurada `release-approved`, sin Git source, dominios ni despliegues.
-- Generar solo `dist-cloudflare-stage/` con 10 entradas de lista blanca y archivo `reports/cloudflare-stage-manifest.json` de SHA-256. **El artefacto de staging nunca es un release**.
+- Generar solo `dist-cloudflare-stage/` con 10 entradas de lista blanca y archivo `reports/cloudflare-stage-manifest.json` de SHA-256. El manifiesto distingue `candidate_head` (SHA de PR solicitado) de `checkout_sha` (commit sintético de merge que Actions puede comprobar). **El artefacto de staging nunca es un release**.
 - El `index.html` **conserva** `noindex,nofollow` y no tiene canonical. `robots.txt` prohibe rastreo y `_headers` declara CSP, frame-ancestors, nosniff, DENY, Referrer-Policy, Permissions-Policy y X-Robots-Tag.
 - `_headers` actúa sobre **archivos estáticos de Pages**; CI comprueba el contenido, **NO** la aplicación efectiva por HTTP. `robots.txt` y `noindex` no constituyen autenticación ni impiden acceder a una URL pública `.pages.dev`.
 - No permitir Git integration automática en la versión de origen que todavía está en PR. No usar la producción antigua Vercel ni Bento V1.

@@ -31,6 +31,8 @@ for(const header of ["Content-Security-Policy:","frame-ancestors 'none'","X-Cont
 assert.equal(readFileSync(resolve(dist,"robots.txt"),"utf8"),"User-agent: *\nDisallow: /\n");
 const manifest=JSON.parse(readFileSync(resolve(root,"reports/cloudflare-stage-manifest.json"),"utf8"));
 assert.equal(manifest.mode,"LOCAL_TEST_ONLY");
+assert.equal(manifest.candidate_head,process.env.DESSET_CANDIDATE_SHA||"unrecorded-local","SHA de PR no corresponde a manifiesto");
+if(process.env.DESSET_CANDIDATE_SHA)assert.match(manifest.candidate_head,/^[a-f0-9]{40}$/);
 assert.equal(manifest.public_exposure,false);
 assert.equal(manifest.domain_association,false);
 assert.deepEqual(Object.keys(manifest.files).sort(),approved);

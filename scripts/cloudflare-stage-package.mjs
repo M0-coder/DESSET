@@ -35,7 +35,7 @@ hashes["_headers"]=createHash("sha256").update(headers).digest("hex");
 hashes["robots.txt"]=createHash("sha256").update(robots).digest("hex");
 mkdirSync(resolve(root,"reports"),{recursive:true});
 writeFileSync(resolve(root,"reports/cloudflare-stage-manifest.json"),JSON.stringify({
- mode:"LOCAL_TEST_ONLY", source_commit:process.env.GITHUB_SHA||"unrecorded-local",
+ mode:"LOCAL_TEST_ONLY", candidate_head:process.env.DESSET_CANDIDATE_SHA||"unrecorded-local", checkout_sha:process.env.GITHUB_SHA||"unrecorded-local",
  public_exposure:false,domain_association:false,files:hashes
 },null,2)+"\n");
 console.log("CLOUDFLARE STAGE: solo paquete local, 10 archivos allowlist; no deploy, no DNS, sin indexación.");
