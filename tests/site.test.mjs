@@ -98,3 +98,10 @@ test("solo cambia la ilustración central: misma narrativa V2 y contenido comerc
   assert.match(css,/\.tile--visual img\{object-fit:contain;/);
   assert.match(css,/\.site\{width:100%;height:100dvh;/);
 });
+
+test("chips del ecosistema usan la misma identidad cromática del hero",()=>{
+  const css=read("styles.css");
+  for(const [role,hex] of [[1,"#1551D8"],[2,"#FFC62F"],[3,"#111111"],[4,"#FF3328"]]){
+    assert.match(css,new RegExp("\\.app-strip span:nth-child\\("+role+"\\),body\\[data-theme=\"dark\"\\] \\.app-strip span:nth-child\\("+role+"\\)\\{background:"+hex));
+  }
+});

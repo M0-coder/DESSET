@@ -197,3 +197,9 @@ body[data-theme="dark"] .app-strip span:nth-child(3){background:color-mix(in srg
 .tile--visual{background:#F0EEEA}
 .tile--visual img{object-fit:contain;object-position:center center;background:#F0EEEA}
 body[data-theme="dark"] .tile--visual img{filter:none;opacity:1}
+
+/* Correspondencia estricta entre gráfica de roles y chips del ecosistema. */
+.app-strip span:nth-child(1),body[data-theme="dark"] .app-strip span:nth-child(1){background:#1551D8;color:#FFFFFF}
+.app-strip span:nth-child(2),body[data-theme="dark"] .app-strip span:nth-child(2){background:#FFC62F;color:#111111}
+.app-strip span:nth-child(3),body[data-theme="dark"] .app-strip span:nth-child(3){background:#111111;color:#FFFFFF}
+.app-strip span:nth-child(4),body[data-theme="dark"] .app-strip span:nth-child(4){background:#FF3328;color:#FFFFFF;border-bottom:0}

@@ -14,3 +14,6 @@ Incorporar a la tarjeta visual el boceto geométrico que el fundador eligió en 
 CI: `npm run check` y `npm run browser:audit`; inspección visual de 1440×900, 390×844 y 320×568. Los tests de navegador ya existentes controlan no-scroll, carga de imágenes, diálogos, tema y vistas móviles. El arte móvil muy pequeño debe inspeccionarse como limitación del contenedor Bento, sin ocultar contenido operativo.
 
 **Rama de trabajo:** `feat/hero-four-roles-approved-v2`; **base:** `feat/brand-character-v2@896678787054ea7ff6aa5142be93cdf3f67ccd2f`. No fusionar ni sustituir Pages sin revisión del fundador.
+
+## Consistencia de colores entre vistas
+Los cuatro chips de la tarjeta «ECOSISTEMA DIGITAL» reutilizan la misma correspondencia cromática del gráfico: CU azul, BU amarillo, RI negro y CO rojo, en ambos temas. No cambian palabras ni disposición.
