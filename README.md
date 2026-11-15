@@ -1,5 +1,8 @@
 # DESSET — Web oficial de DELIVER ASSETS
 
+> **FUENTE DE VERDAD ACTUAL (14/11/2026):** `audit/prelaunch-02-final-gates` / [PR #7](https://github.com/M0-coder/DESSET/pull/7). Candidato de publicación `https://desset.lat` (compra en curso, no confirmada). Bento V1 **descartada** y conservada solo como respaldo histórico; su antiguo GitHub Pages puede seguir visible hasta la retirada de publicación. No modificar el Bento, la narrativa ni la marca aprobada.
+
+
 **Estado:** prototipo visual en desarrollo; NO es un servicio comercial publicado.  
 **Repositorio exclusivo de implementación:** `M0-coder/DESSET`.  
 

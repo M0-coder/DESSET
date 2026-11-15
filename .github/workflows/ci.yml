@@ -36,6 +36,13 @@ jobs:
       - name: Release safety gate (must refuse without authorization)
         run: |
           if npm run release:package; then echo "ERROR: no se debe empaquetar sin autorización" && exit 1; fi
+      - name: Ensayo local del paquete para desset.lat (sin despliegue)
+        env:
+          DESSET_RELEASE_APPROVED: "YES"
+          DESSET_OFFICIAL_ORIGIN: "https://desset.lat"
+        run: |
+          npm run release:package
+          node scripts/release-package-gate.mjs
       - name: Chrome/Chromium availability
         run: google-chrome --version
       - name: Browser integration, zero-scroll and responsive screenshots

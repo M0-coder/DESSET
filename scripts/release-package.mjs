@@ -12,7 +12,7 @@ let url;
 try{url=new URL(origin)}catch{console.error("NO-GO: origen HTTPS inválido");process.exit(2)}
 if(url.protocol!=="https:"||url.username||url.password||url.port||url.pathname!=="/"||url.search||url.hash||
   url.hostname.endsWith(".vercel.app")||url.hostname.endsWith(".github.io")||
-  url.hostname.endsWith(".invalid")||url.hostname==="localhost"){
+  url.hostname.endsWith(".invalid")||url.hostname==="localhost"||url.hostname!=="desset.lat"){
  console.error("NO-GO: se requiere dominio canónico propio, HTTPS y sin ruta o credenciales");
  process.exit(2);
 }
