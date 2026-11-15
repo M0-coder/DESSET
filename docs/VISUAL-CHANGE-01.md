@@ -8,7 +8,7 @@
 
 ## Modelo nuevo
 
-1. `config/visual-baseline-approved.json` guarda la versión autorizada, origen y evidencia del último release, siete hashes Git y firma BODY.
+1. `config/visual-baseline-approved.json` guarda la versión autorizada, origen y evidencia del último release, los siete archivos canónicos protegidos y, cuando se aprueben, fotografías raster adicionales; cada archivo tiene hash Git, además de la firma BODY.
 2. `scripts/approved-baseline-gate.mjs` sigue siendo obligatorio en GitHub Actions y publicación manual. Comprueba que el HTML/CSS/JS/PNG/SVG coincidan con el manifiesto; también conserva `noindex` en la fuente.
 3. `npm run visual:propose` ofrece un diagnóstico **de solo lectura**: cambios detectados y hashes propuestos. El resultado **no aprueba**, no modifica manifiestos, no crea PR, no fusiona y no despliega.
 4. Cada futura propuesta se trabaja en una **rama aparte**, se inspecciona mediante imágenes/capturas y pruebas visuales, y se presenta al fundador con diff, licencia de imágenes, accesibilidad y evidencia de rendimiento.
@@ -19,7 +19,7 @@
 ## Límites todavía existentes (no declararlos resueltos)
 
 - `tests/site.test.mjs` comprueba frases, colores y geometría explícitos del Bento actual. Ajustar los contratos en el PR del diseño aprobado; no borrarlos sin pruebas equivalentes.
-- `scripts/release-package.mjs`, `scripts/cloudflare-release-candidate.mjs`, `scripts/cloudflare-release-gate.mjs` y `scripts/browser-audit.mjs` manejan rutas y cantidades de archivos explícitas. **Agregar nuevas imágenes requiere actualizar la allowlist del paquete y las pruebas**, no simplemente copiar archivos.
+- El manifiesto admite **imágenes raster adicionales versionadas** en `assets/` (`png`, `jpg`, `jpeg`, `webp`, `avif` o `gif`), pero `scripts/release-package.mjs`, `scripts/cloudflare-release-candidate.mjs`, `scripts/cloudflare-release-gate.mjs` y `scripts/browser-audit.mjs` manejan rutas y cantidades de archivos explícitas. **Agregar nuevas imágenes requiere actualizar la allowlist del paquete y las pruebas**, no simplemente copiar archivos. Imágenes SVG nuevas exigen auditoría de seguridad específica.
 - `scripts/release-package-gate.mjs` y `scripts/mutation-smoke.mjs` todavía incluyen condiciones históricas de copy/ilustración. Se deben revisar durante un rediseño autorizado.
 - `config/visual-baseline-approved.json` es auditable pero **no una firma criptográfica del consentimiento del fundador**. GitHub exige PR y checks `verify`/`analyze`, pero el ruleset observado tiene `required_approving_review_count=0`. La autorización humana y el control operativo de merges deben mantenerse; si existe un segundo revisor confiable, valorar configurar aprobación obligatoria.
 - Mantener licencia y trazabilidad de fotografías, tipografías y recursos; no publicar marcas o servicios que no estén debidamente acreditados.
