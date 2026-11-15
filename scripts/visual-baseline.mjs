@@ -48,9 +48,17 @@ export function parseApprovedManifest(text) {
   assert.equal(manifest.hash_algorithm, "git-blob-sha1");
   assert.match(manifest.html_body_fnv64, /^[a-f0-9]{16}$/);
   assert.ok(manifest.files && typeof manifest.files === "object" && !Array.isArray(manifest.files));
-  assert.deepEqual(Object.keys(manifest.files).sort(), [...VISUAL_FILES].sort(),
-    "El manifiesto debe proteger exactamente los siete archivos canónicos");
+  const entries = Object.keys(manifest.files);
+  assert.ok(entries.length >= VISUAL_FILES.length && entries.length <= 64,
+    "La referencia debe incluir los siete activos canónicos y no más de 64 archivos");
+  for (const path of VISUAL_FILES) assert.ok(Object.hasOwn(manifest.files, path), "Falta activo canónico: " + path);
+  // Additional approved images can be versioned without changing this gate.
+  // New paths are restricted to relative raster assets; no scripts, traversal or external references.
   for (const [path, sha] of Object.entries(manifest.files)) {
+    if (!VISUAL_FILES.includes(path)) {
+      assert.match(path, /^assets\/(?:[a-z0-9_-]+\/)*[a-z0-9][a-z0-9._-]*\.(?:png|jpg|jpeg|webp|avif|gif)$/i,
+        "No está permitido versionar esta ruta adicional: " + path);
+    }
     assert.match(sha, /^[a-f0-9]{40}$/, "Hash de Git inválido: " + path);
   }
   return manifest;
@@ -59,7 +67,7 @@ export function parseApprovedManifest(text) {
 export function inspectVisualBaseline(manifest, read = defaultRead) {
   const diffs = [];
   const actualFiles = {};
-  for (const path of VISUAL_FILES) {
+  for (const path of Object.keys(manifest.files)) {
     try {
       const actual = gitBlobSha1(read(path));
       actualFiles[path] = actual;
