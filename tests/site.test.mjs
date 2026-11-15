@@ -26,7 +26,7 @@ test("ningún enlace comercial no verificado ni componente externo",()=>{
   assert.match(html,/Content-Security-Policy/);
 });
 test("se versionan los activos del proyecto anterior",()=>{
-  for(const path of ["assets/deliver-assets-mark.png","assets/city-network.svg"])assert.ok(existsSync(new URL("../"+path,import.meta.url)));
+  for(const path of ["assets/deliver-assets-mark.png","404.html"])assert.ok(existsSync(new URL("../"+path,import.meta.url)));
 });
 test("la interfaz no afirma operaciones, coberturas ni métricas",()=>{
   const html=read("index.html");

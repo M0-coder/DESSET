@@ -11,7 +11,7 @@ for(const path of ["src/app.mjs","src/content.mjs"]){
  const txt=read(path);
  assert.doesNotMatch(txt,/\beval\s*\(|\bnew\s+Function\s*\(|\.innerHTML\s*=|document\.write\s*\(/i,path+" contiene una API peligrosa");
 }
-for(const path of ["assets/roles-geometry-v2.svg","assets/city-network.svg"]){
+for(const path of ["assets/roles-geometry-v2.svg"]){
  const txt=read(path);
  assert.match(txt,/<svg\b/);
  assert.doesNotMatch(txt,/<\s*(?:script|foreignObject)\b|\bon[a-z]+\s*=/i,path+" contiene elementos o atributos de ejecución");

@@ -13,7 +13,7 @@ if(process.env.DESSET_CLOUDFLARE_STAGE!=="LOCAL_TEST_ONLY"||
   console.error("NO-GO: Cloudflare stage solo permite ensayo local aislado, sin credenciales ni destino de producción");
   process.exit(2);
 }
-const approved=["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","assets/city-network.svg"];
+const approved=["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","404.html"];
 const source=readFileSync(resolve(root,"index.html"),"utf8");
 if(!source.includes('<meta name="robots" content="noindex,nofollow">')||
     /<link\s+rel="canonical"/i.test(source))throw Error("NO-GO: la fuente no conserva noindex staging");

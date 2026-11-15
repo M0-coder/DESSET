@@ -9,7 +9,7 @@ La preparación del PR #10 produce un paquete de preview indexación prohibida. 
 
 ## Contrato
 - Se toma `dist/` construido por `release:package` con `DESSET_PACKAGE_MODE=LOCAL_TEST_ONLY` y `DESSET_OFFICIAL_ORIGIN=https://desset.lat`.
-- Se copia allowlist estática **11 archivos** a `dist-cloudflare-release-candidate/` incluyendo `_headers`, `robots.txt` y `sitemap.xml`; se excluye `vercel.json`, cualquier archivo privado y resto de raíz.
+- Se copia allowlist estática **11 archivos** a `dist-cloudflare-release-candidate/` incluyendo `_headers`, `robots.txt`, `sitemap.xml` y `404.html` (evita la respuesta SPA 200 para rutas inexistentes); se excluye `vercel.json`, cualquier archivo privado y resto de raíz.
 - Mantiene canon `https://desset.lat/`, metadatos de compartir, robots públicos y sitemap. **No cambia** el body HTML, el CSS aprobado, símbolos, imágenes, palabras ni código JavaScript de aplicación.
 - Requiere `DESSET_CF_RELEASE_MODE=LOCAL_TEST_ONLY`. Si hay `DESSET_RELEASE_APPROVED` o tokens Cloudflare, falla. No hay API call, HTTP upload ni deploy en el script. Artefacto no está autorizado para difusión, aunque sea técnicamente indexable si alguien lo subiera manualmente.
 - `_headers` declara CSP estricta, bloqueo de framing, nosniff, política de referencias y permisos. Su implementación real **no puede comprobarse** en este CI sin despliegue autorizado. No añadir HSTS-preload ni redirects en ausencia de pruebas TLS finales.

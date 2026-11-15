@@ -6,7 +6,7 @@ import {fileURLToPath} from "node:url";
 import {createHash} from "node:crypto";
 const root=fileURLToPath(new URL("../",import.meta.url));
 const dir=resolve(root,"dist-cloudflare-release-candidate");
-const allow=["_headers","assets/city-network.svg","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","index.html","robots.txt","sitemap.xml","src/app.mjs","src/content.mjs","styles-compact.css","styles.css"];
+const allow=["404.html","_headers","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","index.html","robots.txt","sitemap.xml","src/app.mjs","src/content.mjs","styles-compact.css","styles.css"];
 const seen=[];
 function walk(path){
  for(const e of readdirSync(path,{withFileTypes:true})){
