@@ -55,14 +55,18 @@ export async function closeBrowserResources(
   { stop = stopChrome, remove = removeChromeProfile } = {}
 ) {
   const errors = [];
+  let chromeStopped = false;
   try { ws?.close(); } catch (error) { errors.push(error); }
-  try { await stop(browser); } catch (error) { errors.push(error); }
+  try { await stop(browser); chromeStopped = true; } catch (error) { errors.push(error); }
   if (server) {
     try {
       await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
     } catch (error) { errors.push(error); }
   }
-  try { await remove(temporary); } catch (error) { errors.push(error); }
+  // Never delete a profile that may still be used by a Chrome process.
+  if (chromeStopped) {
+    try { await remove(temporary); } catch (error) { errors.push(error); }
+  }
   if (errors.length) throw new AggregateError(errors, "Falló el cierre de recursos del navegador");
 }
 
