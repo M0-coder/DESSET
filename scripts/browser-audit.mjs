@@ -180,6 +180,8 @@ try {
   const send = connected.send;
   await send("Page.enable");
   await send("Runtime.enable");
+  await send("Profiler.enable");
+  await send("Profiler.startPreciseCoverage", {callCount:true,detailed:true});
   await mkdir(output, { recursive: true });
   for (const [width, height] of viewports) {
     await send("Emulation.setDeviceMetricsOverride", { width, height, mobile: width <= 640, deviceScaleFactor: 1 });
@@ -204,6 +206,9 @@ try {
     }
 
     try { (height<=400?checkCompactMetrics:checkMetrics)(primary, label); } catch (error) { failures.push(error.message); }
+    const semantics = await evalBrowser(send, "(function(){const visible=[...document.querySelectorAll('button')].filter(b=>{const s=getComputedStyle(b);return s.display!=='none'&&s.visibility!=='hidden'&&b.getClientRects().length>0;});const nameless=visible.filter(b=>!(b.getAttribute('aria-label')||b.getAttribute('aria-labelledby')||b.textContent.trim())).map(b=>b.outerHTML.slice(0,95));const d=document.querySelector('#detailDialog');const heading=document.getElementById('detailTitle');return {language:document.documentElement.lang,visibleButtons:visible.length,nameless,dialogLabelled:d.getAttribute('aria-labelledby')===heading.id,dialogDescribed:d.getAttribute('aria-describedby')==='detailBody'};})()");
+    if(semantics.language!=="es"||semantics.nameless.length||!semantics.dialogLabelled||!semantics.dialogDescribed) failures.push(label+": semántica accesible incompleta: "+JSON.stringify(semantics));
+    console.log(JSON.stringify({label:label+"-a11y-semantics",...semantics}));
     console.log(JSON.stringify({ label, ...primary }));
     const capture = await send("Page.captureScreenshot", { format: "png", fromSurface: true });
     await writeFile(new URL(label + ".png", output), Buffer.from(capture.data, "base64"));
@@ -237,12 +242,17 @@ try {
       await send("Input.dispatchKeyEvent",{type:"keyUp",key:"Escape",code:"Escape",windowsVirtualKeyCode:27});
       const keyboardClosed=await evalBrowser(send,"!document.querySelector('#detailDialog').open");
       if(!keyboardClosed) failures.push(label+": Escape no cierra el diálogo");
-      console.log(JSON.stringify({label:label+"-keyboard",focus:focused,enter:keyboardOpened,escape:keyboardClosed}));
+      const focusRestored=await evalBrowser(send,"document.activeElement===document.querySelector('[data-detail=project]')");
+      if(!focusRestored) failures.push(label+": foco no vuelve al control que abrió el diálogo");
+      console.log(JSON.stringify({label:label+"-keyboard",focus:focused,enter:keyboardOpened,escape:keyboardClosed,restored:focusRestored}));
     }
     if (width <= 640) {
       const legend = await evalBrowser(send, "(function(){const tile=document.querySelector('.tile--visual'),cap=tile.querySelector('.visual-caption'),el=tile.querySelector('.role-legend'),labels=[...el.children];const a=el.getBoundingClientRect(),b=cap.getBoundingClientRect();return {count:labels.length,display:getComputedStyle(el).display,minFont:Math.min(...labels.map(x=>parseFloat(getComputedStyle(x).fontSize))),truncated:labels.some(x=>x.scrollWidth>x.clientWidth+2||x.scrollHeight>x.clientHeight+2),overlap:a.bottom>b.top+2,tileOverflow:a.left<tile.getBoundingClientRect().left-1||a.right>tile.getBoundingClientRect().right+1};})()");
       if(legend.count!==4||legend.display!=="grid"||legend.minFont<10||legend.truncated||legend.overlap||legend.tileOverflow) failures.push(label+": leyenda móvil ilegible o solapada: "+JSON.stringify(legend));
       console.log(JSON.stringify({label:label+"-roles",...legend}));
+      const chipContrast=await evalBrowser(send,"(function(){const parts=[...document.querySelectorAll('.role-legend span')];function luminance(c){const a=(c.match(/[0-9.]+/g)||[]).slice(0,3).map(x=>Number(x)/255).map(x=>x<=.04045?x/12.92:Math.pow((x+.055)/1.055,2.4));return .2126*a[0]+.7152*a[1]+.0722*a[2]};return parts.map(n=>{const cs=getComputedStyle(n),a=luminance(cs.color),b=luminance(cs.backgroundColor);return {role:n.textContent,ratio:Number(((Math.max(a,b)+.05)/(Math.min(a,b)+.05)).toFixed(2))};});})()");
+      if(chipContrast.some(x=>!(x.ratio>=4.5)))failures.push(label+": contraste insuficiente de leyenda de roles: "+JSON.stringify(chipContrast));
+      console.log(JSON.stringify({label:label+"-role-contrast",values:chipContrast}));
       const switched = await evalBrowser(send, "(function(){document.querySelector('[data-view-button=sections]').click();return document.querySelector('#board').dataset.view==='sections' && getComputedStyle(document.querySelector('.tile--journal')).display!=='none';})()");
       if (!switched) failures.push(label + ": navegación móvil no funciona");
       const secondary = await evalBrowser(send, "(" + measure.toString() + ")()");
@@ -252,6 +262,15 @@ try {
       await writeFile(new URL(width + "x" + height + "-sections.png", output), Buffer.from(secondCapture.data, "base64"));
     }
   }
+  const jsCoverage=await send("Profiler.takePreciseCoverage");
+  const appScript=(jsCoverage.result||[]).find(x=>x.url?.includes("/src/app.mjs"));
+  const appFunctions=appScript?.functions||[];
+  const executed=appFunctions.reduce((n,f)=>n+f.ranges.filter(r=>r.count>0).length,0);
+  const uncovered=appFunctions.reduce((n,f)=>n+f.ranges.filter(r=>r.count===0).length,0);
+  const jsEvidence={script:appScript?.url||null,functions:appFunctions.length,executedRanges:executed,unexecutedRanges:uncovered,method:"Chrome DevTools Profiler precise coverage; do not interpret as complete line/branch coverage"};
+  await writeFile(new URL("js-browser-execution-evidence.json",output),JSON.stringify(jsEvidence,null,2)+"\n");
+  if(!appScript||!executed)failures.push("JS app.mjs sin evidencia de ejecución real en navegador");
+  console.log(JSON.stringify({label:"browser-js-execution",...jsEvidence}));
   if (failures.length) {
     console.error("AUDITORÍA VISUAL: FALLÓ\n" + failures.join("\n"));
     process.exitCode = 1;

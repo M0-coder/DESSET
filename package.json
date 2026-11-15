@@ -18,7 +18,8 @@
     "release:negative": "node scripts/release-negative-tests.mjs",
     "cloudflare:stage": "node scripts/cloudflare-stage-package.mjs",
     "cloudflare:negative": "node scripts/cloudflare-stage-negative.mjs",
-    "cloudflare:gate": "node scripts/cloudflare-stage-gate.mjs"
+    "cloudflare:gate": "node scripts/cloudflare-stage-gate.mjs",
+    "launch:guard": "node scripts/launch-gate-guard.mjs"
   },
   "license": "UNLICENSED"
 }

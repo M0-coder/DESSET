@@ -1,0 +1,18 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
+const ci=read(".github/workflows/ci.yml");
+const pkg=JSON.parse(read("package.json"));
+const html=read("index.html"),css=read("styles.css"),compact=read("styles-compact.css");
+const cf=read("scripts/cloudflare-stage-package.mjs");
+assert.ok(!/\b(deploy|publish|promote|create.domain)\b/i.test(Object.values(pkg.scripts).join(";").replaceAll("cloudflare-stage","staging")),"NO-GO: package.json habilita despliegue");
+assert.doesNotMatch(ci,/\b(?:wrangler|cf)\s+(?:pages\s+)?deploy\b|CLOUDFLARE_API_TOKEN\s*:/i,"NO-GO: CI contiene orden o token de despliegue");
+assert.match(ci,/npm run cloudflare:negative/);
+assert.match(ci,/DESSET_CLOUDFLARE_STAGE: "LOCAL_TEST_ONLY"/);
+assert.match(html,/<meta name="robots" content="noindex,nofollow">/);
+assert.doesNotMatch(html,/<link\s+rel="canonical"/i);
+assert.match(compact,/@media screen and \(max-height: 400px\)/);
+assert.match(css,/\.site\{width:100%;height:100dvh;/);
+assert.match(cf,/DESSET_CLOUDFLARE_STAGE!=="LOCAL_TEST_ONLY"/);
+assert.match(cf,/public_exposure:false/);
+console.log("LAUNCH-GATE-01: source remains noindex, CI deployment disabled, compact fallback isolated. External Access/domain/SEO/legal approvals NOT_VERIFIED.");

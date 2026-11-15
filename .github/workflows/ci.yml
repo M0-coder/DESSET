@@ -50,6 +50,8 @@ jobs:
         env:
           DESSET_BROWSER_DIST: "1"
         run: npm run browser:audit
+      - name: LAUNCH-GATE-01 no deploy nor publication controls
+        run: npm run launch:guard
       - name: Cloudflare fail-closed tests (no deployment)
         run: npm run cloudflare:negative
       - name: Cloudflare local-only staging package and allowlist gate
