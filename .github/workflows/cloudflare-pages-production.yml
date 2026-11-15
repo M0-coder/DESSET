@@ -104,6 +104,30 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Install and audit pinned Wrangler outside Git (no credentials)
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1)"
+          TOOL_DIR="$RUNNER_TEMP/desset-wrangler-v4.162.0"
+          mkdir -p "$TOOL_DIR"
+          printf '{"name":"desset-wrangler-tool","version":"1.0.0","private":true}\n' > "$TOOL_DIR/package.json"
+          npm install --prefix "$TOOL_DIR" --save-exact --ignore-scripts --no-audit --no-fund wrangler@4.162.0
+          npm audit --prefix "$TOOL_DIR" --audit-level=high --json > reports/wrangler-toolchain-audit.json
+          cp "$TOOL_DIR/package-lock.json" reports/wrangler-toolchain-lock.json
+          "$TOOL_DIR/node_modules/.bin/wrangler" pages deploy --help > /dev/null
+          test -z "$(git status --porcelain=v1)"
+          echo "Wrangler 4.162.0 audited; approved checkout clean."
+
+      - name: Preserve toolchain evidence before access to secrets
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-wrangler-toolchain-evidence
+          path: |
+            reports/wrangler-toolchain-audit.json
+            reports/wrangler-toolchain-lock.json
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Validate Cloudflare credentials and destination
         env:
           CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -123,16 +147,17 @@ jobs:
 
       - name: Deploy validated static assets to existing Pages project
         id: deploy
-        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: "5a1fbee5f06b8dcec986caa4e080c8d9"
-          wranglerVersion: "4.136.3"
-          command: >-
-            pages deploy dist-cloudflare-release-candidate
-            --project-name=desset-institucional
-            --branch=release-approved
-            --commit-hash=${{ github.sha }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: "5a1fbee5f06b8dcec986caa4e080c8d9"
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1)"
+          "$RUNNER_TEMP/desset-wrangler-v4.162.0/node_modules/.bin/wrangler" \
+            pages deploy "$GITHUB_WORKSPACE/dist-cloudflare-release-candidate" \
+            --project-name=desset-institucional \
+            --branch=release-approved \
+            --commit-hash="$GITHUB_SHA"
 
       - name: Verify Cloudflare published exact commit and static mode
         env:
