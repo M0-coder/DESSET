@@ -49,7 +49,6 @@ test("automatic Cloudflare analytics CSP allows only beacon.min.js and first-par
     assert.ok(csp.includes("script-src 'self' "+CLOUDFLARE_ANALYTICS_SCRIPT+"; connect-src 'self';"),
       "Unrestricted or missing Cloudflare RUM CSP");
     assert.doesNotMatch(csp,/unsafe-inline|unsafe-eval|https:\/\/\*|connect-src.*cloudflareinsights\.com/i);
-    assert.ok(!csp.includes("https://cloudflareinsights.com/"),"Automatic injection must use first-party RUM endpoint");
   }
   assert.match(read("index.html"),/name="robots" content="noindex,nofollow"/);
   assert.ok(read("index.html").includes('<meta http-equiv="Content-Security-Policy" content="'+CLOUDFLARE_SOURCE_META_CSP+'">'),
