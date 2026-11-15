@@ -32,6 +32,10 @@ Los siguientes blobs son idénticos en el SHA publicado y en el `main` indicado:
 ## 3. Evidencia de publicación y pruebas
 
 - [GitHub Actions publicación, segundo intento aprobado](https://github.com/M0-coder/DESSET/actions/runs/43751936396): código de `main` en el momento de la publicación y verificación HTTP de dominio, `www`, favicon/logotipo, robots, sitemap, CSP y HTTP 404.
+- **Artefacto `desset-cloudflare-release-evidence`**: ID `14175933962`, ZIP SHA-256 `60aee4ca950ead51f5f71fc7241ffec72c9dc98ae04bfa63d98f824e5977b3ae`, `expired=false` al consultar GitHub. Contiene evidencia de empaquetado, hashes SHA-256 y capturas (no se afirma haber vuelto a analizar el ZIP en este registro).
+- **Artefacto `desset-wrangler-toolchain-evidence`**: ID `14175963992`, ZIP SHA-256 `e9fe05874f848223f1af6ae5c5d6e69b3128564fa5d9de13836b74859ae61d5d`, `expired=false` en la misma consulta.
+- **Riesgo de conservación:** GitHub Actions configura `retention-days: 30` para ambos. **Antes de su vencimiento**, exportar los ZIP a almacenamiento duradero controlado por el titular y comprobar sus digest, sin publicar secretos ni volverlos públicos. El historial Git y los IDs de Pages **no reemplazan las capturas ni los hashes de build**.
+
 - [CI `verify` del `main` vigente](https://github.com/M0-coder/DESSET/actions/runs/43754359391): PASS.
 - [CI `analyze` del `main` vigente](https://github.com/M0-coder/DESSET/actions/runs/43754359378): PASS.
 - [PR #23](https://github.com/M0-coder/DESSET/pull/23): corrección de apagado de Chrome, sin alterar HTML/CSS/JS públicos ni activos gráficos.
