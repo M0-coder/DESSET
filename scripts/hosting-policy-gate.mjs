@@ -17,5 +17,6 @@ assert.doesNotMatch(headers,/script-src[^;\n]*\*|connect-src[^;\n]*\*/, "NO-GO: 
 
 const html=read("index.html");
 assert.match(html,/<meta name="robots" content="noindex,nofollow">/);
+assert.ok(html.includes('<meta http-equiv="Content-Security-Policy" content="'+CLOUDFLARE_SOURCE_META_CSP+'">'),"NO-GO: el HTML fuente aprobado no se modifica");
 assert.doesNotMatch(html,/<link[^>]*rel="canonical"/i);
 console.log("GATE HOSTING CLOUDFLARE: origin stays protected; production _headers policy validated.");
