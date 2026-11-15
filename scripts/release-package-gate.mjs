@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {readFileSync,existsSync} from "node:fs";
 import {createHash} from "node:crypto";
+import {CLOUDFLARE_SOURCE_META_CSP,CLOUDFLARE_RELEASE_META_CSP} from "./cloudflare-headers.mjs";
 const path=part=>new URL("../dist/"+part,import.meta.url);
 const read=part=>readFileSync(path(part),"utf8");
 const source=readFileSync(new URL("../index.html",import.meta.url),"utf8");
@@ -10,6 +11,13 @@ assert.doesNotMatch(html,/<meta name="robots" content="noindex,nofollow">/,"El p
 assert.ok(html.includes('<link rel="canonical" href="'+origin+'/">'));
 assert.ok(html.includes('<meta property="og:url" content="'+origin+'/">'));
 assert.ok(html.includes("UNA MISMA VISIÓN.")&&html.includes("MOVEMOS LA CIUDAD."),"Narrativa intacta");
+const previewMeta='<meta http-equiv="Content-Security-Policy" content="'+CLOUDFLARE_SOURCE_META_CSP+'">';
+const releaseMeta='<meta http-equiv="Content-Security-Policy" content="'+CLOUDFLARE_RELEASE_META_CSP+'">';
+assert.ok(source.includes(previewMeta),"La fuente aprobada debe conservar su CSP original");
+assert.ok(html.includes(releaseMeta),"El artefacto debe admitir únicamente el beacon RUM automático");
+assert.ok(!html.includes(previewMeta),"El artefacto debe sustituir la CSP de preview, no añadir políticas incompatibles");
+assert.equal(html.slice(html.indexOf("<body")),source.slice(source.indexOf("<body")),"NO-GO: la publicación altera un solo byte del BODY visual aprobado");
+
 
 assert.match(html, /<title>DESSET \| DELIVER ASSETS — Comercio y logística en desarrollo<\/title>/);
 assert.match(html, /<meta property="og:title" content="DESSET \| DELIVER ASSETS — Comercio y logística en desarrollo">/);

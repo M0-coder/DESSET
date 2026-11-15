@@ -1,6 +1,7 @@
 import {readFileSync,writeFileSync,mkdirSync,cpSync,rmSync} from "node:fs";
 import {resolve} from "node:path";
 import {fileURLToPath} from "node:url";
+import {CLOUDFLARE_SOURCE_META_CSP,CLOUDFLARE_RELEASE_META_CSP} from "./cloudflare-headers.mjs";
 const root=fileURLToPath(new URL("../",import.meta.url));
 const output=resolve(root,"dist");
 const origin=process.env.DESSET_OFFICIAL_ORIGIN;
@@ -34,6 +35,11 @@ for (const [from,to] of seoReplacements) {
   if (!html.includes(from)) throw Error("NO-GO: metadatos originales no reconocidos en el paquete de producción");
   html = html.replace(from,to);
 }
+// HEAD-only, fail-closed CSP change: never edit the approved HTML BODY or source file.
+const sourceCspMeta='<meta http-equiv="Content-Security-Policy" content="'+CLOUDFLARE_SOURCE_META_CSP+'">';
+const releaseCspMeta='<meta http-equiv="Content-Security-Policy" content="'+CLOUDFLARE_RELEASE_META_CSP+'">';
+if (html.split(sourceCspMeta).length!==2) throw Error("NO-GO: la CSP original no coincide con el HTML aprobado");
+html=html.replace(sourceCspMeta,releaseCspMeta);
 const dst=output;
 rmSync(dst,{force:true,recursive:true});mkdirSync(dst,{recursive:true});
 for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","404.html"]){
