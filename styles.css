@@ -191,3 +191,9 @@ body[data-theme="dark"] .app-strip span:nth-child(3){background:color-mix(in srg
 .visual-statement{font-size:clamp(9px,.65vw,12px);padding:8px 9px}
 @media(min-width:1001px) and (max-width:1150px){.visual-statement{display:none}}
 @media(min-width:641px) and (max-width:1000px){.visual-statement{font-size:10px;padding:8px 9px}}
+
+/* HERO DESSET — boceto de cuatro roles aprobado por el fundador.
+   La imagen se presenta íntegra (nunca recortada); las demás tarjetas y textos quedan intactos. */
+.tile--visual{background:#F0EEEA}
+.tile--visual img{object-fit:contain;object-position:center center;background:#F0EEEA}
+body[data-theme="dark"] .tile--visual img{filter:none;opacity:1}
