@@ -30,7 +30,7 @@ GitHub → repositorio `M0-coder/DESSET` → Settings → Rules → Rulesets →
 
 ### Doctrina ASI v3.3 aplicada
 - `control_result = PASS` solo para una propiedad medida y un SHA preciso.
-- `branch_protection = NOT_VERIFIED` hasta que el servicio admin lo confirme.
+- `branch_protection = FAIL` para el estado observado: `main.protected=false` y rulesets vacíos. Una futura protección queda `NOT_VERIFIED` hasta que el administrador la configure y se vuelva a observar.
 - `candidate_decision = BLOCKED` para la publicación si queda una condición crítica incumplida.
 - Auditoría independiente externa distinta del creador; este PR es **autoverificación**, no certificación independiente.
 
