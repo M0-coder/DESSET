@@ -173,6 +173,7 @@ jobs:
              .result.canonical_deployment.environment == "production" and
              .result.canonical_deployment.latest_stage.status == "success" and
              .result.canonical_deployment.deployment_trigger.metadata.commit_hash == $sha and
+             .result.canonical_deployment.deployment_trigger.metadata.commit_dirty == false and
              .result.canonical_deployment.uses_functions == false' > /dev/null
 
       - name: Live HTTPS smoke after deployment
