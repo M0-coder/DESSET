@@ -43,6 +43,29 @@ test("hash aprobado manipulado sin modificar el archivo también bloquea CI", ()
   assert.ok(inspectVisualBaseline(m, read).diffs.includes("styles.css"));
 });
 
+test("nueva imagen aprobada se valida por hash sin editar el código del gate", () => {
+  const m = clone(loadApprovedVisualBaseline());
+  const newImage = Buffer.from("image candidate bytes");
+  m.files["assets/campana.webp"] = gitBlobSha1(newImage);
+  const versioned = parseApprovedManifest(JSON.stringify(m));
+  assert.deepEqual(inspectVisualBaseline(versioned,
+    p => p === "assets/campana.webp" ? newImage : read(p)).diffs, []);
+  assert.ok(inspectVisualBaseline(versioned, read).diffs.some(x => x.includes("assets/campana.webp")),
+    "Imagen listada, pero ausente en el repo, debe bloquear el gate");
+  assert.ok(inspectVisualBaseline(versioned,
+    p => p === "assets/campana.webp" ? Buffer.from("tampered") : read(p))
+    .diffs.includes("assets/campana.webp"), "Una alteración del nuevo recurso debe ser rechazada");
+});
+
+test("rutas adicionales peligrosas o no gráficas se rechazan", () => {
+  for (const path of ["../secrets.png", "assets/../secrets.png", "assets/script.js",
+    "assets/unsafe.svg", "https://example.com/a.png", "images/logo.png"]) {
+    const m = clone(loadApprovedVisualBaseline());
+    m.files[path] = "1".repeat(40);
+    assert.throws(() => parseApprovedManifest(JSON.stringify(m)), undefined, path);
+  }
+});
+
 test("noindex no se puede omitir en la fuente incluso si se editara el manifest", () => {
   const m = clone(loadApprovedVisualBaseline());
   const changed = Buffer.from(read("index.html").toString("utf8")
