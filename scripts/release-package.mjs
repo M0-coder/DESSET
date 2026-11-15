@@ -21,6 +21,19 @@ const source=readFileSync(resolve(root,"index.html"),"utf8");
 if(!source.includes('<meta name="robots" content="noindex,nofollow">'))throw Error("Preflight: la fuente cambió");
 let html=source.replace('  <meta name="robots" content="noindex,nofollow">\n',"");
 html=html.replace('  <link rel="stylesheet" href="./styles.css">','  <link rel="canonical" href="'+site+'/">\n  <meta property="og:url" content="'+site+'/">\n  <link rel="stylesheet" href="./styles.css">');
+
+const seoTitle = "DESSET | DELIVER ASSETS — Comercio y logística en desarrollo";
+const seoDescription = "Conoce DESSET, un proyecto de DELIVER ASSETS en Huacho, Perú. Una visión de comercio y coordinación de entregas, todavía en desarrollo.";
+const seoReplacements = [
+  ['<title>DELIVER ASSETS · Proyecto en desarrollo</title>', '<title>'+seoTitle+'</title>'],
+  ['<meta property="og:title" content="DELIVER ASSETS · Proyecto en desarrollo">', '<meta property="og:title" content="'+seoTitle+'">'],
+  ['<meta property="og:description" content="DELIVER ASSETS / DESSET. Sitio institucional en desarrollo. Proyecto de comercio y coordinación de entregas en preparación.">', '<meta property="og:description" content="'+seoDescription+'">'],
+  ['<meta name="description" content="DELIVER ASSETS / DESSET. Sitio institucional en desarrollo. Proyecto de comercio y coordinación de entregas en preparación.">', '<meta name="description" content="'+seoDescription+'">']
+];
+for (const [from,to] of seoReplacements) {
+  if (!html.includes(from)) throw Error("NO-GO: metadatos originales no reconocidos en el paquete de producción");
+  html = html.replace(from,to);
+}
 const dst=output;
 rmSync(dst,{force:true,recursive:true});mkdirSync(dst,{recursive:true});
 for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","404.html"]){

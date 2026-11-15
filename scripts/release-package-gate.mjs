@@ -10,6 +10,12 @@ assert.doesNotMatch(html,/<meta name="robots" content="noindex,nofollow">/,"El p
 assert.ok(html.includes('<link rel="canonical" href="'+origin+'/">'));
 assert.ok(html.includes('<meta property="og:url" content="'+origin+'/">'));
 assert.ok(html.includes("UNA MISMA VISIÓN.")&&html.includes("MOVEMOS LA CIUDAD."),"Narrativa intacta");
+
+assert.match(html, /<title>DESSET \| DELIVER ASSETS — Comercio y logística en desarrollo<\/title>/);
+assert.match(html, /<meta property="og:title" content="DESSET \| DELIVER ASSETS — Comercio y logística en desarrollo">/);
+assert.match(html, /<meta name="description" content="Conoce DESSET, un proyecto de DELIVER ASSETS en Huacho, Perú\./);
+assert.match(html, /<meta property="og:description" content="Conoce DESSET, un proyecto de DELIVER ASSETS en Huacho, Perú\./);
+
 assert.match(read("robots.txt"),/User-agent: \*\nAllow: \//);
 assert.ok(read("robots.txt").includes(origin+"/sitemap.xml"));
 assert.ok(read("sitemap.xml").includes("<loc>"+origin+"/</loc>"));
