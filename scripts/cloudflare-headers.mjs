@@ -1,0 +1,2 @@
+// Exact existing Cloudflare production _headers policy; shared by release generator and early CI guard.
+export const CLOUDFLARE_RELEASE_HEADERS = "/*\n  Content-Security-Policy: default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n  Referrer-Policy: no-referrer\n  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()\n";
