@@ -1,0 +1,102 @@
+name: DESSET - Wrangler Supply Chain Audit (NO DEPLOY)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/wrangler-toolchain-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-cli:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Read-only checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Pin Node 22.16.0
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: "22.16.0"
+      - name: Audit historical and candidate Wrangler outside checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPORTS="$RUNNER_TEMP/desset-cli-audit-reports"
+          mkdir -p "$REPORTS"
+          printf "node=%s\nnpm=%s\nsha=%s\n" "$(node --version)" "$(npm --version)" "$GITHUB_SHA" > "$REPORTS/environment.txt"
+          test -z "$(git status --porcelain=v1)"
+          for entry in "old:4.136.3" "candidate:4.162.0"; do
+            label="${entry%%:*}"
+            version="${entry#*:}"
+            sandbox="$RUNNER_TEMP/desset-wrangler-$label"
+            mkdir -p "$sandbox"
+            printf '{"name":"desset-isolated-%s","version":"1.0.0","private":true}\n' "$label" > "$sandbox/package.json"
+            npm install --prefix "$sandbox" --save-exact --ignore-scripts --no-audit --no-fund "wrangler@$version"
+            npm ls --prefix "$sandbox" --all --json > "$REPORTS/$label-tree.json" || true
+            npm audit --prefix "$sandbox" --json > "$REPORTS/$label-audit.json" || true
+            (cd "$sandbox" && ./node_modules/.bin/wrangler pages deploy --help > "$REPORTS/$label-pages-help.txt")
+          done
+          test -z "$(git status --porcelain=v1)"
+      - name: Reproduce checkout modification in throwaway clone only
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPORTS="$RUNNER_TEMP/desset-cli-audit-reports"
+          CLONE="$RUNNER_TEMP/desset-git-dirty-repro"
+          git clone --quiet --local --no-hardlinks "$GITHUB_WORKSPACE" "$CLONE"
+          git -C "$CLONE" status --porcelain=v1 > "$REPORTS/clone-status-before.txt"
+          test ! -s "$REPORTS/clone-status-before.txt"
+          npm install --prefix "$CLONE" --save-exact --ignore-scripts --no-audit --no-fund wrangler@4.136.3
+          git -C "$CLONE" status --porcelain=v1 > "$REPORTS/clone-status-after.txt"
+          git -C "$CLONE" diff --name-only > "$REPORTS/clone-diff-names.txt"
+          echo "Throwaway clone status after action-like npm install:"
+          cat "$REPORTS/clone-status-after.txt"
+          printf "Actual checkout still clean: "
+          test -z "$(git status --porcelain=v1)" && echo PASS
+      - name: Summarize exact npm security findings
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPORTS="$RUNNER_TEMP/desset-cli-audit-reports"
+          node --input-type=module - "$REPORTS" <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const dir = process.argv[2];
+          const lines = ['# DESSET — Isolated Wrangler audit', '', 'No production secrets, no deployment, no changes to approved website.', ''];
+          let invalid = false;
+          for (const label of ['old', 'candidate']) {
+            const data = JSON.parse(fs.readFileSync(path.join(dir, label + '-audit.json'), 'utf8'));
+            if (data.error || !data.metadata?.vulnerabilities) {
+              invalid = true;
+              console.log('AUDIT_FAILED', label, JSON.stringify(data.error || data).slice(0, 1000));
+              lines.push('- ' + label + ': AUDIT_FAILED (no reliable registry response)');
+              continue;
+            }
+            const counts = data.metadata.vulnerabilities;
+            console.log('VULNERABILITY_TOTALS', label, JSON.stringify(counts));
+            lines.push('## ' + label + ': ' + JSON.stringify(counts));
+            for (const [name, finding] of Object.entries(data.vulnerabilities || {})) {
+              const via = (finding.via || []).map(x => typeof x === 'string' ? x : {name:x.name,title:x.title,url:x.url,range:x.range,severity:x.severity});
+              const row = {name, severity:finding.severity,range:finding.range,fixAvailable:finding.fixAvailable,via};
+              console.log('ADVISORY', label, JSON.stringify(row));
+              lines.push('- ' + name + ': ' + JSON.stringify(row));
+            }
+          }
+          const dirty = fs.readFileSync(path.join(dir,'clone-status-after.txt'),'utf8');
+          console.log('DIRTY_CLONE_FILES', JSON.stringify(dirty.trim().split('\n').filter(Boolean)));
+          lines.push('', '## Git status in throwaway clone after npm install', '~~~', dirty.trim() || '(clean)', '~~~');
+          fs.writeFileSync(path.join(dir,'summary.md'), lines.join('\n') + '\n');
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join('\n') + '\n');
+          if (invalid) process.exitCode = 1;
+          NODE
+      - name: Preserve audit evidence (never deployment artifacts)
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-wrangler-supply-chain-audit
+          path: ${{ runner.temp }}/desset-cli-audit-reports/
+          if-no-files-found: warn
+          retention-days: 30
