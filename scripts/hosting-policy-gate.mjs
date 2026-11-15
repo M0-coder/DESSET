@@ -1,14 +1,18 @@
+// Validate the Cloudflare Pages production header policy (not a legacy Vercel config).
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
+import {CLOUDFLARE_RELEASE_HEADERS} from "./cloudflare-headers.mjs";
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
-const v=JSON.parse(read("vercel.json"));
-const headers=v.headers?.[0]?.headers??[];
-const kv=Object.fromEntries(headers.map(x=>[x.key.toLowerCase(),x.value]));
-for(const k of ["content-security-policy","x-content-type-options","x-frame-options","referrer-policy","permissions-policy"])assert.ok(kv[k],"Falta header "+k);
-for(const directive of ["default-src 'self'","frame-ancestors 'none'","script-src 'self'","object-src 'none'"])assert.ok(kv["content-security-policy"].includes(directive),directive);
-assert.equal(kv["x-frame-options"],"DENY");
-assert.equal(kv["x-content-type-options"],"nosniff");
+const headers=CLOUDFLARE_RELEASE_HEADERS;
+assert.ok(headers.startsWith("/*\n"),"Cloudflare _headers must apply to every path");
+for(const directive of [
+  "Content-Security-Policy:","default-src 'self'","script-src 'self'",
+  "object-src 'none'","frame-ancestors 'none'","form-action 'none'",
+  "X-Content-Type-Options: nosniff","X-Frame-Options: DENY",
+  "Referrer-Policy: no-referrer","Permissions-Policy:","upgrade-insecure-requests"
+]) assert.ok(headers.includes(directive),"Missing Cloudflare production policy: "+directive);
+assert.doesNotMatch(headers,/unsafe-inline|unsafe-eval|X-Robots-Tag:\s*noindex/i);
 const html=read("index.html");
-assert.match(html,/noindex,nofollow/);
-assert.doesNotMatch(html,/<link[^>]*rel="canonical"/);
-console.log("GATE HOSTING: cabeceras listas para Vercel; robots permanece NOINDEX y canonical pendiente de dominio verificado.");
+assert.match(html,/<meta name="robots" content="noindex,nofollow">/);
+assert.doesNotMatch(html,/<link[^>]*rel="canonical"/i);
+console.log("GATE HOSTING CLOUDFLARE: origin stays protected; production _headers policy validated.");

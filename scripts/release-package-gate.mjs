@@ -20,7 +20,7 @@ for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.
  const h=x=>createHash("sha256").update(x).digest("hex");
  assert.equal(h(a),h(b),"Copiado no reproducible: "+file);
 }
-assert.ok(existsSync(path("vercel.json")));
+assert.ok(!existsSync(path("vercel.json")),"No incluir configuración legacy Vercel en paquete Cloudflare");
 assert.ok(existsSync(path("404.html")),"Debe existir página de error 404 en Cloudflare Pages");
 assert.match(read("404.html"),/name="robots" content="noindex,nofollow"/);
 console.log("ENSAYO DESSET.lat OK: paquete reproducible con canonical/SEO y origen aprobado, NO subido ni publicado.");
