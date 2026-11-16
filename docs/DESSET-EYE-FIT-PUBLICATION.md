@@ -59,3 +59,7 @@ AUTORIZO DISENO VISUAL DESSET SHA256 b5391522849cb94d32658070ce5f6074566f9393a2a
 ```
 
 Pendiente: autorización para registrar el nuevo texto, promoción del manifiesto, CI completa remota y publicación manual con verificaciones. No hubo merge, workflow de publicación ni modificación de producción/DNS.
+
+## Autorización V2 recibida — continuación
+
+El fundador autorizó expresamente registrar la huella b5391522849cb94d32658070ce5f6074566f9393a2a3da1634f7964ae3c25ff3 y continuar hasta publicación si todos los controles aprueban, sin repetir aprobaciones de pasos ya autorizados. Comentario real: https://github.com/M0-coder/DESSET/issues/29#issuecomment-6910555482 . Se promueve el manifiesto V2 y se actualizan únicamente sus expectativas de identidad; los controles de integridad y autorización permanecen activos. El NO-GO anterior describe la ejecución previa, no una prohibición permanente. Publicación pendiente de CI completa en esta actualización.

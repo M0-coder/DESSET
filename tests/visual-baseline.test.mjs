@@ -11,8 +11,8 @@ const clone = x => JSON.parse(JSON.stringify(x));
 
 test("manifest versionado reconoce exactamente el Bento vigente, sin saltos", () => {
   const m = loadApprovedVisualBaseline();
-  assert.equal(m.baseline_id, "DESSET-EYE-FIT-2026-11-16");
-  assert.equal(m.source_commit, "84b51e1e542fe6c2efd75f26baaa73a1d60e8e6c");
+  assert.equal(m.baseline_id, "DESSET-EYE-FIT-2026-11-16-V2");
+  assert.equal(m.source_commit, "066c1f07d486cfa05ce09c710c625862e2616c1a");
   assert.equal(m.production_deployment, "c29ec7a7-806a-4a92-b326-e1a42c7dc1fe");
   assert.equal(Object.keys(m.files).length, 9);
   assert.deepEqual(inspectVisualBaseline(m, read).diffs, []);
