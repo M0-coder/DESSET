@@ -41,3 +41,19 @@ test("long-form content has an accessible project-only scroll, without typograph
   assert.match(html,/data-detail="project">CONOCER EL PROYECTO/);
   assert.match(html,/COMERCIO<br>Y <span class="brand-word">LOGÍSTICA<\/span>\.<br><span>UNA MISMA VISIÓN\.<\/span>/);
 });
+
+test("V5 physically constrains only the project dialog and keeps its reader scrollable",()=>{
+  const css=read("styles.css"),js=read("src/app.mjs");
+  assert.match(css,/\.detail-dialog\.detail-dialog--project\{height:min\(540px,calc\(100dvh - 24px\)\);overflow:hidden\}/);
+  assert.match(css,/\.detail-dialog--project \.dialog-shell\{height:100%;max-height:none;min-height:0\}/);
+  assert.match(css,/\.detail-dialog--project \.dialog-content--project\{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;/);
+  assert.match(css,/scrollbar-color:var\(--brand-blue-ink\) transparent/);
+  assert.match(css,/\.detail-dialog--project #detailBody strong,\.detail-dialog--project \.project-prose strong\{color:var\(--brand-blue-ink\)\}/);
+  assert.match(js,/dialog\.classList\.toggle\("detail-dialog--project",isProject\)/);
+  assert.match(js,/const prefix=\["Nuestra visión","Nuestro propósito:","Nuestro horizonte:"\]/);
+  // Do not introduce typography changes inside the V5-specific selectors.
+  for(const rule of css.match(/\.detail-dialog--project[^{}]*\{[^}]*\}/g)||[]){
+    assert.doesNotMatch(rule,/(?:font-size|font-family|letter-spacing|line-height|font-weight)\s*:/);
+  }
+  assert.doesNotMatch(js,/innerHTML\s*=/);
+});
