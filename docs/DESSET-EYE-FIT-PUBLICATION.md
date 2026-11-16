@@ -40,3 +40,7 @@ Antes del workflow: confirmar main con el SHA integrado, verify/analyze aprobado
 El fundador autorizó registrar el texto exacto con su cuenta y continuar la publicación controlada. Comentario real: https://github.com/M0-coder/DESSET/issues/29#issuecomment-6910336609 . El gate verificó OWNER y digest exacto: PASS. Se promovió el manifiesto sin cambiar los archivos visuales autorizados. El manifiesto original se conserva byte a byte en tests/fixtures/visual-baseline-original.json con comprobación del blob histórico.
 
 Pruebas locales después de promoción: check 61/61 PASS; seguridad estática PASS; mutation smoke 4/4; cobertura diagnóstica ejecutada (parcial); hosting, launch guard, pruebas negativas y paquete final 13/13 PASS. Las menciones anteriores a tres fallos y comentario pendiente describen el estado previo, ya resuelto. CI remota y publicación aún pendientes al redactar esta actualización.
+
+### Corrección del servidor de pruebas
+
+CI 43824979009 falló antes de cualquier integración o publicación: su allowlist HTTP omitía las dos imágenes nuevas. Se añadieron GIF y PNG con MIME explícito; se mantienen todas las aserciones de imágenes cargadas y geometría. La auditoría comprueba también proporción, contención y separación del ojo, y selección del PNG con reducción de movimiento en escritorio y móvil. No se modificó el contenido visual autorizado.

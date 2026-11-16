@@ -18,7 +18,9 @@ const files = new Map([
   ["/src/app.mjs", ["src/app.mjs", "text/javascript; charset=utf-8"]],
   ["/src/content.mjs", ["src/content.mjs", "text/javascript; charset=utf-8"]],
   ["/assets/deliver-assets-mark.png", ["assets/deliver-assets-mark.png", "image/png"]],
-  ["/assets/roles-geometry-v2.svg", ["assets/roles-geometry-v2.svg", "image/svg+xml"]]
+  ["/assets/roles-geometry-v2.svg", ["assets/roles-geometry-v2.svg", "image/svg+xml"]],
+  ["/assets/desset-eye.gif", ["assets/desset-eye.gif", "image/gif"]],
+  ["/assets/desset-eye-still.png", ["assets/desset-eye-still.png", "image/png"]]
 ]);
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 function findChrome() {
@@ -212,8 +214,23 @@ try {
     if(semantics.language!=="es"||semantics.nameless.length||!semantics.dialogLabelled||!semantics.dialogDescribed) failures.push(label+": semántica accesible incompleta: "+JSON.stringify(semantics));
     console.log(JSON.stringify({label:label+"-a11y-semantics",...semantics}));
     console.log(JSON.stringify({ label, ...primary }));
+    const eye = await evalBrowser(send, "(function(){const img=document.querySelector('.intro-eye img'),copy=document.querySelector('.intro-copy'),tile=document.querySelector('.tile--intro');const r=img.getBoundingClientRect(),c=copy.getBoundingClientRect(),t=tile.getBoundingClientRect();return {loaded:img.complete&&img.naturalWidth===496&&img.naturalHeight===499,ratio:r.width/r.height,inside:r.left>=t.left&&r.right<=t.right&&r.top>=t.top&&r.bottom<=t.bottom,separate:r.left>=c.right-1,src:img.currentSrc};})()");
+    if(!eye.loaded||!eye.inside||!eye.separate||Math.abs(eye.ratio-496/499)>.01)failures.push(label+": ojo no cargado, deformado o fuera de su espacio "+JSON.stringify(eye));
+    console.log(JSON.stringify({label:label+"-eye",...eye}));
     const capture = await send("Page.captureScreenshot", { format: "png", fromSurface: true });
     await writeFile(new URL(label + ".png", output), Buffer.from(capture.data, "base64"));
+    if ((width === 1440 && height === 900) || (width === 390 && height === 844)) {
+      await send("Emulation.setEmulatedMedia", {features:[{name:"prefers-reduced-motion",value:"reduce"}]});
+      let fixed = false;
+      for(let attempt=0;attempt<30;attempt++) {
+        fixed=await evalBrowser(send,"(function(){const i=document.querySelector('.intro-eye img');return i.complete&&i.naturalWidth===496&&i.currentSrc.endsWith('/assets/desset-eye-still.png');})()");
+        if(fixed)break;
+        await delay(100);
+      }
+      if(!fixed)failures.push(label+": reducción de movimiento no selecciona PNG fijo");
+      console.log(JSON.stringify({label:label+"-reduced-motion",fixed}));
+      await send("Emulation.setEmulatedMedia", {features:[]});
+    }
     const changed = await evalBrowser(send, "(function(){document.querySelector('#themeButton').click(); return document.body.dataset.theme==='dark' && document.querySelector('#themeButton').getAttribute('aria-pressed')==='true';})()");
     if (!changed) failures.push(label + ": modo oscuro no se activó");
     const modal = await evalBrowser(send, "(function(){document.querySelector('[data-detail=services]').click();const d=document.querySelector('#detailDialog');const p=d.querySelector('.dialog-content');return {open:d.open,body:document.querySelector('#detailBody').textContent.length,clipped:p.scrollHeight>p.clientHeight+2};})()");
