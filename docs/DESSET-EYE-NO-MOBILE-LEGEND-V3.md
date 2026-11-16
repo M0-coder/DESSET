@@ -1,6 +1,6 @@
 # DESSET — V3 propuesta: retirar rótulos móviles redundantes
 
-Estado: **CANDIDATO — NO PUBLICADO NI APROBADO POR EL GATE**.
+Estado: **V3 autorizada por comentario verificable del propietario; publicación todavía pendiente.**
 
 - SHA del commit de diseño: `8ce36e7ae1df66990f47e4971833b017ce17f635`.
 - Referencia anterior aprobada: `DESSET-EYE-FIT-2026-11-16-V2`.
@@ -21,3 +21,7 @@ AUTORIZO DISENO VISUAL DESSET SHA256 360e4421b95a372b82e94d4bec2a20a349d25788b54
 Luego incorporar la URL exacta del comentario en `config/visual-baseline-approved.json`, cambiar su versión a V3, actualizar hashes/BODY y pruebas correspondientes, y comprobar `npm run check`, seguridad, cobertura, mutation smoke, Chrome responsivo, CodeQL y paquetes Cloudflare. **No omitir ningún gate ni asumir aprobación por este archivo.**
 
 Publicación requiere comprobación independiente de `main` y Cloudflare, respaldo y rollback. No activar workflow, auto-merge ni publicar sin cumplir los controles.
+
+## Evidencia de aprobación V3
+
+El titular aprobó esta huella exacta con su cuenta `M0-coder` en https://github.com/M0-coder/DESSET/issues/29#issuecomment-6911006310 . API GitHub comprobó `author_association=OWNER`, cuerpo exacto y pertenencia al issue #29. La publicación de Cloudflare aún requiere controles y despliegue manual separados.
