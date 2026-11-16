@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  issues: read
 jobs:
   verify:
     runs-on: ubuntu-24.04
@@ -30,6 +31,8 @@ jobs:
       - name: Coverage diagnostic (partial, no production coverage claim)
         run: npm run test:coverage
       - name: Immutable visual and content gate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/approved-baseline-gate.mjs
       - name: Hosting policy and SEO staging gate
         run: node scripts/hosting-policy-gate.mjs

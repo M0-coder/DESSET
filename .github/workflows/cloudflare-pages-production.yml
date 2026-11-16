@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  issues: read
   deployments: write
 
 concurrency:
@@ -42,6 +43,8 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
 
       - name: Source checks and safety contracts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           npm run check

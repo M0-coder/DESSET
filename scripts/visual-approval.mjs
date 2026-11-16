@@ -48,8 +48,12 @@ export async function verifyVisualApproval(manifest, manifestBytes, fetchComment
     "La nueva referencia exige URL a comentario de aprobación de GitHub del propietario, no un run o un PR genérico");
   const issue = Number(evidence[1]), commentId = Number(evidence[2]);
   const apiUrl = "https://api.github.com/repos/M0-coder/DESSET/issues/comments/" + commentId;
+  // GitHub Actions provides a read-only repository token; authenticated API access
+  // avoids shared anonymous rate limits. Authorization never replaces founder proof.
+  const headers = { "Accept": "application/vnd.github+json", "User-Agent": "desset-visual-approval-gate" };
+  if (process.env.GITHUB_TOKEN) headers.Authorization = "Bearer " + process.env.GITHUB_TOKEN;
   const response = await fetchComment(apiUrl, {
-    headers: { "Accept": "application/vnd.github+json", "User-Agent": "desset-visual-approval-gate" },
+    headers,
     signal: AbortSignal.timeout(10000),
   });
   assert.ok(response.ok, "No se pudo comprobar el comentario de aprobación de GitHub: " + response.status);
