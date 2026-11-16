@@ -9,12 +9,12 @@ import {
 const read = path => readFileSync(new URL("../" + path, import.meta.url));
 const clone = x => JSON.parse(JSON.stringify(x));
 
-test("manifest V5 reconoce exactamente el Bento y lector del proyecto aprobados", () => {
+test("manifest V6 reconoce exactamente el Bento y el contenido IDENTIDAD aprobados", () => {
   const m = loadApprovedVisualBaseline();
-  assert.equal(m.baseline_id, "DESSET-PROJECT-READER-2026-11-16-V5");
-  assert.equal(m.source_commit, "2381c8fe394410aa2adc840aec75d49b1618741b");
-  assert.equal(m.production_deployment, "603ef8f3-0ce5-4b1e-8e41-7c6cc8b79930");
-  assert.equal(m.approval_evidence,"https://github.com/M0-coder/DESSET/issues/38#issuecomment-6916932780");
+  assert.equal(m.baseline_id, "DESSET-IDENTITY-2026-11-16-V6");
+  assert.equal(m.source_commit, "7a4bf42506e823c03111b8879fe98ba572ada641");
+  assert.equal(m.production_deployment, "1ad7efa0-b3f8-4c03-8763-0208d553e32b");
+  assert.equal(m.approval_evidence,"https://github.com/M0-coder/DESSET/issues/40#issuecomment-6918472745");
   assert.equal(Object.keys(m.files).length, 9);
   assert.deepEqual(inspectVisualBaseline(m, read).diffs, []);
   assert.deepEqual(assertApprovedVisualBaseline(m, read).diffs, []);
