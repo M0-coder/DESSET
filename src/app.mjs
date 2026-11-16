@@ -7,6 +7,7 @@ const heading=document.getElementById("detailTitle");
 const body=document.getElementById("detailBody");
 const points=document.getElementById("detailPoints");
 const themeButton=document.getElementById("themeButton");
+const dialogContent=dialog.querySelector(".dialog-content");
 
 document.querySelectorAll("[data-detail]").forEach(button=>{
   button.addEventListener("click",()=>{
@@ -14,13 +15,48 @@ document.querySelectorAll("[data-detail]").forEach(button=>{
     if(!detail) return;
     kicker.textContent=detail.kicker;
     heading.textContent=detail.title;
-    body.textContent=detail.body;
-    points.replaceChildren(...detail.points.map(text=>{
-      const li=document.createElement("li");
-      li.textContent=text;
-      return li;
-    }));
+    dialogContent.querySelector(".project-prose")?.remove();
+    const isProject=button.dataset.detail==="project";
+    dialogContent.classList.toggle("dialog-content--project",isProject);
+    body.replaceChildren();
+    if(isProject){
+      const emphasis=document.createElement("strong");
+      emphasis.textContent=detail.body;
+      body.append(emphasis);
+
+      // Preserve every approved paragraph, without changing the site's typography.
+      const prose=document.createElement("div");
+      prose.className="project-prose";
+      detail.points.forEach((text,index)=>{
+        const p=document.createElement("p");
+        const prefix=["Nuestro propósito:","Nuestro horizonte:"].find(label=>text.startsWith(label));
+        if(prefix){
+          const strong=document.createElement("strong");
+          strong.textContent=prefix;
+          p.append(strong,document.createTextNode(text.slice(prefix.length)));
+        }else if(index===detail.points.length-1){
+          const note=document.createElement("em");
+          note.textContent=text;
+          p.append(note);
+        }else p.textContent=text;
+        prose.append(p);
+      });
+      points.replaceChildren();
+      points.hidden=true;
+      points.style.display="none";
+      points.after(prose);
+    }else{
+      body.textContent=detail.body;
+      points.hidden=false;
+      points.style.display="";
+      points.replaceChildren(...detail.points.map(text=>{
+        const li=document.createElement("li");
+        li.textContent=text;
+        return li;
+      }));
+    }
     if(!dialog.open) dialog.showModal();
+    dialogContent.scrollTop=0;
   });
 });
 
