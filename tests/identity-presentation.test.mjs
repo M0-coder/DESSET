@@ -48,7 +48,7 @@ test("identity has its own bounded modal reader, unchanged type and safe DOM ren
   assert.match(css,/\.identity-prose\{display:grid;gap:clamp\(8px,1\.4vh,15px\)\}/);
   assert.match(css,/\.detail-dialog--identity #detailTitle \.identity-accent,\.detail-dialog--identity \.identity-prose strong\{color:var\(--brand-blue-ink\)\}/);
   assert.match(css,/@media\(min-width:641px\)\{\s*\.detail-dialog--identity \.dialog-content--identity\{scrollbar-gutter:auto\}/);
-  assert.match(css,/@media\(min-width:641px\) and \(min-height:700px\)\{\s*\.detail-dialog\.detail-dialog--identity\{height:auto;max-height:min\(580px,calc\(100dvh - 24px\)\)\}/);
+  assert.match(css,/@media\(min-width:641px\) and \(min-height:700px\)\{\s*\.detail-dialog\.detail-dialog--identity\{height:fit-content;max-height:min\(580px,calc\(100dvh - 24px\)\)\}/);
   assert.match(css,/\.detail-dialog--identity \.dialog-shell\{height:auto;max-height:calc\(100dvh - 42px\)\}/);
   assert.match(css,/\.detail-dialog--identity \.dialog-content--identity\{flex:1 1 auto;min-height:0;justify-content:flex-start;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;/);
   for(const match of css.match(/\.detail-dialog--identity[^{}]*\{[^}]*\}/g)||[]){
