@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {readFileSync,existsSync} from "node:fs";
 import {createHash} from "node:crypto";
 import {CLOUDFLARE_SOURCE_META_CSP,CLOUDFLARE_RELEASE_META_CSP} from "./cloudflare-headers.mjs";
+import {STYLESHEET_PATHS,versionedStylesheetUrl} from "./cache-version.mjs";
 const path=part=>new URL("../dist/"+part,import.meta.url);
 const read=part=>readFileSync(path(part),"utf8");
 const source=readFileSync(new URL("../index.html",import.meta.url),"utf8");
@@ -28,7 +29,14 @@ assert.match(read("robots.txt"),/User-agent: \*\nAllow: \//);
 assert.ok(read("robots.txt").includes(origin+"/sitemap.xml"));
 assert.ok(read("sitemap.xml").includes("<loc>"+origin+"/</loc>"));
 assert.match(source,/styles-compact\.css" media="screen and \(max-height: 400px\)"/);
-assert.ok(html.includes('styles-compact.css" media="screen and (max-height: 400px)"'));
+for(const stylesheet of STYLESHEET_PATHS){
+ const bytes=readFileSync(new URL("../"+stylesheet,import.meta.url));
+ const expected=versionedStylesheetUrl(stylesheet,bytes);
+ assert.ok(source.includes('href="./'+stylesheet+'"'),"La fuente mantiene ruta de CSS aprobada");
+ assert.ok(html.includes('href="'+expected+'"'),"NO-GO: la versión pública no identifica CSS por SHA-256: "+stylesheet);
+ assert.ok(!html.includes('href="./'+stylesheet+'"'),"NO-GO: ruta CSS sin versión en release: "+stylesheet);
+}
+assert.ok(html.includes('href="'+versionedStylesheetUrl("styles-compact.css",readFileSync(new URL("../styles-compact.css",import.meta.url)))+'" media="screen and (max-height: 400px)"'));
 for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/roles-geometry-v2.svg","assets/deliver-assets-mark.png","assets/desset-eye-still.png","assets/desset-eye.gif"]){
  const a=readFileSync(new URL("../"+file,import.meta.url)),b=readFileSync(path(file));
  const h=x=>createHash("sha256").update(x).digest("hex");
