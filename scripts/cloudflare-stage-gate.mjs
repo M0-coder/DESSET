@@ -5,7 +5,7 @@ import {resolve,join,relative,sep} from "node:path";
 import {createHash} from "node:crypto";
 const root=fileURLToPath(new URL("../",import.meta.url));
 const dist=resolve(root,"dist-cloudflare-stage");
-const approved=["404.html","_headers","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","index.html","robots.txt","src/app.mjs","src/content.mjs","styles-compact.css","styles.css"];
+const approved=["404.html","_headers","assets/deliver-assets-mark.png","assets/desset-eye-still.png","assets/desset-eye.gif","assets/roles-geometry-v2.svg","index.html","robots.txt","src/app.mjs","src/content.mjs","styles-compact.css","styles.css"];
 const seen=[];
 function walk(dir){
  for(const ent of readdirSync(dir,{withFileTypes:true})){
@@ -40,4 +40,4 @@ for(const path of approved){
  const expected=createHash("sha256").update(readFileSync(resolve(dist,path))).digest("hex");
  assert.equal(manifest.files[path],expected,"Manifiesto incorrecto "+path);
 }
-console.log("CLOUDFLARE GATE PASS: 10 archivos allowlist, SHA-256 idénticos, sin noindex retirado, sin datos privados, con _headers declarados. Aplicación real de cabeceras = NOT_VERIFIED.");
+console.log("CLOUDFLARE GATE PASS: 12 archivos allowlist, SHA-256 idénticos, sin noindex retirado, sin datos privados, con _headers declarados. Aplicación real de cabeceras = NOT_VERIFIED.");

@@ -29,7 +29,7 @@ assert.ok(read("robots.txt").includes(origin+"/sitemap.xml"));
 assert.ok(read("sitemap.xml").includes("<loc>"+origin+"/</loc>"));
 assert.match(source,/styles-compact\.css" media="screen and \(max-height: 400px\)"/);
 assert.ok(html.includes('styles-compact.css" media="screen and (max-height: 400px)"'));
-for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/roles-geometry-v2.svg","assets/deliver-assets-mark.png"]){
+for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/roles-geometry-v2.svg","assets/deliver-assets-mark.png","assets/desset-eye-still.png","assets/desset-eye.gif"]){
  const a=readFileSync(new URL("../"+file,import.meta.url)),b=readFileSync(path(file));
  const h=x=>createHash("sha256").update(x).digest("hex");
  assert.equal(h(a),h(b),"Copiado no reproducible: "+file);
