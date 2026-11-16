@@ -179,8 +179,8 @@ jobs:
       - name: Live HTTPS smoke after deployment
         run: |
           set -euo pipefail
-          curl --retry 3 --retry-delay 3 --fail-with-body -sS https://desset.lat/ |
-            grep -Fq "DELIVER ASSETS / DESSET"
+          curl --retry 3 --retry-delay 3 --fail-with-body -sS https://desset.lat/ -o /tmp/desset-published-index.html
+          grep -Fq "DELIVER ASSETS / DESSET" /tmp/desset-published-index.html
           curl --retry 3 --retry-delay 3 --fail-with-body -sS https://www.desset.lat/ |
             grep -Fq "DELIVER ASSETS / DESSET"
           curl --fail-with-body -sS https://desset.lat/robots.txt |
@@ -190,6 +190,19 @@ jobs:
           curl --fail-with-body -sS https://desset.lat/assets/deliver-assets-mark.png \
             -o /tmp/desset-public-logo.png
           cmp -s assets/deliver-assets-mark.png /tmp/desset-public-logo.png
+          # Fail closed if public HTML refers to stale/unversioned CSS or cached bytes differ.
+          for css in styles.css styles-compact.css; do
+            css_sha="$(sha256sum "$css" | cut -d' ' -f1)"
+            grep -Fq "href=\"./${css}?v=${css_sha}\"" /tmp/desset-published-index.html || {
+              echo "::error::Public HTML CSS digest mismatch: $css"
+              exit 1
+            }
+            curl --retry 5 --retry-delay 2 --fail-with-body -sS "https://desset.lat/${css}?v=${css_sha}" -o "/tmp/desset-public-${css}"
+            cmp -s "$css" "/tmp/desset-public-${css}" || {
+              echo "::error::Public CSS content mismatch: $css"
+              exit 1
+            }
+          done
           curl --silent --show-error -o /dev/null -w '%{http_code}' \
             https://desset.lat/__desset_missing_audit_path__ |
             grep -Fxq "404"

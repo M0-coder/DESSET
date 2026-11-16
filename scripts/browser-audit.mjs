@@ -6,9 +6,15 @@ import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { finishBrowserAudit } from "./browser-cleanup.mjs";
+import { readFileSync } from "node:fs";
+import { STYLESHEET_PATHS, versionedStylesheetUrl } from "./cache-version.mjs";
 
 const browserModes = ["DESSET_BROWSER_DIST","DESSET_BROWSER_CLOUDFLARE","DESSET_BROWSER_CF_RELEASE"].filter(key=>process.env[key]==="1");
 if(browserModes.length>1)throw Error("Modos de navegador incompatibles");
+const requireVersionedCss = process.env.DESSET_BROWSER_DIST === "1" || process.env.DESSET_BROWSER_CF_RELEASE === "1";
+const expectedCssUrls = requireVersionedCss
+  ? STYLESHEET_PATHS.map(path => versionedStylesheetUrl(path, readFileSync(new URL("../" + path, import.meta.url))))
+  : [];
 const root = process.env.DESSET_BROWSER_CF_RELEASE === "1" ? new URL("../dist-cloudflare-release-candidate/", import.meta.url) : process.env.DESSET_BROWSER_CLOUDFLARE === "1" ? new URL("../dist-cloudflare-stage/", import.meta.url) : process.env.DESSET_BROWSER_DIST === "1" ? new URL("../dist/", import.meta.url) : new URL("../", import.meta.url);
 const files = new Map([
   ["/", ["index.html", "text/html; charset=utf-8"]],
@@ -196,6 +202,12 @@ try {
       await delay(100);
     }
     await delay(120);
+    // Check the production HTML actually loaded the content-addressed CSS URL.
+    if (requireVersionedCss) {
+      const cssState = await evalBrowser(send, "(function(){return {hrefs:[...document.querySelectorAll('link[rel=stylesheet]')].map(x=>x.getAttribute('href')),grid:getComputedStyle(document.querySelector('.intro-main')).display};})()");
+      if (cssState.grid !== "grid" || !expectedCssUrls.every(url => cssState.hrefs.includes(url)))
+        failures.push(width + "x" + height + ": production CSS cache contract failed: " + JSON.stringify(cssState));
+    }
     const primary = await evalBrowser(send, "(" + measure.toString() + ")()");
     if(height<=400){
       const compact=await evalBrowser(send,"(function(){const sheet=[...document.styleSheets].find(s=>s.href?.includes('styles-compact.css'));const nav=document.querySelector('.mobile-nav');return {loaded:!!sheet,overflow:getComputedStyle(document.documentElement).overflowY,nav:getComputedStyle(nav).position};})()");
