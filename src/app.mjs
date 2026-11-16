@@ -16,9 +16,13 @@ document.querySelectorAll("[data-detail]").forEach(button=>{
     kicker.textContent=detail.kicker;
     heading.textContent=detail.title;
     dialogContent.querySelector(".project-prose")?.remove();
+    dialogContent.querySelector(".identity-prose")?.remove();
     const isProject=button.dataset.detail==="project";
+    const isIdentity=button.dataset.detail==="company";
     dialogContent.classList.toggle("dialog-content--project",isProject);
     dialog.classList.toggle("detail-dialog--project",isProject);
+    dialogContent.classList.toggle("dialog-content--identity",isIdentity);
+    dialog.classList.toggle("detail-dialog--identity",isIdentity);
     body.replaceChildren();
     if(isProject){
       const emphasis=document.createElement("strong");
@@ -35,6 +39,40 @@ document.querySelectorAll("[data-detail]").forEach(button=>{
           const strong=document.createElement("strong");
           strong.textContent=prefix;
           p.append(strong,document.createTextNode(text.slice(prefix.length)));
+        }else if(index===detail.points.length-1){
+          const note=document.createElement("em");
+          note.textContent=text;
+          p.append(note);
+        }else p.textContent=text;
+        prose.append(p);
+      });
+      points.replaceChildren();
+      points.hidden=true;
+      points.style.display="none";
+      points.after(prose);
+    }else if(isIdentity){
+      const [firstLine,secondLine]=detail.title.split("\n");
+      const accent=document.createElement("span");
+      accent.className="identity-accent";
+      accent.textContent=secondLine;
+      heading.replaceChildren(document.createTextNode(firstLine),document.createElement("br"),accent);
+      body.textContent=detail.body;
+
+      const prose=document.createElement("div");
+      prose.className="identity-prose";
+      detail.points.forEach((text,index)=>{
+        const p=document.createElement("p");
+        if(index===1){
+          const phrase="conexión, confianza y evolución";
+          const pos=text.indexOf(phrase);
+          if(pos<0)throw new Error("Principios de identidad modificados");
+          const strong=document.createElement("strong");
+          strong.textContent=phrase;
+          p.append(document.createTextNode(text.slice(0,pos)),strong,document.createTextNode(text.slice(pos+phrase.length)));
+        }else if(index===2){
+          const strong=document.createElement("strong");
+          strong.textContent=text;
+          p.append(strong);
         }else if(index===detail.points.length-1){
           const note=document.createElement("em");
           note.textContent=text;

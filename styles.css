@@ -72,6 +72,18 @@ button{font:inherit;color:inherit}button:focus-visible{outline:3px solid var(--f
 .detail-dialog--project .dialog-content--project::-webkit-scrollbar-track{background:transparent}
 .detail-dialog--project .dialog-content--project::-webkit-scrollbar-thumb{background:var(--brand-blue-ink);border-radius:8px}
 .detail-dialog--project #detailBody strong,.detail-dialog--project .project-prose strong{color:var(--brand-blue-ink)}
+/* V6: IDENTIDAD uses the existing information dialog, not a new Bento tile.
+   Isolate reading height, scroll and blue emphasis to this approved section only. */
+.detail-dialog.detail-dialog--identity{height:min(540px,calc(100dvh - 24px));overflow:hidden}
+.detail-dialog--identity .dialog-shell{height:100%;max-height:none;min-height:0}
+.detail-dialog--identity .dialog-content--identity{flex:1 1 auto;min-height:0;justify-content:flex-start;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:var(--brand-blue-ink) transparent;-webkit-overflow-scrolling:touch}
+.detail-dialog--identity .dialog-content--identity>*{flex-shrink:0}
+.identity-prose{display:grid;gap:clamp(8px,1.4vh,15px)}
+.detail-dialog--identity #detailTitle .identity-accent,.detail-dialog--identity .identity-prose strong{color:var(--brand-blue-ink)}
+.detail-dialog--identity .dialog-content--identity::-webkit-scrollbar{width:8px}
+.detail-dialog--identity .dialog-content--identity::-webkit-scrollbar-track{background:transparent}
+.detail-dialog--identity .dialog-content--identity::-webkit-scrollbar-thumb{background:var(--brand-blue-ink);border-radius:8px}
+
 
 .dialog-eyebrow{margin:0;font-size:12px;color:var(--muted)}
 .dialog-content h2{margin:0;font-size:clamp(24px,4.5vw,39px);line-height:1.02;letter-spacing:-.06em;font-weight:500}

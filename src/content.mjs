@@ -37,10 +37,15 @@ export const DETAILS = Object.freeze({
     points:["El ingreso principal previsto es una tarifa por envío.","La operación requiere controles legales, comerciales y técnicos antes de iniciar.","Esta web es institucional: no admite compras, pedidos ni pagos."]
   },
   company:{
-    kicker:"SITUACIÓN EMPRESARIAL",
-    title:"Una empresa en constitución.",
-    body:"DELIVER ASSETS E.I.R.L. es la denominación escogida para el trámite de constitución, con un titular único.",
-    points:["Domicilio propuesto en Huacho, Perú.","Inscripción, RUC y autorizaciones: pendientes de acreditar.","DESSET es una marca comercial propuesta, no registrada aquí."]
+    kicker:"DESSET / IDENTIDAD",
+    title:"UNA IDENTIDAD.\nUNA VISIÓN QUE CONECTA.",
+    body:"DESSET nace con la convicción de que el comercio, los servicios y la logística pueden avanzar conectados.",
+    points:[
+      "Aspiramos a construir un ecosistema tecnológico que una personas, empresas y mercados, facilitando nuevas oportunidades.",
+      "Nuestra identidad se fundamenta en tres principios: conexión, confianza y evolución.",
+      "Nuestra visión nos define. Nuestras acciones deberán demostrarla.",
+      "DELIVER ASSETS / DESSET — PROYECTO EN DESARROLLO"
+    ]
   },
   evidence:{
     kicker:"GOBIERNO Y EVIDENCIA",
