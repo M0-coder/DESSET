@@ -34,3 +34,9 @@ Tras verificar ese comentario: incorporar su URL, promover el manifiesto, conser
 ## Activación y rollback
 
 Antes del workflow: confirmar main con el SHA integrado, verify/analyze aprobados, despliegue anterior conservado y opción de rollback. Ejecutar cloudflare-pages-production.yml con PUBLICAR_DESSET. Comprobar SHA, commit_dirty=false, uses_functions=false, 13 archivos, HTTPS, 200/404, cabeceras, GIF y PNG por hash, escritorio y móvil. Ante regresión: restaurar el deployment c29ec7a7-806a-4a92-b326-e1a42c7dc1fe y registrar NO-GO.
+
+## Promoción autorizada — 16 de noviembre de 2026
+
+El fundador autorizó registrar el texto exacto con su cuenta y continuar la publicación controlada. Comentario real: https://github.com/M0-coder/DESSET/issues/29#issuecomment-6910336609 . El gate verificó OWNER y digest exacto: PASS. Se promovió el manifiesto sin cambiar los archivos visuales autorizados. El manifiesto original se conserva byte a byte en tests/fixtures/visual-baseline-original.json con comprobación del blob histórico.
+
+Pruebas locales después de promoción: check 61/61 PASS; seguridad estática PASS; mutation smoke 4/4; cobertura diagnóstica ejecutada (parcial); hosting, launch guard, pruebas negativas y paquete final 13/13 PASS. Las menciones anteriores a tres fallos y comentario pendiente describen el estado previo, ya resuelto. CI remota y publicación aún pendientes al redactar esta actualización.

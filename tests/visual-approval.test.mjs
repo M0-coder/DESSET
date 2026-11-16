@@ -7,7 +7,7 @@ import {
   visualApprovalSentence, verifyVisualApproval
 } from "../scripts/visual-approval.mjs";
 
-const read = () => readFileSync(new URL("../config/visual-baseline-approved.json", import.meta.url));
+const read = () => readFileSync(new URL("./fixtures/visual-baseline-original.json", import.meta.url));
 const clone = x => JSON.parse(JSON.stringify(x));
 const url = "https://github.com/M0-coder/DESSET/issues/15#issuecomment-987654321";
 const proposed = () => {
@@ -34,7 +34,7 @@ const succeed = data => async (api, options) => {
 };
 
 test("el manifiesto original está anclado al Git blob exacto y no requiere red", async () => {
-  const m = loadApprovedVisualBaseline();
+  const m = JSON.parse(read().toString("utf8"));
   assert.equal(gitBlobSha1(read()), FIRST_APPROVED_MANIFEST_GIT_BLOB);
   const result = await verifyVisualApproval(m, read(), () => { throw new Error("Network must not run"); });
   assert.equal(result.kind, "original-approved-snapshot");
