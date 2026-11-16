@@ -67,6 +67,29 @@ test("únicamente el comentario del propietario con digest exacto permite promoc
   assert.equal(res.issue, 15);
 });
 
+test("token de solo lectura autentica la consulta pero no cambia la prueba del propietario", async () => {
+  const m = proposed();
+  const prior = process.env.GITHUB_TOKEN;
+  process.env.GITHUB_TOKEN = "unit-test-readonly-token";
+  try {
+    const fn = async (url, options) => {
+      assert.equal(url, "https://api.github.com/repos/M0-coder/DESSET/issues/comments/987654321");
+      assert.equal(options.headers.Authorization, "Bearer unit-test-readonly-token");
+      return { ok: true, json: async () => comment(m) };
+    };
+    const res = await verifyVisualApproval(m, bytes(m), fn);
+    assert.equal(res.kind, "verified-founder-github-comment");
+    const mismatched = comment(m);
+    mismatched.user.login = "not-owner";
+    await assert.rejects(verifyVisualApproval(m, bytes(m), async () => ({
+      ok: true, json: async () => mismatched
+    })), /Solo el propietario/);
+  } finally {
+    if (prior === undefined) delete process.env.GITHUB_TOKEN;
+    else process.env.GITHUB_TOKEN = prior;
+  }
+});
+
 test("rechaza una aprobación publicada por otro usuario", async () => {
   const m = proposed();
   const c = comment(m); c.user.login = "someone-else";
