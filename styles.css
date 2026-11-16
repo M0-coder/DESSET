@@ -83,6 +83,16 @@ button{font:inherit;color:inherit}button:focus-visible{outline:3px solid var(--f
 .detail-dialog--identity .dialog-content--identity::-webkit-scrollbar{width:8px}
 .detail-dialog--identity .dialog-content--identity::-webkit-scrollbar-track{background:transparent}
 .detail-dialog--identity .dialog-content--identity::-webkit-scrollbar-thumb{background:var(--brand-blue-ink);border-radius:8px}
+/* V7: desktop IDENTIDAD sizes to its short copy; keep scroll when genuinely needed.
+   The phone reader and the long-form project reader remain unchanged. */
+@media(min-width:641px){
+  .detail-dialog--identity .dialog-content--identity{scrollbar-gutter:auto}
+}
+@media(min-width:641px) and (min-height:700px){
+  .detail-dialog.detail-dialog--identity{height:fit-content;max-height:min(580px,calc(100dvh - 24px))}
+  .detail-dialog--identity .dialog-shell{height:auto;max-height:calc(100dvh - 42px)}
+}
+
 
 
 .dialog-eyebrow{margin:0;font-size:12px;color:var(--muted)}
