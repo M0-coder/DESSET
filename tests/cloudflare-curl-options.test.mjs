@@ -39,5 +39,12 @@ test("production Cloudflare workflow has no conflicting curl flags", () => {
   for (const command of commands) {
     assert.equal(hasIncompatibleCurlFlags(command), false, `Conflicting curl flags: ${command}`);
   }
-  assert.equal(commands.filter((command) => command.includes("--fail-with-body")).length, 7);
+  assert.equal(commands.filter((command) => command.includes("--fail-with-body")).length, 8,
+    "Expected all original calls and the versioned CSS integrity download");
+  assert.ok(workflow.includes("for css in styles.css styles-compact.css; do"),
+    "Release must verify both CSS assets after deployment");
+  assert.ok(workflow.includes('sha256sum "$css"'),
+    "CSS cache query version must match real file bytes");
+  assert.ok(workflow.includes('cmp -s "$css" "/tmp/desset-public-${css}"'),
+    "Public CSS bytes must match the approved checkout");
 });
