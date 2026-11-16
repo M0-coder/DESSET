@@ -35,7 +35,8 @@ test("la interfaz no afirma operaciones, coberturas ni métricas",()=>{
 test("los datos operativos quedan rotulados como previstos",()=>{
   assert.match(DETAILS.model.body,/previsto/);
   assert.match(DETAILS.status.body,/prototipo/);
-  assert.match(DETAILS.company.body,/trámite de constitución/);
+  assert.match(DETAILS.status.body,/no consta como inscrita/);
+  assert.match(DETAILS.company.points.at(-1),/PROYECTO EN DESARROLLO/);
 });
 test("full-bleed elimina max-width, padding y márgenes exteriores",()=>{
   const css=read("styles.css");
