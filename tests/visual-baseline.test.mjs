@@ -9,11 +9,12 @@ import {
 const read = path => readFileSync(new URL("../" + path, import.meta.url));
 const clone = x => JSON.parse(JSON.stringify(x));
 
-test("manifest versionado reconoce exactamente el Bento vigente, sin saltos", () => {
+test("manifest V4 reconoce exactamente el contenido y Bento aprobado, sin saltos", () => {
   const m = loadApprovedVisualBaseline();
-  assert.equal(m.baseline_id, "DESSET-EYE-NO-MOBILE-LEGEND-2026-11-16-V3");
-  assert.equal(m.source_commit, "8ce36e7ae1df66990f47e4971833b017ce17f635");
-  assert.equal(m.production_deployment, "c29ec7a7-806a-4a92-b326-e1a42c7dc1fe");
+  assert.equal(m.baseline_id, "DESSET-PROJECT-COPY-2026-11-16-V4");
+  assert.equal(m.source_commit, "64570b0de080bcb30bb3a106fe598ab2a7efcc67");
+  assert.equal(m.production_deployment, "4528eaab-b642-4166-b4ca-c5444b94fcac");
+  assert.equal(m.approval_evidence,"https://github.com/M0-coder/DESSET/issues/36#issuecomment-6916268848");
   assert.equal(Object.keys(m.files).length, 9);
   assert.deepEqual(inspectVisualBaseline(m, read).diffs, []);
   assert.deepEqual(assertApprovedVisualBaseline(m, read).diffs, []);
