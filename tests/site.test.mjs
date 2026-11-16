@@ -106,7 +106,7 @@ test("chips del ecosistema usan la misma identidad cromática del hero",()=>{
   }
 });
 
-test("Prelaunch: el hero conserva geometría y texto con contraste de CONTROL corregido",()=>{
+test("Bento móvil: sin cuatro rótulos redundantes y con ilustración original intacta",()=>{
   const svg=read("assets/roles-geometry-v2.svg");
   const html=read("index.html");
   const css=read("styles.css");
@@ -114,11 +114,11 @@ test("Prelaunch: el hero conserva geometría y texto con contraste de CONTROL co
   assert.match(svg,/d="M272 368H448V294L360 212L272 294Z" fill="#111111"/);
   assert.match(svg,/x="535" y="188" fill="#111111"/);
   assert.match(svg,/x="535" y="208" fill="#111111"/);
-  assert.match(html,/class="role-legend" aria-hidden="true"/);
-  for(const role of ["CUSTOMER","BUSINESS","RIDER","CONTROL"]){
-    assert.match(html,new RegExp("role-legend--"+role.toLowerCase()));
-  }
-  assert.match(css,/@media\(max-width:640px\)\{[\s\S]*?\.role-legend\{display:grid/);
+  assert.doesNotMatch(html,/class="role-legend"|role-legend--(?:customer|business|rider|control)/);
+  assert.doesNotMatch(css,/\.role-legend(?:--|\b)/);
+  assert.match(css,/\.tile--visual img\{width:100%;height:100%;min-height:0;max-height:none;/);
+  assert.match(html,/class="visual-caption">MOVIMIENTO \/ SISTEMA/);
+  assert.match(html,/src="\.\/assets\/desset-eye\.gif"/);
 });
 test("Prelaunch: ningún texto institucional aprobado se sustituye",()=>{
   const html=read("index.html");
