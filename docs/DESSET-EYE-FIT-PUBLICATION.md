@@ -44,3 +44,18 @@ Pruebas locales después de promoción: check 61/61 PASS; seguridad estática PA
 ### Corrección del servidor de pruebas
 
 CI 43824979009 falló antes de cualquier integración o publicación: su allowlist HTTP omitía las dos imágenes nuevas. Se añadieron GIF y PNG con MIME explícito; se mantienen todas las aserciones de imágenes cargadas y geometría. La auditoría comprueba también proporción, contención y separación del ojo, y selección del PNG con reducción de movimiento en escritorio y móvil. No se modificó el contenido visual autorizado.
+
+## Estado final de esta ejecución: NO-GO, sin publicación
+
+- Se registró únicamente el texto que el fundador autorizó, en https://github.com/M0-coder/DESSET/issues/29#issuecomment-6910336609 .
+- CI 43825246027 detectó recortes reales en 1280x600 y 375x667. Evidencia: https://github.com/M0-coder/DESSET/actions/runs/43825246027 . También detectó una espera pendiente al volver del PNG al GIF en la prueba de reducción de movimiento; se añadió espera acotada con fallo explícito.
+- Corrección: solamente para alturas entre 401 y 700px, quitar padding vertical del bloque central y reducir el ancho del ojo 12px conservando su proporción. No cambia imagen, colores, textos, logotipo ni otras tarjetas.
+- Candidato corregido: 066c1f07d486cfa05ce09c710c625862e2616c1a. Pruebas locales por DOM en 14 tamaños: sin overflow de la tarjeta, pie contenido, imagen cargada, proporción conservada. Archivo docs/DESSET-EYE-FIT-layout-evidence-v2.json. Las alturas compactas usan desplazamiento vertical previsto. No equivale a CI completa aprobada.
+- Manifiesto propuesto: docs/DESSET-EYE-FIT-candidate-manifest-v2.json; NO se promovió al aprobado ni se reutilizó el comentario del digest anterior.
+- Nuevo digest: b5391522849cb94d32658070ce5f6074566f9393a2a3da1634f7964ae3c25ff3. Texto exacto que requeriría autorización para registrarse:
+
+```text
+AUTORIZO DISENO VISUAL DESSET SHA256 b5391522849cb94d32658070ce5f6074566f9393a2a3da1634f7964ae3c25ff3
+```
+
+Pendiente: autorización para registrar el nuevo texto, promoción del manifiesto, CI completa remota y publicación manual con verificaciones. No hubo merge, workflow de publicación ni modificación de producción/DNS.
