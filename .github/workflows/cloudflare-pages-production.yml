@@ -179,7 +179,7 @@ jobs:
       - name: Live HTTPS smoke after deployment
         run: |
           set -euo pipefail
-          curl --retry 3 --retry-delay 3 --fail-with-body -sS https://desset.lat/             -o /tmp/desset-published-index.html
+          curl --retry 3 --retry-delay 3 --fail-with-body -sS https://desset.lat/ -o /tmp/desset-published-index.html
           grep -Fq "DELIVER ASSETS / DESSET" /tmp/desset-published-index.html
           curl --retry 3 --retry-delay 3 --fail-with-body -sS https://www.desset.lat/ |
             grep -Fq "DELIVER ASSETS / DESSET"
@@ -197,7 +197,7 @@ jobs:
               echo "::error::Public HTML CSS digest mismatch: $css"
               exit 1
             }
-            curl --retry 5 --retry-delay 2 --fail-with-body -sS               "https://desset.lat/${css}?v=${css_sha}" -o "/tmp/desset-public-${css}"
+            curl --retry 5 --retry-delay 2 --fail-with-body -sS "https://desset.lat/${css}?v=${css_sha}" -o "/tmp/desset-public-${css}"
             cmp -s "$css" "/tmp/desset-public-${css}" || {
               echo "::error::Public CSS content mismatch: $css"
               exit 1
