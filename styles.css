@@ -216,3 +216,20 @@ body[data-theme="dark"] .tile--visual img{filter:none;opacity:1}
   .role-legend--rider{background:#111;color:#FFF}
   .role-legend--control{background:#FF3328;color:#111}
 }
+
+/* DESSET EYE FIT — propuesta aislada: solo el interior de la tarjeta principal.
+   Dos columnas en flujo normal; imagen completa, sin posición absoluta ni recorte. */
+.tile--intro{container-type:inline-size}
+.intro-main{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;gap:clamp(8px,2cqw,16px);width:100%;padding:8px 0}
+.intro-copy{min-width:0}
+.intro-main h1{font-size:clamp(15px,5.65cqw,40px);line-height:1.09;margin:clamp(7px,2cqw,15px) 0}
+.intro-main .eyebrow{font-size:clamp(8px,1.9cqw,14px)}
+.intro-lead{font-size:clamp(9px,2.15cqw,15px);line-height:1.35}
+.intro-eye{display:block;min-width:0;width:100%;aspect-ratio:496/499}
+.intro-eye img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}
+@media(max-width:360px) and (max-height:640px){.intro-main{padding:0}.intro-lead{font-size:9px;line-height:1.18}.intro-main h1{margin:5px 0}}
+/* Reserva aire para el pie de la tarjeta en pantallas de poca altura. */
+@media (min-height:401px) and (max-height:700px){
+  .intro-main{padding:0}
+  .intro-eye{width:calc(100% - 12px);justify-self:center}
+}

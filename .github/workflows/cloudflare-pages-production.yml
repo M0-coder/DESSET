@@ -89,7 +89,7 @@ jobs:
           find dist-cloudflare-release-candidate -type f -print0 |
             LC_ALL=C sort -z | xargs -0 sha256sum > reports/release-file-hashes.txt
           printf "Git SHA: %s\n" "$GITHUB_SHA" > reports/release-source-sha.txt
-          test "$(find dist-cloudflare-release-candidate -type f | wc -l)" -eq 11
+          test "$(find dist-cloudflare-release-candidate -type f | wc -l)" -eq 13
 
       - name: Upload reproducibility evidence
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

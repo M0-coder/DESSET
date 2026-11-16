@@ -42,7 +42,7 @@ if (html.split(sourceCspMeta).length!==2) throw Error("NO-GO: la CSP original no
 html=html.replace(sourceCspMeta,releaseCspMeta);
 const dst=output;
 rmSync(dst,{force:true,recursive:true});mkdirSync(dst,{recursive:true});
-for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","404.html"]){
+for(const file of ["styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/desset-eye-still.png","assets/desset-eye.gif","assets/roles-geometry-v2.svg","404.html"]){
  const src=resolve(root,file),out=resolve(dst,file);mkdirSync(resolve(out,".."),{recursive:true});cpSync(src,out);
 }
 writeFileSync(resolve(dst,"index.html"),html);

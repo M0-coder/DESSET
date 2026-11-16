@@ -7,7 +7,7 @@ import {createHash} from "node:crypto";
 import {CLOUDFLARE_RELEASE_HEADERS,CLOUDFLARE_RELEASE_META_CSP} from "./cloudflare-headers.mjs";
 const root=fileURLToPath(new URL("../",import.meta.url));
 const dir=resolve(root,"dist-cloudflare-release-candidate");
-const allow=["404.html","_headers","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","index.html","robots.txt","sitemap.xml","src/app.mjs","src/content.mjs","styles-compact.css","styles.css"];
+const allow=["404.html","_headers","assets/deliver-assets-mark.png","assets/desset-eye-still.png","assets/desset-eye.gif","assets/roles-geometry-v2.svg","index.html","robots.txt","sitemap.xml","src/app.mjs","src/content.mjs","styles-compact.css","styles.css"];
 const seen=[];
 function walk(path){
  for(const e of readdirSync(path,{withFileTypes:true})){
@@ -46,4 +46,4 @@ if(process.env.DESSET_CANDIDATE_SHA){
 }
 assert.deepEqual(Object.keys(m.files).sort(),allow);
 for(const p of allow)assert.equal(m.files[p],createHash("sha256").update(readFileSync(resolve(dir,p))).digest("hex"));
-console.log("CLOUDFLARE RELEASE-SHAPE GATE: PASS 11/11, SEO y cabeceras declaradas, design assets SHA-256 idénticos. HTTP TLS y despliegue = NOT_VERIFIED.");
+console.log("CLOUDFLARE RELEASE-SHAPE GATE: PASS 13/13, SEO y cabeceras declaradas, design assets SHA-256 idénticos. HTTP TLS y despliegue = NOT_VERIFIED.");

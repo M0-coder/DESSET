@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
-  VISUAL_FILES, gitBlobSha1, htmlBodyFnv64, parseApprovedManifest,
+  gitBlobSha1, htmlBodyFnv64, parseApprovedManifest,
   inspectVisualBaseline, assertApprovedVisualBaseline, loadApprovedVisualBaseline
 } from "../scripts/visual-baseline.mjs";
 
@@ -11,17 +11,17 @@ const clone = x => JSON.parse(JSON.stringify(x));
 
 test("manifest versionado reconoce exactamente el Bento vigente, sin saltos", () => {
   const m = loadApprovedVisualBaseline();
-  assert.equal(m.baseline_id, "DESSET-BENTO-APPROVED-2026-11-15");
-  assert.equal(m.source_commit, "841fb1d5ba44022237fe1534926c6c3a5ab564f5");
+  assert.equal(m.baseline_id, "DESSET-EYE-FIT-2026-11-16-V2");
+  assert.equal(m.source_commit, "066c1f07d486cfa05ce09c710c625862e2616c1a");
   assert.equal(m.production_deployment, "c29ec7a7-806a-4a92-b326-e1a42c7dc1fe");
-  assert.equal(Object.keys(m.files).length, 7);
+  assert.equal(Object.keys(m.files).length, 9);
   assert.deepEqual(inspectVisualBaseline(m, read).diffs, []);
   assert.deepEqual(assertApprovedVisualBaseline(m, read).diffs, []);
 });
 
-test("cada uno de los 7 archivos protegidos rechaza un solo byte cambiado", () => {
+test("cada uno de los 9 archivos protegidos rechaza un solo byte cambiado", () => {
   const m = loadApprovedVisualBaseline();
-  for (const path of VISUAL_FILES) {
+  for (const path of Object.keys(m.files)) {
     const source = read(path);
     const altered = Buffer.concat([source, Buffer.from("\n")]);
     assert.notEqual(gitBlobSha1(altered), m.files[path]);

@@ -13,7 +13,7 @@ if(process.env.DESSET_CLOUDFLARE_STAGE!=="LOCAL_TEST_ONLY"||
   console.error("NO-GO: Cloudflare stage solo permite ensayo local aislado, sin credenciales ni destino de producción");
   process.exit(2);
 }
-const approved=["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","404.html"];
+const approved=["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/desset-eye-still.png","assets/desset-eye.gif","assets/roles-geometry-v2.svg","404.html"];
 const source=readFileSync(resolve(root,"index.html"),"utf8");
 if(!source.includes('<meta name="robots" content="noindex,nofollow">')||
     /<link\s+rel="canonical"/i.test(source))throw Error("NO-GO: la fuente no conserva noindex staging");
@@ -38,4 +38,4 @@ writeFileSync(resolve(root,"reports/cloudflare-stage-manifest.json"),JSON.string
  mode:"LOCAL_TEST_ONLY", candidate_head:process.env.DESSET_CANDIDATE_SHA||"unrecorded-local", checkout_sha:process.env.GITHUB_SHA||"unrecorded-local",
  public_exposure:false,domain_association:false,files:hashes
 },null,2)+"\n");
-console.log("CLOUDFLARE STAGE: solo paquete local, 10 archivos allowlist; no deploy, no DNS, sin indexación.");
+console.log("CLOUDFLARE STAGE: solo paquete local, 12 archivos allowlist; no deploy, no DNS, sin indexación.");

@@ -14,7 +14,7 @@ if(process.env.DESSET_CF_RELEASE_MODE!=="LOCAL_TEST_ONLY"||
  console.error("NO-GO: solo permite simular paquete local; no admite credenciales ni aprobación de publicación");
  process.exit(2);
 }
-const allow=["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/roles-geometry-v2.svg","404.html","robots.txt","sitemap.xml"];
+const allow=["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/deliver-assets-mark.png","assets/desset-eye-still.png","assets/desset-eye.gif","assets/roles-geometry-v2.svg","404.html","robots.txt","sitemap.xml"];
 const header=CLOUDFLARE_RELEASE_HEADERS;
 const html=readFileSync(resolve(dist,"index.html"),"utf8");
 if(!html.includes('<link rel="canonical" href="https://desset.lat/">')||
@@ -41,4 +41,4 @@ writeFileSync(resolve(root,"reports/cloudflare-release-manifest.json"),JSON.stri
  checkout_sha:process.env.GITHUB_SHA||"unrecorded-local",
  files:hashes
 },null,2)+"\n");
-console.log("CF RELEASE-SHAPE: 11 archivos locales; ningún despliegue, no DNS ni autorización para publicar.");
+console.log("CF RELEASE-SHAPE: 13 archivos locales; ningún despliegue, no DNS ni autorización para publicar.");
