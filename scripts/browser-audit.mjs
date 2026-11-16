@@ -230,6 +230,13 @@ try {
       if(!fixed)failures.push(label+": reducción de movimiento no selecciona PNG fijo");
       console.log(JSON.stringify({label:label+"-reduced-motion",fixed}));
       await send("Emulation.setEmulatedMedia", {features:[]});
+      let animated = false;
+      for(let attempt=0;attempt<30;attempt++) {
+        animated=await evalBrowser(send,"(function(){const i=document.querySelector('.intro-eye img');return i.complete&&i.naturalWidth===496&&i.currentSrc.endsWith('/assets/desset-eye.gif');})()");
+        if(animated)break;
+        await delay(100);
+      }
+      if(!animated)failures.push(label+": no se recuperó el GIF tras desactivar reducción de movimiento");
     }
     const changed = await evalBrowser(send, "(function(){document.querySelector('#themeButton').click(); return document.body.dataset.theme==='dark' && document.querySelector('#themeButton').getAttribute('aria-pressed')==='true';})()");
     if (!changed) failures.push(label + ": modo oscuro no se activó");
