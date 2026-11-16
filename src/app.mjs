@@ -18,6 +18,7 @@ document.querySelectorAll("[data-detail]").forEach(button=>{
     dialogContent.querySelector(".project-prose")?.remove();
     const isProject=button.dataset.detail==="project";
     dialogContent.classList.toggle("dialog-content--project",isProject);
+    dialog.classList.toggle("detail-dialog--project",isProject);
     body.replaceChildren();
     if(isProject){
       const emphasis=document.createElement("strong");
@@ -29,7 +30,7 @@ document.querySelectorAll("[data-detail]").forEach(button=>{
       prose.className="project-prose";
       detail.points.forEach((text,index)=>{
         const p=document.createElement("p");
-        const prefix=["Nuestro propósito:","Nuestro horizonte:"].find(label=>text.startsWith(label));
+        const prefix=["Nuestra visión","Nuestro propósito:","Nuestro horizonte:"].find(label=>text.startsWith(label));
         if(prefix){
           const strong=document.createElement("strong");
           strong.textContent=prefix;
