@@ -58,6 +58,11 @@ button{font:inherit;color:inherit}button:focus-visible{outline:3px solid var(--f
 .dialog-bottom{border-top:1px solid var(--line);padding-top:13px}
 .close-button{border:1px solid var(--line);background:var(--tile-light);border-radius:50%;width:35px;height:35px;font-size:26px;cursor:pointer}
 .dialog-content{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(16px,3vh,25px) 0;gap:clamp(8px,1.4vh,15px)}
+/* Only the approved long-form project presentation scrolls within its dialog.
+   Keep the exact font family, weight, sizes, palette and all other Bento cards. */
+.dialog-content--project{justify-content:flex-start;overflow-y:auto;overscroll-behavior:contain}
+.dialog-content--project>*{flex-shrink:0}
+.project-prose{display:grid;gap:clamp(8px,1.4vh,15px)}
 .dialog-eyebrow{margin:0;font-size:12px;color:var(--muted)}
 .dialog-content h2{margin:0;font-size:clamp(24px,4.5vw,39px);line-height:1.02;letter-spacing:-.06em;font-weight:500}
 .dialog-content p:not(.dialog-eyebrow){margin:0;font-size:clamp(12px,1.8vw,15px);line-height:1.45}
