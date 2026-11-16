@@ -2,8 +2,15 @@ export const DETAILS = Object.freeze({
   project:{
     kicker:"PRESENTACIÓN",
     title:"DELIVER ASSETS / DESSET",
-    body:"Proyecto empresarial y tecnológico en preparación. Esta web presenta identidad, visión y evolución institucional; las operaciones comerciales corresponden exclusivamente a las aplicaciones.",
-    points:["Denominación social propuesta: DELIVER ASSETS E.I.R.L.","DESSET es el signo comercial previsto; su registro no está acreditado.","Huacho, Huaura, Lima: ubicación empresarial propuesta."]
+    body:"Una visión para integrar el comercio, los servicios y la logística.",
+    points:[
+      "DESSET nace con la ambición de transformar la manera en que las personas y las empresas acceden a productos, servicios y oportunidades comerciales.",
+      "Nuestra visión es construir un ecosistema tecnológico donde comprar, vender, contratar servicios, reservar espacios y transportar mercancías formen parte de una experiencia conectada.",
+      "No buscamos desarrollar únicamente una aplicación de entregas o un marketplace. Aspiramos a integrar diferentes mercados mediante plataformas especializadas que compartan una misma infraestructura digital.",
+      "Nuestro propósito: reducir las barreras entre la oferta y la demanda, facilitar las operaciones comerciales y conectar el mundo digital con el movimiento físico de bienes y mercancías.",
+      "Nuestro horizonte: construir una plataforma comercial y logística multisectorial, capaz de evolucionar desde operaciones locales hacia mercados nacionales e internacionales.",
+      "DESSET es un proyecto en desarrollo. Su visión se ejecutará progresivamente, conforme se validen sus capacidades tecnológicas, comerciales y operativas."
+    ]
   },
   ecosystem:{
     kicker:"ARQUITECTURA CONCEPTUAL",
