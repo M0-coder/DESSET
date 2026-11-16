@@ -63,6 +63,16 @@ button{font:inherit;color:inherit}button:focus-visible{outline:3px solid var(--f
 .dialog-content--project{justify-content:flex-start;overflow-y:auto;overscroll-behavior:contain}
 .dialog-content--project>*{flex-shrink:0}
 .project-prose{display:grid;gap:clamp(8px,1.4vh,15px)}
+/* V5: only the project detail dialog has a fixed flex viewport and an inner reader.
+   The Bento, typography, media and every other dialog retain their approved rules. */
+.detail-dialog.detail-dialog--project{height:min(540px,calc(100dvh - 24px));overflow:hidden}
+.detail-dialog--project .dialog-shell{height:100%;max-height:none;min-height:0}
+.detail-dialog--project .dialog-content--project{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:var(--brand-blue-ink) transparent;-webkit-overflow-scrolling:touch}
+.detail-dialog--project .dialog-content--project::-webkit-scrollbar{width:8px}
+.detail-dialog--project .dialog-content--project::-webkit-scrollbar-track{background:transparent}
+.detail-dialog--project .dialog-content--project::-webkit-scrollbar-thumb{background:var(--brand-blue-ink);border-radius:8px}
+.detail-dialog--project #detailBody strong,.detail-dialog--project .project-prose strong{color:var(--brand-blue-ink)}
+
 .dialog-eyebrow{margin:0;font-size:12px;color:var(--muted)}
 .dialog-content h2{margin:0;font-size:clamp(24px,4.5vw,39px);line-height:1.02;letter-spacing:-.06em;font-weight:500}
 .dialog-content p:not(.dialog-eyebrow){margin:0;font-size:clamp(12px,1.8vw,15px);line-height:1.45}
