@@ -89,7 +89,7 @@ button{font:inherit;color:inherit}button:focus-visible{outline:3px solid var(--f
   .detail-dialog--identity .dialog-content--identity{scrollbar-gutter:auto}
 }
 @media(min-width:641px) and (min-height:700px){
-  .detail-dialog.detail-dialog--identity{height:auto;max-height:min(580px,calc(100dvh - 24px))}
+  .detail-dialog.detail-dialog--identity{height:fit-content;max-height:min(580px,calc(100dvh - 24px))}
   .detail-dialog--identity .dialog-shell{height:auto;max-height:calc(100dvh - 42px)}
 }
 
