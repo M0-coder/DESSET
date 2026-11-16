@@ -5,6 +5,7 @@ import {resolve,relative,join,sep} from "node:path";
 import {fileURLToPath} from "node:url";
 import {createHash} from "node:crypto";
 import {CLOUDFLARE_RELEASE_HEADERS,CLOUDFLARE_RELEASE_META_CSP} from "./cloudflare-headers.mjs";
+import {STYLESHEET_PATHS,versionedStylesheetUrl} from "./cache-version.mjs";
 const root=fileURLToPath(new URL("../",import.meta.url));
 const dir=resolve(root,"dist-cloudflare-release-candidate");
 const allow=["404.html","_headers","assets/deliver-assets-mark.png","assets/desset-eye-still.png","assets/desset-eye.gif","assets/roles-geometry-v2.svg","index.html","robots.txt","sitemap.xml","src/app.mjs","src/content.mjs","styles-compact.css","styles.css"];
@@ -24,6 +25,11 @@ for(const path of allow.filter(x=>x!=="_headers")){
  assert.equal(createHash("sha256").update(src).digest("hex"),createHash("sha256").update(actual).digest("hex"),"Archivo modificado: "+path);
 }
 const html=readFileSync(resolve(dir,"index.html"),"utf8"),h=readFileSync(resolve(dir,"_headers"),"utf8");
+for(const stylesheet of STYLESHEET_PATHS){
+ const expected=versionedStylesheetUrl(stylesheet,readFileSync(resolve(dir,stylesheet)));
+ assert.ok(html.includes('href="'+expected+'"'),"NO-GO: versioned CSS not present in Cloudflare artifact: "+stylesheet);
+ assert.ok(!html.includes('href="./'+stylesheet+'"'),"NO-GO: unversioned CSS in Cloudflare artifact: "+stylesheet);
+}
 assert.doesNotMatch(html,/<meta name="robots" content="noindex/);
 assert.equal(h,CLOUDFLARE_RELEASE_HEADERS,"NO-GO: la CSP HTTP y política de publicación no coinciden");
 assert.ok(html.includes('<meta http-equiv="Content-Security-Policy" content="'+CLOUDFLARE_RELEASE_META_CSP+'">'),"NO-GO: la CSP meta del artefacto bloquearía el beacon automático");
