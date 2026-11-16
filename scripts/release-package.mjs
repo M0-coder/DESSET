@@ -2,6 +2,7 @@ import {readFileSync,writeFileSync,mkdirSync,cpSync,rmSync} from "node:fs";
 import {resolve} from "node:path";
 import {fileURLToPath} from "node:url";
 import {CLOUDFLARE_SOURCE_META_CSP,CLOUDFLARE_RELEASE_META_CSP} from "./cloudflare-headers.mjs";
+import {STYLESHEET_PATHS,versionReleaseStylesheets} from "./cache-version.mjs";
 const root=fileURLToPath(new URL("../",import.meta.url));
 const output=resolve(root,"dist");
 const origin=process.env.DESSET_OFFICIAL_ORIGIN;
@@ -22,6 +23,10 @@ const source=readFileSync(resolve(root,"index.html"),"utf8");
 if(!source.includes('<meta name="robots" content="noindex,nofollow">'))throw Error("Preflight: la fuente cambió");
 let html=source.replace('  <meta name="robots" content="noindex,nofollow">\n',"");
 html=html.replace('  <link rel="stylesheet" href="./styles.css">','  <link rel="canonical" href="'+site+'/">\n  <meta property="og:url" content="'+site+'/">\n  <link rel="stylesheet" href="./styles.css">');
+
+// HEAD-only cache busting: a new CSS byte sequence always gets a distinct URL.
+const stylesheetBytes = Object.fromEntries(STYLESHEET_PATHS.map(path => [path,readFileSync(resolve(root,path))]));
+html = versionReleaseStylesheets(html,stylesheetBytes);
 
 const seoTitle = "DESSET | DELIVER ASSETS — Comercio y logística en desarrollo";
 const seoDescription = "Conoce DESSET, un proyecto de DELIVER ASSETS en Huacho, Perú. Una visión de comercio y coordinación de entregas, todavía en desarrollo.";
