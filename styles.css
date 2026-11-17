@@ -278,7 +278,7 @@ body[data-theme="dark"] .tile--visual img{filter:none;opacity:1}
 
 /* V10 HERO PILOT — UNAPPROVED: first-card finish only.
    Keep the approved monospace type inherited from body. No custom fonts
-   and no changes to text metrics, animations or Bento geometry. */
+   and no changes to GIF animation or Bento geometry; type metrics are scoped to intro. */
 .tile--intro {
   background-color:#F0EEEA;
   background-image:radial-gradient(circle,rgba(0,0,0,.035) .45px,transparent .7px);
