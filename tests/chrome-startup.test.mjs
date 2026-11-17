@@ -137,6 +137,8 @@ test("transient missing marker triggers exactly one fresh-profile retry with cle
   assert.match(warnings[0], /reintento aislado/);
   assert.ok(launches.every(x => x.binary === "fake-chrome" &&
     x.args.includes("--remote-debugging-port=0") &&
+    x.args.includes("--no-proxy-server") &&
+    x.args.includes("--disable-background-networking") &&
     x.options.stdio[2] === "pipe"));
   assert.ok(launches[1].args.includes("--user-data-dir=" + profiles[1]));
   assert.notEqual(profiles[0], profiles[1]);
@@ -203,6 +205,9 @@ test("browser audits retain all 13 resolutions, real assertions and fail-closed 
   assert.match(audit, /prefers-reduced-motion/);
   assert.match(audit, /Profiler\.takePreciseCoverage/);
   assert.match(audit, /navigation\.errorText/);
+  assert.match(audit, /servidor local no devolvió HTTP 200/);
+  assert.match(audit, /servidor local no entregó el Bento aprobado/);
+  assert.match(audit, /bodyPreview:document\.body/);
   assert.match(audit, /if \(!boardReady\)/);
   assert.match(audit, /NO-GO: tablero Bento no cargó/);
   assert.match(audit, /detail\.exception\?\.description/);
