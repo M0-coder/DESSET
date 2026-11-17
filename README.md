@@ -1,9 +1,9 @@
 # DESSET — Web oficial de DELIVER ASSETS
 
-> **ESTADO VIGENTE VERIFICADO — 15/11/2026:** https://desset.lat/ está publicado como sitio **institucional estático** en Cloudflare Pages, deployment `c29ec7a7-806a-4a92-b326-e1a42c7dc1fe` (SUCCESS, `uses_functions=false`, `commit_dirty=false`). El commit público es `841fb1d5ba44022237fe1534926c6c3a5ab564f5`; `main` avanzó a `f7e6f14e9254df587b2c72f6d122c2079014cbb0` únicamente por pruebas de Chrome, sin cambiar los archivos Bento. **Línea base y rollback:** [PRODUCTION-BASELINE-2026-11-15.md](docs/PRODUCTION-BASELINE-2026-11-15.md). El PR #7 y otras ramas son historial, no fuente de verdad actual.
+> **CORTE DE AUDITORÍA — 17/11/2026 (instantánea, no estado permanente):** https://desset.lat/ corresponde al sitio institucional estático de Cloudflare Pages, proyecto `desset-institucional`. La API de Cloudflare registra como despliegue de producción `b118e080-24c8-412a-8ae7-ab52af7506f3` (SUCCESS, `uses_functions=false`, `commit_dirty=false`), código `c27b11586ba7dfbd6a02a65087299a261d5173d0`. El `main` comprobado fue `0f7fda9568de3749e5bd2b38d74ee4ce798f4991`; la comparación con producción solo incluye el workflow de publicación y sus pruebas de regresión, sin cambios de Bento. El [workflow de publicación](https://github.com/M0-coder/DESSET/actions/runs/44155968989) terminó **FAIL en el smoke HTTP final** (`curl` exit 23) aunque el despliegue y la comprobación de SHA en Cloudflare fueron SUCCESS; la corrección posterior está en `main`, **no está acreditada una nueva ejecución del smoke público**. No inferir caída de la web ni certificación completa de HTTP/SEO desde ese resultado. **Referencia histórica del 15/11:** [PRODUCTION-BASELINE-2026-11-15.md](docs/PRODUCTION-BASELINE-2026-11-15.md). Consultar Cloudflare/GitHub nuevamente antes de cualquier decisión.
 
 
-**Estado:** web institucional publicada y operativa; el negocio, aplicaciones, cobros y pedidos siguen **sin lanzamiento comercial acreditado**.  
+**Estado:** web institucional publicada, con contenido visible en un navegador conectado y despliegue identificado en Cloudflare; **verificación HTTP pública independiente todavía pendiente**. El negocio, las aplicaciones, los cobros y los pedidos siguen **sin lanzamiento comercial acreditado**.  
 **Repositorio exclusivo de implementación:** `M0-coder/DESSET`.  
 
 ## Cambios visuales autorizados
@@ -16,7 +16,7 @@ Para experimentar en una rama sin alterar producción, ejecutar `npm run visual:
 
 ## Bento Grid — v0.1
 
-Diseño inspirado en la **estructura** de la referencia gráfica proporcionada por el fundador: tarjetas monocromáticas, separación negra, radios amplios y **cero desplazamiento horizontal o vertical**. El contenido se muestra con un diálogo accesible, y en móvil mediante dos vistas sin scroll. Las tarjetas son interactivas; no procesan pedidos ni datos personales.
+Diseño inspirado en la **estructura** de la referencia gráfica proporcionada por el fundador: tarjetas monocromáticas, separación negra y radios amplios. En los tamaños habituales conserva el tablero sin desplazamiento; **la excepción `styles-compact.css` permite scroll vertical con alturas de 400 px o menos** para no perder contenido. En móvil existen dos vistas; los diálogos recuperan contenido mediante scroll. Las tarjetas son interactivas; no procesan pedidos ni datos personales.
 
 La identidad reutilizada tiene procedencia rastreable: `assets/deliver-assets-mark.png` procede del commit `f3a075b...` del repo previo `DELIVER-ASESSET-pro`, ruta `public/brand/deliver-assets-mark.png` (nodo de Figma documentado `277:5`). El gráfico histórico `assets/city-network.svg` procedía del mismo commit, pero se conserva únicamente en el historial Git por no ser utilizado en el diseño aprobado. **La aprobación legal y gráfica definitiva de esos activos todavía necesita reconciliarse con Notion.** No están autorizados para campañas o publicación oficial sin cierre del gate de marca.
 
@@ -38,7 +38,7 @@ Abrir `http://localhost:8080`. No es necesario compilar: se distribuyen archivos
 - Marca: DESSET (signo comercial propuesto, no asumir registro).
 - Sede propuesta: Huacho, Huaura, Perú.
 - Modelo: cobro por envío como fuente principal prevista.
-- WhatsApp: canal inicial previsto; sin contacto oficial habilitado aquí.
+- WhatsApp: posible canal operativo de las futuras aplicaciones, **no habilitado para pedidos en esta web**. La sección institucional CANALES OFICIALES muestra cinco redes sociales proporcionadas por el fundador; esos enlaces no constituyen compras, contratación ni cobros.
 - No se hacen afirmaciones de cobertura, tiempos, flota, clientes o seguridad demostrada.
 
 ## Pendiente para cierre institucional y eventual lanzamiento comercial
