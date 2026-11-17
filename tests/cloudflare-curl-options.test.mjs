@@ -48,3 +48,43 @@ test("production Cloudflare workflow has no conflicting curl flags", () => {
   assert.ok(workflow.includes('cmp -s "$css" "/tmp/desset-public-${css}"'),
     "Public CSS bytes must match the approved checkout");
 });
+
+
+function hasPrematureCurlPipe(source) {
+  // grep -q can exit early and close curl's stdout under pipefail.
+  const unfolded = source.replace(/\\\r?\n[ \t]*/g, " ");
+  return /\bcurl\b[^\n]*\|\s*(?:\n[ \t]*)?grep\s+-[a-zA-Z]*q\b/.test(unfolded);
+}
+
+test("regression: quiet grep after curl causes curl exit 23 and must be forbidden", () => {
+  const broken = "curl --fail-with-body -sS https://www.desset.lat/ |\n  grep -Fq 'DELIVER ASSETS / DESSET'";
+  const safe = "curl --fail-with-body -sS https://www.desset.lat/ -o /tmp/www.html\n" +
+    "grep -Fq 'DELIVER ASSETS / DESSET' /tmp/www.html";
+  assert.equal(hasPrematureCurlPipe(broken), true);
+  assert.equal(hasPrematureCurlPipe(safe), false);
+  const smoke = workflow.split("      - name: Live HTTPS smoke after deployment\n")[1];
+  assert.ok(smoke, "No live HTTPS smoke step exists");
+  assert.equal(hasPrematureCurlPipe(smoke), false,
+    "NO-GO: curl piped to grep -q can fail after a successful deployment");
+});
+
+test("release smoke drains HTTPS responses before checking content and status", () => {
+  const smoke = workflow.split("      - name: Live HTTPS smoke after deployment\n")[1];
+  for (const [download,match] of [
+    ['-o /tmp/desset-published-index.html', 'grep -Fq "DELIVER ASSETS / DESSET" /tmp/desset-published-index.html'],
+    ['-o /tmp/desset-published-www-index.html', 'grep -Fq "DELIVER ASSETS / DESSET" /tmp/desset-published-www-index.html'],
+    ['-o /tmp/desset-published-robots.txt', 'grep -Fq "Sitemap: https://desset.lat/sitemap.xml" /tmp/desset-published-robots.txt'],
+    ['-o /tmp/desset-published-sitemap.xml', 'grep -Fq "https://desset.lat/" /tmp/desset-published-sitemap.xml'],
+    ['-o /tmp/desset-published-headers.txt', "grep -iq '^content-security-policy:' /tmp/desset-published-headers.txt"],
+  ]) {
+    assert.ok(smoke.includes(download), "Missing fully drained curl output: " + download);
+    assert.ok(smoke.includes(match), "Missing fail-closed check: " + match);
+  }
+  assert.match(smoke, /missing_code="\$\(curl --silent --show-error -o \/dev\/null -w '%\{http_code\}'/);
+  assert.match(smoke, /test "\$missing_code" = "404"/);
+  assert.match(smoke, /cmp -s assets\/deliver-assets-mark\.png \/tmp\/desset-public-logo\.png/);
+  assert.match(smoke, /cmp -s "\$css" "\/tmp\/desset-public-\$\{css\}"/);
+  assert.match(smoke, /set -euo pipefail/);
+  assert.match(workflow, /inputs\.confirm == 'PUBLICAR_DESSET'/);
+  assert.match(workflow, /--commit-hash="\$GITHUB_SHA"/);
+});
