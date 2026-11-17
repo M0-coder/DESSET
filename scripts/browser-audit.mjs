@@ -93,7 +93,11 @@ async function connectChrome(port) {
 }
 async function evalBrowser(send, expression) {
   const response = await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true });
-  if (response.exceptionDetails) throw new Error("Runtime exception: " + response.exceptionDetails.text);
+  if (response.exceptionDetails) {
+    const detail = response.exceptionDetails;
+    const description = detail.exception?.description ?? detail.exception?.value ?? detail.text;
+    throw new Error("Runtime exception: " + String(description).slice(0, 1200));
+  }
   return response.result.value;
 }
 function measure() {
@@ -182,11 +186,21 @@ try {
   await mkdir(output, { recursive: true });
   for (const [width, height] of viewports) {
     await send("Emulation.setDeviceMetricsOverride", { width, height, mobile: width <= 640, deviceScaleFactor: 1 });
-    await send("Page.navigate", { url: local.url });
-    for (let attempt = 0; attempt < 60; attempt++) {
-      const ready = await evalBrowser(send, "document.readyState === 'complete' && Boolean(document.querySelector('.board'))");
-      if (ready) break;
+    const navigation = await send("Page.navigate", { url: local.url });
+    if (navigation.errorText)
+      throw new Error("NO-GO: navegación local falló " + width + "x" + height + ": " + navigation.errorText);
+    let boardReady = false;
+    for (let attempt = 0; attempt < 150; attempt++) {
+      boardReady = await evalBrowser(send, "document.readyState === 'complete' && Boolean(document.querySelector('.board'))");
+      if (boardReady) break;
       await delay(100);
+    }
+    if (!boardReady) {
+      const info = await evalBrowser(send,
+        "(function(){return {url:location.href,readyState:document.readyState,hasSite:!!document.querySelector('.site'),hasBoard:!!document.querySelector('.board'),title:document.title};})()")
+        .catch(error => ({ diagnosticError: error.message }));
+      throw new Error("NO-GO: tablero Bento no cargó en Chrome tras 15 segundos " +
+        width + "x" + height + ": " + JSON.stringify(info));
     }
     await delay(120);
     // Check the production HTML actually loaded the content-addressed CSS URL.
