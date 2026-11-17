@@ -26,14 +26,33 @@ jobs:
           cache: npm
       - name: Reproducible install
         run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Existing unit and structural contracts
-        run: npm run check
+      - name: Ensure the production approval gate rejects this unapproved CSS
+        run: |
+          if node scripts/approved-baseline-gate.mjs >/tmp/desset-v10-gate.txt 2>&1; then
+            echo "::error::Unexpected baseline PASS; candidate must remain unapproved"
+            exit 1
+          fi
+          grep -Fq "BENTO NO APROBADO" /tmp/desset-v10-gate.txt || {
+            cat /tmp/desset-v10-gate.txt
+            exit 1
+          }
+          echo "PASS: production approval gate remains fail-closed on candidate"
+      - name: Syntax, candidate and general unit tests (except baseline-approval unit assertions)
+        shell: bash
+        run: |
+          node --check src/app.mjs
+          node --check src/content.mjs
+          mapfile -t suites < <(find tests -maxdepth 1 -type f -name '*.test.mjs' ! -name 'visual-baseline.test.mjs' | LC_ALL=C sort)
+          node --test "${suites[@]}"
+          node scripts/verify.mjs
       - name: Security static audit
         run: npm run security:audit
-      - name: Mutation smoke and partial coverage
+      - name: Mutation smoke and partial candidate coverage
+        shell: bash
         run: |
           npm run mutation:smoke
-          npm run test:coverage
+          mapfile -t suites < <(find tests -maxdepth 1 -type f -name '*.test.mjs' ! -name 'visual-baseline.test.mjs' | LC_ALL=C sort)
+          node --experimental-test-coverage --test "${suites[@]}"
       - name: Chrome available
         run: google-chrome --version
       - name: Browser regression on 13 sizes (preview only)
@@ -46,5 +65,5 @@ jobs:
           path: reports/browser/
           if-no-files-found: warn
           retention-days: 14
-# This is a scoped candidate preview. The unchanged CI approval gate and
-# manual Cloudflare production workflow remain mandatory for promotion.
+# PREVIEW is separate from approval. The unchanged main CI baseline tests
+# and manual Cloudflare release workflow remain mandatory for promotion.
