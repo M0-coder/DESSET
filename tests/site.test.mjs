@@ -95,7 +95,7 @@ test("solo cambia la ilustración central: misma narrativa V2 y contenido comerc
   assert.match(html,/MOVIMIENTO \/ SISTEMA/);
   assert.match(html,/COBRO<br>POR ENVÍO\./);
   assert.match(html,/UNA MISMA VISIÓN\./);
-  assert.match(html,/CANALES OFICIALES<br>EN PREPARACIÓN\./);
+  assert.match(html,/CANALES<br>OFICIALES\./);
   assert.match(css,/\.tile--visual img\{object-fit:contain;/);
   assert.match(css,/\.site\{width:100%;height:100dvh;/);
 });
