@@ -54,10 +54,6 @@ jobs:
           npm run mutation:smoke
           mapfile -t suites < <(find tests -maxdepth 1 -type f -name '*.test.mjs' ! -name 'visual-baseline.test.mjs' | LC_ALL=C sort)
           node --experimental-test-coverage --test "${suites[@]}"
-      - name: Chrome available
-        run: google-chrome --version
-      - name: Browser regression on 13 sizes (preview only)
-        run: npm run browser:audit
       - name: Hosting safety and negative package cases (local only)
         run: |
           node scripts/hosting-policy-gate.mjs
@@ -72,10 +68,6 @@ jobs:
         run: |
           npm run release:package
           node scripts/release-package-gate.mjs
-      - name: Browser integration of local production-shaped files
-        env:
-          DESSET_BROWSER_DIST: "1"
-        run: npm run browser:audit
       - name: Cloudflare production-shaped local artifact validation (NO DEPLOY)
         env:
           DESSET_CF_RELEASE_MODE: LOCAL_TEST_ONLY
@@ -83,6 +75,14 @@ jobs:
         run: |
           npm run cloudflare:release-candidate
           npm run cloudflare:release-gate
+      - name: Chrome available
+        run: google-chrome --version
+      - name: Browser regression on 13 sizes (preview only)
+        run: npm run browser:audit
+      - name: Browser integration of local production-shaped files
+        env:
+          DESSET_BROWSER_DIST: "1"
+        run: npm run browser:audit
       - name: Chrome audit of locally assembled Cloudflare package (NO DEPLOY)
         env:
           DESSET_BROWSER_CF_RELEASE: "1"
