@@ -9,13 +9,16 @@ import {
 const read = path => readFileSync(new URL("../" + path, import.meta.url));
 const clone = x => JSON.parse(JSON.stringify(x));
 
-test("manifest V9 verifica el Bento y los cinco enlaces de CANALES OFICIALES", () => {
+test("manifest V10 verifica el Bento, el nuevo hero y los canales oficiales", () => {
   const m = loadApprovedVisualBaseline();
-  assert.equal(m.baseline_id, "DESSET-CHANNELS-2026-11-16-V9");
-  assert.equal(m.source_commit, "7b99292d829affc102051eace2a6aba40c235efa");
+  assert.equal(m.baseline_id, "DESSET-V10-HERO-2026-11-17");
+  assert.equal(m.source_commit, "e6cef899199c575f6a0db0ec9f1804669b7800b0");
   assert.equal(m.production_deployment, "7385252a-999d-4542-98c7-ae8f1e1d8a1e");
-  assert.equal(m.approval_evidence,"https://github.com/M0-coder/DESSET/issues/45#issuecomment-6933415916");
+  assert.equal(m.approval_evidence,"https://github.com/M0-coder/DESSET/issues/47#issuecomment-6956791110");
   assert.equal(Object.keys(m.files).length, 9);
+  assert.equal(m.files["index.html"], "14bf6c243937d988e76d886c53deade7c0448fb5");
+  assert.equal(m.files["styles.css"], "a41f70d21e9d9a432d0943b0264617c67661cbfe");
+  assert.equal(m.html_body_fnv64, "32b176e5ee9afce4");
   assert.deepEqual(inspectVisualBaseline(m, read).diffs, []);
   assert.deepEqual(assertApprovedVisualBaseline(m, read).diffs, []);
 });
