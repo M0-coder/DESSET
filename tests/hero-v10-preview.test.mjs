@@ -10,15 +10,17 @@ const html = read("index.html").toString("utf8");
 const css = read("styles.css").toString("utf8");
 const marker = "/* V10 HERO PILOT";
 
-test("V10 only appends scoped pilot CSS; approved stylesheet prefix is identical", () => {
+test("V10 preserves original monospace typography and only appends scoped finishing CSS", () => {
   const at = css.indexOf(marker);
   assert.ok(at > 0, "V10 pilot marker missing");
   assert.equal(css.indexOf(marker, at + marker.length), -1, "duplicate V10 marker");
   assert.equal(gitBlobSha1(Buffer.from(css.slice(0, at).trimEnd() + "\n")),
     manifest.files["styles.css"], "historical CSS changed before the isolated pilot");
   const pilot = css.slice(at);
-  assert.match(pilot, /\.tile--intro \.intro-main h1\s*\{/);
-  assert.match(pilot, /font-family:"PP Mondwest",Georgia/);
+  assert.match(css, /font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace/);
+  assert.doesNotMatch(pilot, /font-family\s*:|font-(?:size|style|weight|stretch)\s*:|letter-spacing\s*:|line-height\s*:/i,
+    "Unapproved pilot must inherit the exact original monospace typography");
+  assert.match(pilot, /\.tile--intro\s*\{/);
   assert.match(pilot, /body\[data-theme="dark"\] \.tile--intro\s*\{/);
   assert.match(pilot, /\.tile--intro::after\s*\{/);
   assert.match(pilot, /pointer-events:none/);
