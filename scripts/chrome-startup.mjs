@@ -12,6 +12,7 @@ const MAX_LOG_CHARS = 1800;
 const chromeArgs = Object.freeze([
   "--headless=new", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage",
   "--no-first-run", "--no-default-browser-check", "--disable-extensions",
+  "--no-proxy-server", "--disable-background-networking",
   "--remote-debugging-port=0",
 ]);
 const ended = child => child.exitCode !== null || child.signalCode !== null;
