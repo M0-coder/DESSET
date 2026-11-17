@@ -1,10 +1,8 @@
 import assert from "node:assert/strict";
-import { spawn, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { createServer } from "node:http";
-import { readFile, mkdtemp, mkdir, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { launchChromeWithRetry } from "./chrome-startup.mjs";
 import { finishBrowserAudit } from "./browser-cleanup.mjs";
 import { readFileSync } from "node:fs";
 import { STYLESHEET_PATHS, versionedStylesheetUrl } from "./cache-version.mjs";
@@ -46,25 +44,18 @@ async function serve() {
       const bytes = await readFile(new URL(file[0], root));
       response.writeHead(200, { "content-type": file[1], "x-content-type-options": "nosniff", "cache-control": "no-store" });
       response.end(bytes);
-    } catch {
+    } catch (error) {
+      console.error("LOCAL HTTP NO-GO: no se pudo servir " + pathname +
+        ": " + (error?.code ?? error?.name ?? "unknown"));
       response.writeHead(500); response.end("Missing file");
     }
   });
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
   return { server, url: "http://127.0.0.1:" + server.address().port + "/" };
 }
-async function connectChrome(browser, dir) {
-  const marker = join(dir, "DevToolsActivePort");
-  let port;
-  for (let i = 0; i < 100; i++) {
-    if (existsSync(marker)) {
-      port = Number((await readFile(marker, "utf8")).split("\n")[0]);
-      break;
-    }
-    if (browser.exitCode !== null) throw new Error("Chrome terminó antes de abrir DevTools");
-    await delay(100);
-  }
-  assert.ok(port > 0, "Chrome no creó DevToolsActivePort");
+async function connectChrome(port) {
+  assert.ok(Number.isInteger(port) && port > 0 && port <= 65535,
+    "NO-GO: puerto de depuración Chrome fuera de rango");
   let target;
   for (let i = 0; i < 50; i++) {
     const pages = await fetch("http://127.0.0.1:" + port + "/json/list").then(r => r.json()).catch(() => []);
@@ -104,7 +95,11 @@ async function connectChrome(browser, dir) {
 }
 async function evalBrowser(send, expression) {
   const response = await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true });
-  if (response.exceptionDetails) throw new Error("Runtime exception: " + response.exceptionDetails.text);
+  if (response.exceptionDetails) {
+    const detail = response.exceptionDetails;
+    const description = detail.exception?.description ?? detail.exception?.value ?? detail.text;
+    throw new Error("Runtime exception: " + String(description).slice(0, 1200));
+  }
   return response.result.value;
 }
 function measure() {
@@ -179,13 +174,16 @@ let primaryError;
 const failures = [];
 try {
   const local = await serve(); server = local.server;
-  temporary = await mkdtemp(join(tmpdir(), "desset-browser-"));
-  browser = spawn(findChrome(), [
-    "--headless=new", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage",
-    "--no-first-run", "--no-default-browser-check", "--disable-extensions",
-    "--remote-debugging-port=0", "--user-data-dir=" + temporary, "about:blank"
-  ], { stdio: "ignore" });
-  const connected = await connectChrome(browser, temporary);
+  // Independent local HTTP preflight: a browser error page cannot count as a visual pass.
+  const probe = await fetch(local.url, { signal: AbortSignal.timeout(5000) });
+  assert.equal(probe.status, 200, "NO-GO: servidor local no devolvió HTTP 200");
+  assert.match(await probe.text(), /<main class="board"/,
+    "NO-GO: servidor local no entregó el Bento aprobado");
+  // Retry only the local Chrome startup handshake, never a failed visual assertion.
+  const launched = await launchChromeWithRetry(findChrome());
+  browser = launched.browser;
+  temporary = launched.temporary;
+  const connected = await connectChrome(launched.port);
   ws = connected.ws;
   const send = connected.send;
   await send("Page.enable");
@@ -195,11 +193,21 @@ try {
   await mkdir(output, { recursive: true });
   for (const [width, height] of viewports) {
     await send("Emulation.setDeviceMetricsOverride", { width, height, mobile: width <= 640, deviceScaleFactor: 1 });
-    await send("Page.navigate", { url: local.url });
-    for (let attempt = 0; attempt < 60; attempt++) {
-      const ready = await evalBrowser(send, "document.readyState === 'complete' && Boolean(document.querySelector('.board'))");
-      if (ready) break;
+    const navigation = await send("Page.navigate", { url: local.url });
+    if (navigation.errorText)
+      throw new Error("NO-GO: navegación local falló " + width + "x" + height + ": " + navigation.errorText);
+    let boardReady = false;
+    for (let attempt = 0; attempt < 150; attempt++) {
+      boardReady = await evalBrowser(send, "document.readyState === 'complete' && Boolean(document.querySelector('.board'))");
+      if (boardReady) break;
       await delay(100);
+    }
+    if (!boardReady) {
+      const info = await evalBrowser(send,
+        "(function(){return {url:location.href,readyState:document.readyState,hasSite:!!document.querySelector('.site'),hasBoard:!!document.querySelector('.board'),title:document.title,bodyPreview:document.body?.textContent?.slice(0,300)??null,htmlPrefix:document.documentElement?.outerHTML?.slice(0,300)??null};})()")
+        .catch(error => ({ diagnosticError: error.message }));
+      throw new Error("NO-GO: tablero Bento no cargó en Chrome tras 15 segundos " +
+        width + "x" + height + ": " + JSON.stringify(info));
     }
     await delay(120);
     // Check the production HTML actually loaded the content-addressed CSS URL.
