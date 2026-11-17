@@ -17,12 +17,17 @@ document.querySelectorAll("[data-detail]").forEach(button=>{
     heading.textContent=detail.title;
     dialogContent.querySelector(".project-prose")?.remove();
     dialogContent.querySelector(".identity-prose")?.remove();
+    dialogContent.querySelector(".channel-links")?.remove();
+    dialogContent.querySelector(".channel-note")?.remove();
     const isProject=button.dataset.detail==="project";
     const isIdentity=button.dataset.detail==="company";
+    const isChannels=button.dataset.detail==="contact";
     dialogContent.classList.toggle("dialog-content--project",isProject);
     dialog.classList.toggle("detail-dialog--project",isProject);
     dialogContent.classList.toggle("dialog-content--identity",isIdentity);
     dialog.classList.toggle("detail-dialog--identity",isIdentity);
+    dialogContent.classList.toggle("dialog-content--channels",isChannels);
+    dialog.classList.toggle("detail-dialog--channels",isChannels);
     body.replaceChildren();
     if(isProject){
       const emphasis=document.createElement("strong");
@@ -84,6 +89,37 @@ document.querySelectorAll("[data-detail]").forEach(button=>{
       points.hidden=true;
       points.style.display="none";
       points.after(prose);
+    }else if(isChannels){
+      body.textContent=detail.body;
+      points.replaceChildren();
+      points.hidden=true;
+      points.style.display="none";
+
+      const links=document.createElement("nav");
+      links.className="channel-links";
+      links.setAttribute("aria-label","Canales oficiales de DESSET");
+      const allowedHosts=new Set(["x.com","www.instagram.com","www.tiktok.com","www.facebook.com","www.youtube.com"]);
+      detail.links.forEach(({label,url})=>{
+        const target=new URL(url);
+        if(target.protocol!=="https:"||!allowedHosts.has(target.hostname)||target.username||target.password){
+          throw new Error("Destino externo no autorizado: "+label);
+        }
+        const a=document.createElement("a");
+        a.href=target.href;
+        a.target="_blank";
+        a.rel="noopener noreferrer";
+        a.textContent=label;
+        a.setAttribute("aria-label","Abrir "+label+" de DESSET (sitio externo)");
+        const arrow=document.createElement("span");
+        arrow.textContent="↗";
+        arrow.setAttribute("aria-hidden","true");
+        a.append(arrow);
+        links.append(a);
+      });
+      const note=document.createElement("p");
+      note.className="channel-note";
+      note.textContent=detail.points[1];
+      points.after(links,note);
     }else{
       body.textContent=detail.body;
       points.hidden=false;

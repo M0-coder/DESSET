@@ -47,7 +47,7 @@ test("full-bleed elimina max-width, padding y márgenes exteriores",()=>{
   assert.doesNotMatch(css,/width:min\(100%,1600px\)/);
   assert.match(css,/@media\(max-width:640px\)\{\s*\.site\{padding:0;[^}]*gap:0\}/);
 });
-test("la web no ejecuta scripts ajenos ni utiliza enlaces externos",()=>{
+test("la web no ejecuta scripts ajenos; redes externas solo se abren desde el diálogo permitido",()=>{
   const html=read("index.html");
   assert.doesNotMatch(html,/<script[^>]+src="https?:/i);
   assert.doesNotMatch(html,/target="_blank"/i);
@@ -95,7 +95,7 @@ test("solo cambia la ilustración central: misma narrativa V2 y contenido comerc
   assert.match(html,/MOVIMIENTO \/ SISTEMA/);
   assert.match(html,/COBRO<br>POR ENVÍO\./);
   assert.match(html,/UNA MISMA VISIÓN\./);
-  assert.match(html,/CANALES OFICIALES<br>EN PREPARACIÓN\./);
+  assert.match(html,/CANALES<br>OFICIALES\./);
   assert.match(css,/\.tile--visual img\{object-fit:contain;/);
   assert.match(css,/\.site\{width:100%;height:100dvh;/);
 });
@@ -123,7 +123,7 @@ test("Bento móvil: sin cuatro rótulos redundantes y con ilustración original 
 });
 test("Prelaunch: ningún texto institucional aprobado se sustituye",()=>{
   const html=read("index.html");
-  for(const fragment of ["UNA MISMA VISIÓN.","MOVEMOS LA CIUDAD.","COBRO<br>POR ENVÍO.","CANALES OFICIALES<br>EN PREPARACIÓN."]){
+  for(const fragment of ["UNA MISMA VISIÓN.","MOVEMOS LA CIUDAD.","COBRO<br>POR ENVÍO.","CANALES<br>OFICIALES."]){
     assert.ok(html.includes(fragment),"Falta contenido autorizado: "+fragment);
   }
 });
