@@ -19,10 +19,20 @@ export const DETAILS = Object.freeze({
     points:["Customer: experiencia prevista para clientes.","Business: herramientas proyectadas para comercios.","Rider y Control: reparto y supervisión sujetos a desarrollo y validación."]
   },
   contact:{
-    kicker:"CONTACTO",
-    title:"Canales pendientes de habilitación.",
-    body:"No se ha publicado todavía un número, dirección de correo o formulario empresarial verificado para esta web.",
-    points:["No se recogen datos personales desde esta versión.","Los canales se incorporarán tras revisar privacidad y responsable de atención."]
+    kicker:"DESSET / CANALES OFICIALES",
+    title:"Conecta con DESSET.",
+    body:"Síguenos en nuestras redes para conocer noticias y avances del proyecto.",
+    points:[
+      "Los enlaces conducen a plataformas externas.",
+      "Esta web es institucional: no admite pedidos ni pagos."
+    ],
+    links:Object.freeze([
+      {label:"X",url:"https://x.com/deliver_assets"},
+      {label:"Instagram",url:"https://www.instagram.com/deliver_assets/"},
+      {label:"TikTok",url:"https://www.tiktok.com/@deliver_assets"},
+      {label:"Facebook",url:"https://www.facebook.com/share/1EtpsZNFwQ/"},
+      {label:"YouTube",url:"https://www.youtube.com/@deliver_assets"}
+    ])
   },
   status:{
     kicker:"ESTADO DEL PROYECTO",
