@@ -95,6 +95,17 @@ button{font:inherit;color:inherit}button:focus-visible{outline:3px solid var(--f
 
 
 
+/* V9: five institutional social links inside the original CONTACTO dialog only.
+   The Bento, typography, other dialogs and their responsive behavior stay unchanged. */
+.detail-dialog--channels .dialog-shell{max-height:calc(100dvh - 42px)}
+.detail-dialog--channels .dialog-content--channels{justify-content:flex-start;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:auto}
+.detail-dialog--channels .dialog-content--channels>*{flex-shrink:0}
+.channel-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(7px,1.2vw,10px)}
+.channel-links a{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;padding:clamp(9px,1.4vw,13px);border:1px solid var(--line);border-radius:9px;background:var(--tile-light);color:var(--ink);text-decoration:none;font-size:clamp(12px,1.55vw,15px);font-weight:600}
+.channel-links a span{color:var(--brand-blue-ink)}
+.channel-links a:hover{border-color:var(--brand-blue-ink)}
+.channel-links a:focus-visible{outline:3px solid var(--brand-blue-ink);outline-offset:-3px}
+.channel-note{color:var(--muted)}
 .dialog-eyebrow{margin:0;font-size:12px;color:var(--muted)}
 .dialog-content h2{margin:0;font-size:clamp(24px,4.5vw,39px);line-height:1.02;letter-spacing:-.06em;font-weight:500}
 .dialog-content p:not(.dialog-eyebrow){margin:0;font-size:clamp(12px,1.8vw,15px);line-height:1.45}
