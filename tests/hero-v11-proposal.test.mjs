@@ -46,7 +46,7 @@ test("HERO-V11: CSS limitado a la primera tarjeta y tipografía sin dependencias
     ".tile--intro .intro-skyline",
     "@media(max-width:640px)",
     "@media(max-height:400px)",
-    "font-family:Georgia",
+    'font-family:"Times New Roman",Times,Georgia,serif',
     "font-family:Arial",
     "object-fit:contain",
   ]) assert.ok(css.includes(x), "Elemento de referencia ausente: " + x);
