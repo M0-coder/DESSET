@@ -18,8 +18,12 @@ test("V10 preserves original monospace typography and only appends scoped finish
     manifest.files["styles.css"], "historical CSS changed before the isolated pilot");
   const pilot = css.slice(at);
   assert.match(css, /font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace/);
-  assert.doesNotMatch(pilot, /font-family\s*:|font-(?:size|style|weight|stretch)\s*:|letter-spacing\s*:|line-height\s*:/i,
-    "Unapproved pilot must inherit the exact original monospace typography");
+  const candidateFamilies = [...pilot.matchAll(/font-family\s*:\s*([^;]+);/gi)].map(match => match[1].trim());
+  assert.ok(candidateFamilies.length > 0, "The candidate must declare that it inherits the approved font");
+  assert.ok(candidateFamilies.every(value => value === "inherit"), "The original monospace face must remain unchanged");
+  assert.doesNotMatch(pilot, /PP Mondwest|Space Grotesk|@font-face|@import/i);
+  assert.match(pilot, /\.tile--intro \.intro-skyline\s*\{/);
+  assert.match(pilot, /\.tile--intro \.intro-wordmark\s*\{/);
   assert.match(pilot, /\.tile--intro\s*\{/);
   assert.match(pilot, /body\[data-theme="dark"\] \.tile--intro\s*\{/);
   assert.match(pilot, /\.tile--intro::after\s*\{/);
@@ -30,8 +34,19 @@ test("V10 preserves original monospace typography and only appends scoped finish
     "the unapproved pilot must not accidentally pass the historical visual gate");
 });
 
-test("exact approved HTML, all 10 Bento tiles and project link remain untouched", () => {
-  assert.equal(gitBlobSha1(Buffer.from(html)), manifest.files["index.html"]);
+test("candidate adds city and label only to the first card, preserving 10-tile approved HTML", () => {
+  const label = '          <span class="intro-wordmark" aria-hidden="true">DESSET</span>';
+  assert.equal(html.split(label).length, 2, "Exactly one decorative wordmark");
+  const match = html.match(/\n        <svg class="intro-skyline"[^\n]*<\/svg>/g);
+  assert.equal(match?.length, 1, "The hero skyline must be one self-contained SVG");
+  const skyline = match[0];
+  assert.match(skyline, /aria-hidden="true"/);
+  assert.match(skyline, /viewBox="0 0 180 56"/);
+  assert.doesNotMatch(skyline, /<script|foreignObject|onload|href=|https?:|data:/i);
+  const originalHtml = html.replace("\n" + label, "").replace(skyline, "");
+  assert.equal(gitBlobSha1(Buffer.from(originalHtml)), manifest.files["index.html"],
+    "Everything outside the two new first-card elements must be byte-for-byte identical");
+  assert.doesNotMatch(html, /DESSET®|DESSET&reg;|DESSET&#174;/i);
   assert.equal((html.match(/class="tile tile--/g) || []).length, 10);
   assert.match(html, /COMERCIO<br>Y <span class="brand-word">LOGÍSTICA<\/span>\.<br><span>UNA MISMA VISIÓN\.<\/span>/);
   assert.match(html, /data-detail="project">CONOCER EL PROYECTO/);
