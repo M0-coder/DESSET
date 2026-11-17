@@ -22,7 +22,7 @@ const newCss = read("styles.css");
 const candidate = {
   ...approvedV10,
   baseline_id: "DESSET-V11-HERO-2026-11-17",
-  source_commit: "0123ae648517f4b4c4bc34fc992bfbf63550a46d",
+  source_commit: "5f1d5b711889868a1e14ab75a74448f91b34a59b",
   // The last known LIVE deployment before V11, not a V11 deployment.
   production_deployment: "b118e080-24c8-412a-8ae7-ab52af7506f3",
   // Not a valid approval URL intentionally; do NOT use this as the active manifest.
