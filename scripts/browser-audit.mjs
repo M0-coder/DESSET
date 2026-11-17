@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createServer } from "node:http";
-import { mkdir, writeFile } from "node:fs/promises";
+import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { launchChromeWithRetry } from "./chrome-startup.mjs";
 import { finishBrowserAudit } from "./browser-cleanup.mjs";
 import { readFileSync } from "node:fs";
@@ -44,7 +44,9 @@ async function serve() {
       const bytes = await readFile(new URL(file[0], root));
       response.writeHead(200, { "content-type": file[1], "x-content-type-options": "nosniff", "cache-control": "no-store" });
       response.end(bytes);
-    } catch {
+    } catch (error) {
+      console.error("LOCAL HTTP NO-GO: no se pudo servir " + pathname +
+        ": " + (error?.code ?? error?.name ?? "unknown"));
       response.writeHead(500); response.end("Missing file");
     }
   });
