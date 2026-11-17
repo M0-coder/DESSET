@@ -18,7 +18,7 @@ test("V10 preserves original monospace typography and only appends scoped finish
     manifest.files["styles.css"], "historical CSS changed before the isolated pilot");
   const pilot = css.slice(at);
   assert.match(css, /font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace/);
-  const candidateFamilies = [...pilot.matchAll(/font-family\s*:\s*([^;]+);/gi)].map(match => match[1].trim());
+  const candidateFamilies = [...pilot.matchAll(/font-family\s*:\s*([^;}]+)[;}]/gi)].map(match => match[1].trim());
   assert.ok(candidateFamilies.length > 0, "The candidate must declare that it inherits the approved font");
   assert.ok(candidateFamilies.every(value => value === "inherit"), "The original monospace face must remain unchanged");
   assert.doesNotMatch(pilot, /PP Mondwest|Space Grotesk|@font-face|@import/i);
