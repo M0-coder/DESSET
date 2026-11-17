@@ -314,3 +314,18 @@ body[data-theme="dark"] .tile--intro {
   .tile--intro .intro-main h1 {font-size:clamp(14px,4.8cqw,20px)}
   .tile--intro .intro-main h1 > span:last-child {font-size:clamp(10px,3.45cqw,14px)}
 }
+
+/* Pixel accent derived from the approved first-card concept, CSS only.
+   Decorative, non-interactive and intentionally small at every viewport. */
+.tile--intro::after {
+  content:"";
+  position:absolute;
+  inset-block-start:18%;
+  inset-inline-start:54%;
+  width:6px;
+  height:6px;
+  background:var(--brand-red);
+  box-shadow:0 -7px 0 var(--brand-red),0 7px 0 var(--brand-red),
+    -7px 0 0 var(--brand-red),7px 0 0 var(--brand-red);
+  pointer-events:none;
+}
