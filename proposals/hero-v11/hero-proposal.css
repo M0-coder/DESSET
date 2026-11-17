@@ -78,12 +78,16 @@
 }
 @media(min-width:1001px) and (min-height:700px){
   .tile--intro .intro-skyline{
-    transform:translate(-55px,8px) scale(1.4);
+    transform:translate(-55px,14px) scale(1.4);
     transform-origin:center bottom;
     width:min(70%,410px);
     height:clamp(55px,12cqw,88px);
     margin-left:13%;
   }
+}
+/* En portátiles estrechos, la ciudad no invade el pie HUACHO/CONOCER. */
+@media(min-width:1001px) and (max-width:1150px) and (min-height:700px){
+  .tile--intro .intro-skyline{transform:translate(-55px,-12px) scale(1.32)}
 }
 @media(max-width:1000px){
   .tile--intro .intro-main h1 .intro-title-heavy{font-size:clamp(15px,5.55cqw,35px)}
