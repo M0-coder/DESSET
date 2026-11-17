@@ -1,10 +1,8 @@
 import assert from "node:assert/strict";
-import { spawn, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { createServer } from "node:http";
-import { readFile, mkdtemp, mkdir, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
+import { launchChromeWithRetry } from "./chrome-startup.mjs";
 import { finishBrowserAudit } from "./browser-cleanup.mjs";
 import { readFileSync } from "node:fs";
 import { STYLESHEET_PATHS, versionedStylesheetUrl } from "./cache-version.mjs";
@@ -53,18 +51,9 @@ async function serve() {
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
   return { server, url: "http://127.0.0.1:" + server.address().port + "/" };
 }
-async function connectChrome(browser, dir) {
-  const marker = join(dir, "DevToolsActivePort");
-  let port;
-  for (let i = 0; i < 100; i++) {
-    if (existsSync(marker)) {
-      port = Number((await readFile(marker, "utf8")).split("\n")[0]);
-      break;
-    }
-    if (browser.exitCode !== null) throw new Error("Chrome terminó antes de abrir DevTools");
-    await delay(100);
-  }
-  assert.ok(port > 0, "Chrome no creó DevToolsActivePort");
+async function connectChrome(port) {
+  assert.ok(Number.isInteger(port) && port > 0 && port <= 65535,
+    "NO-GO: puerto de depuración Chrome fuera de rango");
   let target;
   for (let i = 0; i < 50; i++) {
     const pages = await fetch("http://127.0.0.1:" + port + "/json/list").then(r => r.json()).catch(() => []);
@@ -179,13 +168,11 @@ let primaryError;
 const failures = [];
 try {
   const local = await serve(); server = local.server;
-  temporary = await mkdtemp(join(tmpdir(), "desset-browser-"));
-  browser = spawn(findChrome(), [
-    "--headless=new", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage",
-    "--no-first-run", "--no-default-browser-check", "--disable-extensions",
-    "--remote-debugging-port=0", "--user-data-dir=" + temporary, "about:blank"
-  ], { stdio: "ignore" });
-  const connected = await connectChrome(browser, temporary);
+  // Retry only the local Chrome startup handshake, never a failed visual assertion.
+  const launched = await launchChromeWithRetry(findChrome());
+  browser = launched.browser;
+  temporary = launched.temporary;
+  const connected = await connectChrome(launched.port);
   ws = connected.ws;
   const send = connected.send;
   await send("Page.enable");
