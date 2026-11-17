@@ -202,6 +202,10 @@ test("browser audits retain all 13 resolutions, real assertions and fail-closed 
   assert.match(audit, /checkMetrics/);
   assert.match(audit, /prefers-reduced-motion/);
   assert.match(audit, /Profiler\.takePreciseCoverage/);
+  assert.match(audit, /navigation\.errorText/);
+  assert.match(audit, /if \(!boardReady\)/);
+  assert.match(audit, /NO-GO: tablero Bento no cargó/);
+  assert.match(audit, /detail\.exception\?\.description/);
   assert.match(audit, /await finishBrowserAudit\(\{ ws, browser, server, temporary \}, primaryError\)/);
   assert.doesNotMatch(audit, /process\.env\.SKIP|skipVisual|CHROME_IGNORE_ERRORS/i);
 });
