@@ -9,13 +9,14 @@ const manifest = JSON.parse(read("config/visual-baseline-approved.json").toStrin
 const html = read("index.html").toString("utf8");
 const css = read("styles.css").toString("utf8");
 const marker = "/* V10 HERO PILOT";
+assert.equal(manifest.baseline_id, "DESSET-V10-HERO-2026-11-17");
 
 test("V10 preserves original monospace typography and only appends scoped finishing CSS", () => {
   const at = css.indexOf(marker);
   assert.ok(at > 0, "V10 pilot marker missing");
   assert.equal(css.indexOf(marker, at + marker.length), -1, "duplicate V10 marker");
   assert.equal(gitBlobSha1(Buffer.from(css.slice(0, at).trimEnd() + "\n")),
-    manifest.files["styles.css"], "historical CSS changed before the isolated pilot");
+    "7dc136407b82abc51463c4795087f0cabdc2d624", "historical V9 CSS changed before V10 additions");
   const pilot = css.slice(at);
   assert.match(css, /font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace/);
   const candidateFamilies = [...pilot.matchAll(/font-family\s*:\s*([^;}]+)[;}]/gi)].map(match => match[1].trim());
@@ -32,8 +33,8 @@ test("V10 preserves original monospace typography and only appends scoped finish
   assert.doesNotMatch(pilot, /\.board\s*\{|\.brand-symbol\s*\{|\.tile--visual\s*\{/);
   assert.doesNotMatch(pilot, /(^|\n)\s*\.intro-eye\s*\{/m,
     "Eye adjustments must be scoped to the first card, never global");
-  assert.notEqual(gitBlobSha1(Buffer.from(css)), manifest.files["styles.css"],
-    "the unapproved pilot must not accidentally pass the historical visual gate");
+  assert.equal(gitBlobSha1(Buffer.from(css)), manifest.files["styles.css"],
+    "the authorized V10 stylesheet must match its approved baseline exactly");
 });
 
 test("candidate adds city and label only to the first card, preserving 10-tile approved HTML", () => {
@@ -46,8 +47,10 @@ test("candidate adds city and label only to the first card, preserving 10-tile a
   assert.match(skyline, /viewBox="0 0 180 56"/);
   assert.doesNotMatch(skyline, /<script|foreignObject|onload|href=|https?:|data:/i);
   const originalHtml = html.replace("\n" + label, "").replace(skyline, "");
-  assert.equal(gitBlobSha1(Buffer.from(originalHtml)), manifest.files["index.html"],
-    "Everything outside the two new first-card elements must be byte-for-byte identical");
+  assert.equal(gitBlobSha1(Buffer.from(originalHtml)), "041a24329386946b28f0ca889a68f31ce2f42987",
+    "Everything outside the two new first-card elements must match historical V9 HTML");
+  assert.equal(gitBlobSha1(Buffer.from(html)), manifest.files["index.html"],
+    "The approved V10 HTML must match the new baseline exactly");
   assert.doesNotMatch(html, /DESSET®|DESSET&reg;|DESSET&#174;/i);
   assert.equal((html.match(/class="tile tile--/g) || []).length, 10);
   assert.match(html, /COMERCIO<br>Y <span class="brand-word">LOGÍSTICA<\/span>\.<br><span>UNA MISMA VISIÓN\.<\/span>/);
