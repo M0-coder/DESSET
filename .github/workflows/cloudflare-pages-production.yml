@@ -184,12 +184,15 @@ jobs:
           set -euo pipefail
           curl --retry 3 --retry-delay 3 --fail-with-body -sS https://desset.lat/ -o /tmp/desset-published-index.html
           grep -Fq "DELIVER ASSETS / DESSET" /tmp/desset-published-index.html
-          curl --retry 3 --retry-delay 3 --fail-with-body -sS https://www.desset.lat/ |
-            grep -Fq "DELIVER ASSETS / DESSET"
-          curl --fail-with-body -sS https://desset.lat/robots.txt |
-            grep -Fq "Sitemap: https://desset.lat/sitemap.xml"
-          curl --fail-with-body -sS https://desset.lat/sitemap.xml |
-            grep -Fq "https://desset.lat/"
+          curl --retry 3 --retry-delay 3 --fail-with-body -sS https://www.desset.lat/ \
+            -o /tmp/desset-published-www-index.html
+          grep -Fq "DELIVER ASSETS / DESSET" /tmp/desset-published-www-index.html
+          curl --fail-with-body -sS https://desset.lat/robots.txt \
+            -o /tmp/desset-published-robots.txt
+          grep -Fq "Sitemap: https://desset.lat/sitemap.xml" /tmp/desset-published-robots.txt
+          curl --fail-with-body -sS https://desset.lat/sitemap.xml \
+            -o /tmp/desset-published-sitemap.xml
+          grep -Fq "https://desset.lat/" /tmp/desset-published-sitemap.xml
           curl --fail-with-body -sS https://desset.lat/assets/deliver-assets-mark.png \
             -o /tmp/desset-public-logo.png
           cmp -s assets/deliver-assets-mark.png /tmp/desset-public-logo.png
@@ -206,8 +209,12 @@ jobs:
               exit 1
             }
           done
-          curl --silent --show-error -o /dev/null -w '%{http_code}' \
-            https://desset.lat/__desset_missing_audit_path__ |
-            grep -Fxq "404"
-          curl -fsSI https://desset.lat/ | grep -iq '^content-security-policy:'
+          missing_code="$(curl --silent --show-error -o /dev/null -w '%{http_code}' \
+            https://desset.lat/__desset_missing_audit_path__)"
+          test "$missing_code" = "404" || {
+            echo "::error::Public 404 route returned $missing_code, expected 404"
+            exit 1
+          }
+          curl -fsSI https://desset.lat/ -o /tmp/desset-published-headers.txt
+          grep -iq '^content-security-policy:' /tmp/desset-published-headers.txt
           echo "LIVE SMOKE PASS: dominios, recursos, logotipo idéntico y cabeceras."
