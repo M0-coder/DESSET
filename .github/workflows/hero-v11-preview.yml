@@ -1,0 +1,52 @@
+name: DESSET HERO V11 - Preview Offline Only
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'proposals/hero-v11/**'
+      - 'tests/hero-v11-proposal.test.mjs'
+      - '.github/workflows/hero-v11-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    name: preview-only
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout isolated candidate (never deploy)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Node 22.16.0
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - name: Exact install without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Immutable baseline and proposal-only safety checks
+        run: |
+          set -euo pipefail
+          node --check proposals/hero-v11/build-preview.mjs
+          node --check proposals/hero-v11/capture-evidence.mjs
+          node --test tests/hero-v11-proposal.test.mjs
+      - name: Offline screenshots: approved baseline versus candidate
+        run: |
+          set -euo pipefail
+          google-chrome --version
+          node proposals/hero-v11/capture-evidence.mjs
+          test "$(find reports/hero-v11-evidence -name '*.png' | wc -l)" -eq 8
+      - name: Upload visual comparison (not a production artifact)
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-hero-v11-preview-only
+          path: |
+            reports/hero-v11-evidence/
+            reports/hero-v11-preview/
+          if-no-files-found: error
+          retention-days: 14
