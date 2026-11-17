@@ -1,0 +1,50 @@
+name: DESSET V10 Hero Candidate Preview (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - styles.css
+      - tests/hero-v10-preview.test.mjs
+      - docs/V10-HERO-PILOT.md
+      - .github/workflows/v10-hero-preview.yml
+permissions:
+  contents: read
+jobs:
+  hero-preview:
+    if: github.head_ref == 'design/v10-hero-pilot-no-deploy'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout candidate (not production)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Exact Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - name: Reproducible install
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Existing unit and structural contracts
+        run: npm run check
+      - name: Security static audit
+        run: npm run security:audit
+      - name: Mutation smoke and partial coverage
+        run: |
+          npm run mutation:smoke
+          npm run test:coverage
+      - name: Chrome available
+        run: google-chrome --version
+      - name: Browser regression on 13 sizes (preview only)
+        run: npm run browser:audit
+      - name: Collect local screenshots; never publish
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-v10-hero-preview-evidence
+          path: reports/browser/
+          if-no-files-found: warn
+          retention-days: 14
+# This is a scoped candidate preview. The unchanged CI approval gate and
+# manual Cloudflare production workflow remain mandatory for promotion.
