@@ -20,6 +20,8 @@ test("V10 only appends scoped pilot CSS; approved stylesheet prefix is identical
   assert.match(pilot, /\.tile--intro \.intro-main h1\s*\{/);
   assert.match(pilot, /font-family:"PP Mondwest",Georgia/);
   assert.match(pilot, /body\[data-theme="dark"\] \.tile--intro\s*\{/);
+  assert.match(pilot, /\.tile--intro::after\s*\{/);
+  assert.match(pilot, /pointer-events:none/);
   assert.doesNotMatch(pilot, /@font-face|@import|url\s*\(\s*["']?https?:/i);
   assert.doesNotMatch(pilot, /\.board\s*\{|\.intro-eye\s*\{|\.brand-symbol\s*\{|\.tile--visual\s*\{/);
   assert.notEqual(gitBlobSha1(Buffer.from(css)), manifest.files["styles.css"],
@@ -36,12 +38,51 @@ test("exact approved HTML, all 10 Bento tiles and project link remain untouched"
   assert.match(html, /<img src="\.\/assets\/desset-eye\.gif" width="496" height="499"/);
 });
 
+// Count actual GIF image descriptors; searching raw bytes for 0x2C is unsafe,
+// because compressed image data may contain the same value.
+function gifFrameCount(bytes) {
+  assert.match(bytes.subarray(0, 6).toString("ascii"), /^GIF8[79]a$/);
+  let offset = 13;
+  if(bytes[10] & 0x80) offset += 3 * (2 ** ((bytes[10] & 7) + 1));
+  const skipBlocks = () => {
+    for(;;) {
+      assert.ok(offset < bytes.length, "GIF sub-block missing terminator");
+      const length = bytes[offset++];
+      if(!length) return;
+      offset += length;
+      assert.ok(offset <= bytes.length, "GIF sub-block exceeds file size");
+    }
+  };
+  let count = 0;
+  let complete = false;
+  while(offset < bytes.length) {
+    const type = bytes[offset++];
+    if(type === 0x3b) { complete = true; break; }
+    if(type === 0x21) {
+      offset++; // extension label
+      skipBlocks();
+    } else if(type === 0x2c) {
+      offset += 8; // image position and dimensions
+      const packed = bytes[offset++];
+      if(packed & 0x80) offset += 3 * (2 ** ((packed & 7) + 1));
+      offset++; // LZW minimum code size
+      skipBlocks();
+      count++;
+    } else {
+      throw new Error("Unsupported GIF block type: " + type);
+    }
+  }
+  assert.ok(complete, "GIF trailer absent");
+  return count;
+}
+
 test("animated GIF and still fallback retain their approved binary hashes", () => {
   const gif = read("assets/desset-eye.gif");
   const still = read("assets/desset-eye-still.png");
   assert.equal(gif.subarray(0,3).toString(), "GIF");
   assert.equal(gif.readUInt16LE(6), 496);
   assert.equal(gif.readUInt16LE(8), 499);
+  assert.ok(gifFrameCount(gif) > 1, "The approved eye must remain an animated multi-frame GIF");
   assert.equal(still.subarray(0,8).toString("hex"), "89504e470d0a1a0a");
   assert.equal(gitBlobSha1(gif), manifest.files["assets/desset-eye.gif"]);
   assert.equal(gitBlobSha1(still), manifest.files["assets/desset-eye-still.png"]);
