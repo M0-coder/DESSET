@@ -1,0 +1,103 @@
+name: DESSET V10 Hero Candidate Preview (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - index.html
+      - styles.css
+      - tests/hero-v10-preview.test.mjs
+      - docs/V10-HERO-PILOT.md
+      - .github/workflows/v10-hero-preview.yml
+permissions:
+  contents: read
+jobs:
+  hero-preview:
+    if: github.head_ref == 'design/v10-hero-pilot-no-deploy'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout candidate (not production)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Exact Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - name: Reproducible install
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Ensure the production approval gate rejects this unapproved CSS
+        run: |
+          if node scripts/approved-baseline-gate.mjs >/tmp/desset-v10-gate.txt 2>&1; then
+            echo "::error::Unexpected baseline PASS; candidate must remain unapproved"
+            exit 1
+          fi
+          grep -Fq "BENTO NO APROBADO" /tmp/desset-v10-gate.txt || {
+            cat /tmp/desset-v10-gate.txt
+            exit 1
+          }
+          echo "PASS: production approval gate remains fail-closed on candidate"
+      - name: Syntax, candidate and general unit tests (except baseline-approval unit assertions)
+        shell: bash
+        run: |
+          node --check src/app.mjs
+          node --check src/content.mjs
+          mapfile -t suites < <(find tests -maxdepth 1 -type f -name '*.test.mjs' ! -name 'visual-baseline.test.mjs' | LC_ALL=C sort)
+          node --test "${suites[@]}"
+          node scripts/verify.mjs
+      - name: Security static audit
+        run: npm run security:audit
+      - name: Mutation smoke and partial candidate coverage
+        shell: bash
+        run: |
+          npm run mutation:smoke
+          mapfile -t suites < <(find tests -maxdepth 1 -type f -name '*.test.mjs' ! -name 'visual-baseline.test.mjs' | LC_ALL=C sort)
+          node --experimental-test-coverage --test "${suites[@]}"
+      - name: Hosting safety and negative package cases (local only)
+        run: |
+          node scripts/hosting-policy-gate.mjs
+          npm run release:negative
+          npm run launch:guard
+          npm run cloudflare:negative
+          npm run cloudflare:release-negative
+      - name: Reproducible DESSET package for local rehearsal (NO UPLOAD)
+        env:
+          DESSET_PACKAGE_MODE: LOCAL_TEST_ONLY
+          DESSET_OFFICIAL_ORIGIN: https://desset.lat
+        run: |
+          npm run release:package
+          node scripts/release-package-gate.mjs
+      - name: Cloudflare production-shaped local artifact validation (NO DEPLOY)
+        env:
+          DESSET_CF_RELEASE_MODE: LOCAL_TEST_ONLY
+          DESSET_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          npm run cloudflare:release-candidate
+          npm run cloudflare:release-gate
+      - name: Chrome available
+        run: google-chrome --version
+      - name: Browser regression on 13 sizes (preview only)
+        run: npm run browser:audit
+      - name: Browser integration of local production-shaped files
+        env:
+          DESSET_BROWSER_DIST: "1"
+        run: npm run browser:audit
+      - name: Chrome audit of locally assembled Cloudflare package (NO DEPLOY)
+        env:
+          DESSET_BROWSER_CF_RELEASE: "1"
+        run: npm run browser:audit
+      - name: Collect local screenshots; never publish
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-v10-hero-preview-evidence
+          path: |
+            reports/browser/
+            reports/browser-dist/
+            reports/browser-cloudflare-release/
+            reports/cloudflare-release-manifest.json
+          if-no-files-found: warn
+          retention-days: 14
+# PREVIEW is separate from approval. The unchanged main CI baseline tests
+# and manual Cloudflare release workflow remain mandatory for promotion.
