@@ -29,7 +29,9 @@ test("V10 preserves original monospace typography and only appends scoped finish
   assert.match(pilot, /\.tile--intro::after\s*\{/);
   assert.match(pilot, /pointer-events:none/);
   assert.doesNotMatch(pilot, /@font-face|@import|url\s*\(\s*["']?https?:/i);
-  assert.doesNotMatch(pilot, /\.board\s*\{|\.intro-eye\s*\{|\.brand-symbol\s*\{|\.tile--visual\s*\{/);
+  assert.doesNotMatch(pilot, /\.board\s*\{|\.brand-symbol\s*\{|\.tile--visual\s*\{/);
+  assert.doesNotMatch(pilot, /(^|\n)\s*\.intro-eye\s*\{/m,
+    "Eye adjustments must be scoped to the first card, never global");
   assert.notEqual(gitBlobSha1(Buffer.from(css)), manifest.files["styles.css"],
     "the unapproved pilot must not accidentally pass the historical visual gate");
 });
