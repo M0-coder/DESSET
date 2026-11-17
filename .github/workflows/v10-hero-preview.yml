@@ -3,6 +3,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - index.html
       - styles.css
       - tests/hero-v10-preview.test.mjs
       - docs/V10-HERO-PILOT.md
@@ -57,12 +58,45 @@ jobs:
         run: google-chrome --version
       - name: Browser regression on 13 sizes (preview only)
         run: npm run browser:audit
+      - name: Hosting safety and negative package cases (local only)
+        run: |
+          node scripts/hosting-policy-gate.mjs
+          npm run release:negative
+          npm run launch:guard
+          npm run cloudflare:negative
+          npm run cloudflare:release-negative
+      - name: Reproducible DESSET package for local rehearsal (NO UPLOAD)
+        env:
+          DESSET_PACKAGE_MODE: LOCAL_TEST_ONLY
+          DESSET_OFFICIAL_ORIGIN: https://desset.lat
+        run: |
+          npm run release:package
+          node scripts/release-package-gate.mjs
+      - name: Browser integration of local production-shaped files
+        env:
+          DESSET_BROWSER_DIST: "1"
+        run: npm run browser:audit
+      - name: Cloudflare production-shaped local artifact validation (NO DEPLOY)
+        env:
+          DESSET_CF_RELEASE_MODE: LOCAL_TEST_ONLY
+          DESSET_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          npm run cloudflare:release-candidate
+          npm run cloudflare:release-gate
+      - name: Chrome audit of locally assembled Cloudflare package (NO DEPLOY)
+        env:
+          DESSET_BROWSER_CF_RELEASE: "1"
+        run: npm run browser:audit
       - name: Collect local screenshots; never publish
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: desset-v10-hero-preview-evidence
-          path: reports/browser/
+          path: |
+            reports/browser/
+            reports/browser-dist/
+            reports/browser-cloudflare-release/
+            reports/cloudflare-release-manifest.json
           if-no-files-found: warn
           retention-days: 14
 # PREVIEW is separate from approval. The unchanged main CI baseline tests
