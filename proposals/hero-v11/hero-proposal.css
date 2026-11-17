@@ -8,7 +8,7 @@
 .tile--intro .intro-wordmark{
   font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;
   font-weight:900;
-  font-size:clamp(17px,5.0cqw,36px);
+  font-size:clamp(18px,5.85cqw,39px);
   letter-spacing:-.055em;
 }
 .tile--intro .intro-main{
@@ -38,7 +38,7 @@
 }
 .tile--intro .intro-main h1 .intro-title-heavy{
   font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;
-  font-size:clamp(16px,7cqw,49px);
+  font-size:clamp(16px,8.35cqw,53px);
   font-style:normal;
   font-weight:900;
   letter-spacing:-.062em;
@@ -46,8 +46,8 @@
   color:var(--ink);
 }
 .tile--intro .intro-main h1 .intro-title-vision{
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:clamp(14px,5.6cqw,37px);
+  font-family:"Times New Roman",Times,Georgia,serif;
+  font-size:clamp(14px,7.05cqw,44px);
   font-style:italic;
   font-weight:400;
   letter-spacing:-.08em;
@@ -56,32 +56,33 @@
 }
 .tile--intro .intro-lead{
   max-width:30em;
-  font-size:clamp(10px,2.3cqw,15px);
+  font-size:clamp(10px,2.45cqw,16px);
   line-height:1.38;
 }
 .tile--intro .intro-eye{
   align-self:center;
   width:100%;
   max-width:100%;
+  transform:translate(10px,-17px);
 }
 .tile--intro .intro-eye img{object-fit:contain}
 .tile--intro::after{
   z-index:2;
-  inset-block-start:16.5%;
+  inset-block-start:15%;
   inset-inline-start:52.5%;
 }
 .tile--intro::before{
   z-index:2;
-  inset-block-start:66%;
-  inset-inline-end:6%;
+  inset-block-start:71%;
+  inset-inline-end:8%;
 }
 @media(min-width:1001px) and (min-height:700px){
   .tile--intro .intro-skyline{
-    transform:translateX(-25px) scale(1.3);
+    transform:translate(-55px,8px) scale(1.4);
     transform-origin:center bottom;
-    width:min(66%,400px);
+    width:min(70%,410px);
     height:clamp(55px,12cqw,88px);
-    margin-left:15%;
+    margin-left:13%;
   }
 }
 @media(max-width:1000px){
@@ -97,9 +98,10 @@
     margin:5px 0;
     gap:clamp(2px,.7cqw,6px);
   }
-  .tile--intro .intro-main h1 .intro-title-heavy{font-size:clamp(13px,5.35cqw,23px)}
-  .tile--intro .intro-main h1 .intro-title-vision{font-size:clamp(11px,4.25cqw,19px)}
-  .tile--intro .intro-lead{font-size:clamp(9px,2.15cqw,11px)}
+  .tile--intro .intro-main h1 .intro-title-heavy{font-size:clamp(13px,5.85cqw,24px)}
+  .tile--intro .intro-main h1 .intro-title-vision{font-size:clamp(11px,5.0cqw,20px)}
+  .tile--intro .intro-lead{font-size:clamp(9px,2.35cqw,12px)}
+  .tile--intro .intro-eye{transform:none}
   .tile--intro::after{inset-block-start:18%;inset-inline-start:55%;transform:scale(.7)}
   .tile--intro::before{inset-block-start:69%;transform:scale(.7)}
 }
