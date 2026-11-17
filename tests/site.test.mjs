@@ -58,7 +58,8 @@ test("la web no ejecuta scripts ajenos; redes externas solo se abren desde el di
 test("carácter V2 respeta el origen y la jerarquía de marca",()=>{
   const html=read("index.html");
   const css=read("styles.css");
-  assert.match(html,/class="brand-word">LOGÍSTICA<\/span>/);
+  assert.match(html,/class="intro-title-heavy">COMERCIO Y<br>LOGÍSTICA\.<\/span>/);
+  assert.match(html,/class="intro-title-vision">UNA MISMA VISIÓN\.<\/span>/);
   assert.match(html,/NO SOLO ENTREGAMOS\./);
   assert.match(html,/MOVEMOS LA CIUDAD\./);
   assert.match(html,/MOVIMIENTO \/ SISTEMA/);
