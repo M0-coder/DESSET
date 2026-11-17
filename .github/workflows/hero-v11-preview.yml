@@ -35,7 +35,7 @@ jobs:
           node --check proposals/hero-v11/build-preview.mjs
           node --check proposals/hero-v11/capture-evidence.mjs
           node --test tests/hero-v11-proposal.test.mjs
-      - name: Offline screenshots: approved baseline versus candidate
+      - name: "Offline screenshots: approved baseline versus candidate"
         run: |
           set -euo pipefail
           google-chrome --version
