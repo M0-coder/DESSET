@@ -349,3 +349,12 @@ body[data-theme="dark"] .tile--intro {
   .tile--intro::before{display:none}
 }
 @media(max-height:400px){.tile--intro .intro-skyline{display:none}.tile--intro::before{display:none}}
+
+
+/* V10 DESKTOP BALANCE — align with the supplied portrait poster inside Bento.
+   Tablet and mobile typography and GIF remain on their validated settings. */
+@media(min-width:1001px) and (min-height:700px){
+  .tile--intro .intro-wordmark{font-size:clamp(20px,4.25cqw,29px)}
+  .tile--intro .intro-copy{transform:translateY(-38px)}
+  .tile--intro .intro-skyline{transform:translateX(-45px) scale(1.48);transform-origin:center bottom}
+}
