@@ -9,15 +9,22 @@ const manifest = JSON.parse(read("config/visual-baseline-approved.json").toStrin
 const html = read("index.html").toString("utf8");
 const css = read("styles.css").toString("utf8");
 const marker = "/* V10 HERO PILOT";
+const markerV11 = "/* HERO-V11 — IMPLEMENTACIÓN CANDIDATA";
+const v10Heading = '<h1 id="main-heading">COMERCIO<br>Y <span class="brand-word">LOGÍSTICA</span>.<br><span>UNA MISMA VISIÓN.</span></h1>';
+const v11Heading = '<h1 id="main-heading"><span class="intro-title-heavy">COMERCIO Y<br>LOGÍSTICA.</span> <span class="intro-title-vision">UNA MISMA VISIÓN.</span></h1>';
+assert.equal(html.split(v11Heading).length, 2, "V11 heading must be unique");
+assert.equal(css.split(markerV11).length, 2, "V11 overlay must be unique");
+const htmlV10 = html.replace(v11Heading, v10Heading);
+const cssV10 = css.slice(0, css.indexOf(markerV11));
 assert.equal(manifest.baseline_id, "DESSET-V10-HERO-2026-11-17");
 
 test("V10 preserves original monospace typography and only appends scoped finishing CSS", () => {
-  const at = css.indexOf(marker);
+  const at = cssV10.indexOf(marker);
   assert.ok(at > 0, "V10 pilot marker missing");
-  assert.equal(css.indexOf(marker, at + marker.length), -1, "duplicate V10 marker");
-  assert.equal(gitBlobSha1(Buffer.from(css.slice(0, at).trimEnd() + "\n")),
+  assert.equal(cssV10.indexOf(marker, at + marker.length), -1, "duplicate V10 marker");
+  assert.equal(gitBlobSha1(Buffer.from(cssV10.slice(0, at).trimEnd() + "\n")),
     "7dc136407b82abc51463c4795087f0cabdc2d624", "historical V9 CSS changed before V10 additions");
-  const pilot = css.slice(at);
+  const pilot = cssV10.slice(at);
   assert.match(css, /font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace/);
   const candidateFamilies = [...pilot.matchAll(/font-family\s*:\s*([^;}]+)[;}]/gi)].map(match => match[1].trim());
   assert.ok(candidateFamilies.length > 0, "The candidate must declare that it inherits the approved font");
@@ -33,7 +40,7 @@ test("V10 preserves original monospace typography and only appends scoped finish
   assert.doesNotMatch(pilot, /\.board\s*\{|\.brand-symbol\s*\{|\.tile--visual\s*\{/);
   assert.doesNotMatch(pilot, /(^|\n)\s*\.intro-eye\s*\{/m,
     "Eye adjustments must be scoped to the first card, never global");
-  assert.equal(gitBlobSha1(Buffer.from(css)), manifest.files["styles.css"],
+  assert.equal(gitBlobSha1(Buffer.from(cssV10)), manifest.files["styles.css"],
     "the authorized V10 stylesheet must match its approved baseline exactly");
 });
 
@@ -46,14 +53,15 @@ test("candidate adds city and label only to the first card, preserving 10-tile a
   assert.match(skyline, /aria-hidden="true"/);
   assert.match(skyline, /viewBox="0 0 180 56"/);
   assert.doesNotMatch(skyline, /<script|foreignObject|onload|href=|https?:|data:/i);
-  const originalHtml = html.replace("\n" + label, "").replace(skyline, "");
+  const originalHtml = htmlV10.replace("\n" + label, "").replace(skyline, "");
   assert.equal(gitBlobSha1(Buffer.from(originalHtml)), "041a24329386946b28f0ca889a68f31ce2f42987",
     "Everything outside the two new first-card elements must match historical V9 HTML");
-  assert.equal(gitBlobSha1(Buffer.from(html)), manifest.files["index.html"],
+  assert.equal(gitBlobSha1(Buffer.from(htmlV10)), manifest.files["index.html"],
     "The approved V10 HTML must match the new baseline exactly");
   assert.doesNotMatch(html, /DESSET®|DESSET&reg;|DESSET&#174;/i);
   assert.equal((html.match(/class="tile tile--/g) || []).length, 10);
-  assert.match(html, /COMERCIO<br>Y <span class="brand-word">LOGÍSTICA<\/span>\.<br><span>UNA MISMA VISIÓN\.<\/span>/);
+  assert.match(htmlV10, /COMERCIO<br>Y <span class="brand-word">LOGÍSTICA<\/span>\.<br><span>UNA MISMA VISIÓN\.<\/span>/);
+  assert.ok(html.includes(v11Heading), "new headline must match approved reference candidate");
   assert.match(html, /data-detail="project">CONOCER EL PROYECTO/);
   assert.match(html, /<picture class="intro-eye">/);
   assert.match(html, /<source media="\(prefers-reduced-motion: reduce\)" srcset="\.\/assets\/desset-eye-still\.png">/);
