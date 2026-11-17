@@ -9,12 +9,12 @@ import {
 const read = path => readFileSync(new URL("../" + path, import.meta.url));
 const clone = x => JSON.parse(JSON.stringify(x));
 
-test("manifest V8 verifica el Bento y el lector IDENTIDAD sin scrollbar innecesario en escritorio", () => {
+test("manifest V9 verifica el Bento y los cinco enlaces de CANALES OFICIALES", () => {
   const m = loadApprovedVisualBaseline();
-  assert.equal(m.baseline_id, "DESSET-IDENTITY-DESKTOP-2026-11-16-V8");
-  assert.equal(m.source_commit, "5ecc5a090068dd851acdb20ce0862b3e4a14919a");
-  assert.equal(m.production_deployment, "18e0f0a4-ffda-49f2-abfd-42ec6d7b34ef");
-  assert.equal(m.approval_evidence,"https://github.com/M0-coder/DESSET/issues/43#issuecomment-6919485277");
+  assert.equal(m.baseline_id, "DESSET-CHANNELS-2026-11-16-V9");
+  assert.equal(m.source_commit, "7b99292d829affc102051eace2a6aba40c235efa");
+  assert.equal(m.production_deployment, "7385252a-999d-4542-98c7-ae8f1e1d8a1e");
+  assert.equal(m.approval_evidence,"https://github.com/M0-coder/DESSET/issues/45#issuecomment-6933415916");
   assert.equal(Object.keys(m.files).length, 9);
   assert.deepEqual(inspectVisualBaseline(m, read).diffs, []);
   assert.deepEqual(assertApprovedVisualBaseline(m, read).diffs, []);
