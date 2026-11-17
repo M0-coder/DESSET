@@ -358,7 +358,6 @@ body[data-theme="dark"] .tile--intro {
   .tile--intro .intro-copy{transform:translateY(-38px)}
   .tile--intro .intro-skyline{transform:translateX(-45px) scale(1.48);transform-origin:center bottom}
 }
-
 /* HERO-V11 — IMPLEMENTACIÓN CANDIDATA, PR DRAFT; no publicar sin nuevo manifiesto firmado.
    Basada exactamente en propuesta visual aprobada PR #52, HEAD a3372039ecefbe9dc8605f2d1c9b59adca074e45.
    Solo la primera tarjeta. Sin fuentes remotas, activos nuevos ni cambios a grid exterior. */
