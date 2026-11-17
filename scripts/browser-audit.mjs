@@ -172,6 +172,11 @@ let primaryError;
 const failures = [];
 try {
   const local = await serve(); server = local.server;
+  // Independent local HTTP preflight: a browser error page cannot count as a visual pass.
+  const probe = await fetch(local.url, { signal: AbortSignal.timeout(5000) });
+  assert.equal(probe.status, 200, "NO-GO: servidor local no devolvió HTTP 200");
+  assert.match(await probe.text(), /<main class="board"/,
+    "NO-GO: servidor local no entregó el Bento aprobado");
   // Retry only the local Chrome startup handshake, never a failed visual assertion.
   const launched = await launchChromeWithRetry(findChrome());
   browser = launched.browser;
@@ -197,7 +202,7 @@ try {
     }
     if (!boardReady) {
       const info = await evalBrowser(send,
-        "(function(){return {url:location.href,readyState:document.readyState,hasSite:!!document.querySelector('.site'),hasBoard:!!document.querySelector('.board'),title:document.title};})()")
+        "(function(){return {url:location.href,readyState:document.readyState,hasSite:!!document.querySelector('.site'),hasBoard:!!document.querySelector('.board'),title:document.title,bodyPreview:document.body?.textContent?.slice(0,300)??null,htmlPrefix:document.documentElement?.outerHTML?.slice(0,300)??null};})()")
         .catch(error => ({ diagnosticError: error.message }));
       throw new Error("NO-GO: tablero Bento no cargó en Chrome tras 15 segundos " +
         width + "x" + height + ": " + JSON.stringify(info));
