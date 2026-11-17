@@ -205,6 +205,9 @@ test("browser audits retain all 13 resolutions, real assertions and fail-closed 
   assert.match(audit, /prefers-reduced-motion/);
   assert.match(audit, /Profiler\.takePreciseCoverage/);
   assert.match(audit, /navigation\.errorText/);
+  assert.match(audit, /import \{ readFile, mkdir, writeFile \} from "node:fs\/promises"/);
+  assert.match(audit, /await readFile\(new URL\(file\[0\], root\)\)/);
+  assert.match(audit, /LOCAL HTTP NO-GO/);
   assert.match(audit, /servidor local no devolvió HTTP 200/);
   assert.match(audit, /servidor local no entregó el Bento aprobado/);
   assert.match(audit, /bodyPreview:document\.body/);
