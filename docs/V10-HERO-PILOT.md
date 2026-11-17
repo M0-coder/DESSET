@@ -14,11 +14,17 @@ Las propuestas de tipografías alternativas dejan de formar parte del plan V10.
 - El GIF `assets/desset-eye.gif` conserva más de un fotograma y su hash aprobado; la imagen estática se utiliza solo bajo `prefers-reduced-motion: reduce`.
 - Ni el manifiesto `config/visual-baseline-approved.json` ni los controles de publicación se modifican.
 
-## Cambio propuesto
+## Cambio propuesto — reproducción de la referencia facilitada
 
-El candidato **solo añade a `styles.css`** una variación de acabado para `.tile--intro`: superficie cálida de color `#F0EEEA`, textura de puntos por `radial-gradient`, borde interior y cruz roja pixelada decorativa con `::after` y `pointer-events:none`. Para modo oscuro se elimina la textura y se mantiene la variable de superficie existente.
+La **misma imagen facilitada por el fundador** es la referencia de composición: logo rojo, palabra DESSET junto al logo, estado a la derecha con separador, texto institucional a la izquierda, ojo GIF original a la derecha, cruz roja superior, cruz amarilla junto al ojo, silueta urbana inferior y pie institucional. **La única sustitución tipográfica acordada es la monoespaciada original de la web**, sin licencias ni fuentes adicionales.
 
-No se introducen recursos externos, bibliotecas, fuentes web, nuevos iconos descargados, textos, supuestos registros marcarios ni servicios de comercio que no existen.
+Cambios candidatos:
+- `index.html`: únicamente se incorpora un wordmark textual `DESSET` y un `<svg class="intro-skyline">` decorativo trazado desde la imagen aportada, dentro de `.tile--intro`. No se añaden recursos externos ni nuevos archivos al paquete de Cloudflare.
+- `styles.css`: estilos CSS de textura cálida, marco, acento geométrico rojo y amarillo, jerarquía y disposición responsiva, todos limitados a la primera tarjeta. Se mantiene la familia de fuentes original heredada; los tamaños/pesos en esa tarjeta sí se adaptan para caber sin recortes.
+- `tests/hero-v10-preview.test.mjs`: verifica que el HTML original se obtiene exactamente retirando esas dos adiciones; valida la pila monoespaciada, el GIF con más de un fotograma, los activos, los selectores acotados y la ausencia de imports/font-face externos.
+- El proyecto no incluye `®` sin constancia registral. No introduce declaraciones comerciales o disponibilidad anticipada.
+
+**Límite:** la silueta urbana está vectorizada y reducida a la resolución del Bento; no equivale píxel a píxel a todo el fotomontaje original. La composición debe revisarse en capturas instrumentadas reales. Si el dibujo o espaciado resulta inadecuado, NO-GO hasta corregirlo.
 
 ## Evidencia e interpretación correcta
 
