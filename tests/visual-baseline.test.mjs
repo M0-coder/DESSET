@@ -6,10 +6,12 @@ import {
   inspectVisualBaseline, assertApprovedVisualBaseline, loadApprovedVisualBaseline
 } from "../scripts/visual-baseline.mjs";
 import {historicalV11Read,loadHistoricalV11Manifest} from "./helpers/contact-v12-history.mjs";
+import {publishedV12Read} from "./helpers/theme-v13-history.mjs";
 
 const read = path => readFileSync(new URL("../" + path, import.meta.url));
 const clone = x => JSON.parse(JSON.stringify(x));
 const historicalRead = historicalV11Read(read);
+const v12Read=publishedV12Read(read);
 
 test("manifest V11 con aprobación verificada preserva las diez tarjetas y canales oficiales", () => {
   const m = loadHistoricalV11Manifest();
@@ -115,13 +117,15 @@ test("CONTACT-V12: active owner-approved manifest matches files and rejects muta
   assert.equal(actual.status,"approved");
   assert.equal(actual.source_commit,"9e766cb38f1ffd9f4b3460f5e6a46fa914d4edb9");
   assert.equal(actual.approval_evidence,"https://github.com/M0-coder/DESSET/issues/58#issuecomment-6968083138");
-  assert.deepEqual(assertApprovedVisualBaseline(actual).diffs,[]);
-  const html=read("index.html").toString("utf8");
+  assert.deepEqual(assertApprovedVisualBaseline(actual,v12Read).diffs,[]);
+  // The active V12 gate must still REJECT every unsigned V13 asset.
+  assert.deepEqual(inspectVisualBaseline(actual).diffs.sort(),["index.html","styles.css","index.html#body"].sort());
+  const html=v12Read("index.html").toString("utf8");
   const forged=Buffer.from(html.replace('CANALES<br>OFICIALES.','CANALES<br>ALTERADOS.'));
   assert.notEqual(gitBlobSha1(forged),actual.files["index.html"]);
-  assert.throws(()=>assertApprovedVisualBaseline(actual,p=>p==="index.html"?forged:read(p)),/BENTO NO APROBADO/);
-  const cssChanged=Buffer.concat([read("styles.css"),Buffer.from("\n/* unapproved mutation */\n")]);
-  assert.throws(()=>assertApprovedVisualBaseline(actual,p=>p==="styles.css"?cssChanged:read(p)),/BENTO NO APROBADO/);
+  assert.throws(()=>assertApprovedVisualBaseline(actual,p=>p==="index.html"?forged:v12Read(p)),/BENTO NO APROBADO/);
+  const cssChanged=Buffer.concat([v12Read("styles.css"),Buffer.from("\n/* unapproved mutation */\n")]);
+  assert.throws(()=>assertApprovedVisualBaseline(actual,p=>p==="styles.css"?cssChanged:v12Read(p)),/BENTO NO APROBADO/);
 });
 
 test("el inspector de candidatos no autoriza despliegue ni modifica baseline", () => {
