@@ -14,7 +14,7 @@ test("CONTACT-V12: only official contact button differs from V11 HTML",()=>{
   const first=html.indexOf('      <button class="tile tile--contact tile--button" type="button" data-detail="contact">');
   const last=first<0?-1:html.indexOf('      </button>',first)+"      </button>".length;
   assert.ok(first>=0 && last>first,"Contact button present");
-  assert.equal(html.indexOf('class="tile tile--contact',first+1),-1,"Only one contact tile");
+  assert.equal(html.indexOf('class="tile tile--contact',first+'      <button class="tile tile--contact tile--button"'.length),-1,"Only one contact tile");
   const restored=html.slice(0,first)+originalTile+html.slice(last);
   assert.equal(gitBlobSha1(Buffer.from(restored)),V11_HTML_BLOB,"All other site HTML byte-identical to V11");
   assert.equal((html.match(/class="tile tile--/g)||[]).length,10,"Bento has ten tiles");
