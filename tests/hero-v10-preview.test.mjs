@@ -3,10 +3,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {gitBlobSha1} from "../scripts/visual-baseline.mjs";
-import {restoreHistoricalV11Html,restoreHistoricalV11Css} from "./helpers/contact-v12-history.mjs";
+import {restoreHistoricalV11Html,restoreHistoricalV11Css,loadHistoricalV11Manifest} from "./helpers/contact-v12-history.mjs";
 
 const read = path => readFileSync(new URL("../" + path, import.meta.url));
-const manifest = JSON.parse(read("config/visual-baseline-approved.json").toString("utf8"));
+const manifest = loadHistoricalV11Manifest();
 const html = restoreHistoricalV11Html(read("index.html").toString("utf8"));
 const css = restoreHistoricalV11Css(read("styles.css").toString("utf8"));
 const marker = "/* V10 HERO PILOT";
