@@ -203,8 +203,11 @@ try{
       assert.ok(dialog,"NO-GO: contact dialog no longer works "+mode+" "+width+"x"+height);
       if(mode==="candidate" && ((width===1440&&height===900)||
           (width===390&&height===844)||(width===320&&height===256))){
+        await evaluate(send,"document.querySelector('#themeButton').click()");
+        // .tile--button has a 160ms background-color transition; inspect its settled state.
+        await wait(240);
         const dark=await evaluate(send,
-          "(function(){document.querySelector('#themeButton').click();const t=document.querySelector('.tile--contact');const h=t.querySelector('.contact-v12-title');const b=getComputedStyle(t,'::before');return {theme:document.body.dataset.theme,bg:getComputedStyle(t).backgroundColor,text:getComputedStyle(h).color,border:b.borderTopColor,visible:getComputedStyle(t).display!=='none',imageLoaded:t.querySelector('img')?.complete};})()");
+          "(function(){const t=document.querySelector('.tile--contact');const h=t.querySelector('.contact-v12-title');const b=getComputedStyle(t,'::before');return {theme:document.body.dataset.theme,bg:getComputedStyle(t).backgroundColor,text:getComputedStyle(h).color,border:b.borderTopColor,visible:getComputedStyle(t).display!=='none',imageLoaded:t.querySelector('img')?.complete};})()");
         assert.ok(dark.theme==="dark"&&dark.visible&&dark.imageLoaded&&
           dark.text==="rgb(244, 240, 235)"&&dark.bg==="rgb(53, 53, 53)" &&
           dark.border==="rgba(233, 228, 217, 0.6)",
@@ -213,6 +216,7 @@ try{
         await writeFile(join("reports/contact-v12-evidence",
           "candidate-dark-"+width+"x"+height+".png"),Buffer.from(darkPng.data,"base64"));
         await evaluate(send,"document.querySelector('#themeButton').click()");
+        await wait(240);
       }
       const capture=await send("Page.captureScreenshot",{format:"png",fromSurface:true});
       const filename=mode+"-"+width+"x"+height+".png";
