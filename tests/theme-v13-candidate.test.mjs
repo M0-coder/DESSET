@@ -15,7 +15,7 @@ test("THEME-V13: only the theme tile changes compared with approved public V12",
   const start=html.indexOf('      <button class="tile tile--theme tile--button" id="themeButton"');
   const end=start<0?-1:html.indexOf('      </button>',start)+"      </button>".length;
   assert.ok(start>=0&&end>start,"the original toggle exists");
-  assert.equal(html.indexOf('id="themeButton"',start+15),-1,"only one theme toggle");
+  assert.equal(html.indexOf('id="themeButton"',html.indexOf(">",start)+1),-1,"only one theme toggle");
   const candidate=html.slice(start,end);
   assert.match(candidate,/aria-label="Activar el modo oscuro"/);
   assert.match(candidate,/aria-pressed="false"/);
