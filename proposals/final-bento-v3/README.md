@@ -38,3 +38,7 @@ Abrir `http://localhost:8080`. El generador crea una **web estática funcional**
 - **Evidencia de ejecución:** guardar capturas, hashes y resumen por SHA.
 
 **Requisito de gobernanza:** esta propuesta NO autoriza automáticamente merge ni deploy. La promoción necesita modificar los archivos oficiales, el manifiesto visual y contratos en un PR distinto; luego un comentario real del propietario en GitHub con el SHA-256 exacto del diseño, aprobado por el gate actual. Sin bypass, sin auto-merge, sin borrar ramas ni DNS.
+
+## Evidencia visual del código
+- [Captura de escritorio 1440 × 900](evidence/desktop-code-v3.jpg): navegador headless de Cloudflare a partir del HTML/CSS candidato. Se alimenta con las imágenes originales de `desset.lat` y SVGs del PR. **No es una prueba de interacciones JS ni evidencia de un deploy**.
+- Se comprobó visualmente la disposición móvil 390 × 844, incluida la escena vertical. Está pendiente la auditoría instrumentada y comparativa automatizada de interacciones en el sitio candidato.
