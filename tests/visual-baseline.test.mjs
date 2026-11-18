@@ -46,13 +46,13 @@ test("cambiar BODY HTML sin aprobar actualizacion hace fallar el gate", () => {
 });
 
 test("hash aprobado manipulado sin modificar el archivo también bloquea CI", () => {
-  const m = clone(loadApprovedVisualBaseline());
+  const m = clone(loadHistoricalV11Manifest());
   m.files["styles.css"] = "f".repeat(40);
   assert.ok(inspectVisualBaseline(m, historicalRead).diffs.includes("styles.css"));
 });
 
 test("nueva imagen aprobada se valida por hash sin editar el código del gate", () => {
-  const m = clone(loadApprovedVisualBaseline());
+  const m = clone(loadHistoricalV11Manifest());
   const newImage = Buffer.from("image candidate bytes");
   m.files["assets/campana.webp"] = gitBlobSha1(newImage);
   const versioned = parseApprovedManifest(JSON.stringify(m));
@@ -68,14 +68,14 @@ test("nueva imagen aprobada se valida por hash sin editar el código del gate", 
 test("rutas adicionales peligrosas o no gráficas se rechazan", () => {
   for (const path of ["../secrets.png", "assets/../secrets.png", "assets/script.js",
     "assets/unsafe.svg", "https://example.com/a.png", "images/logo.png"]) {
-    const m = clone(loadApprovedVisualBaseline());
+    const m = clone(loadHistoricalV11Manifest());
     m.files[path] = "1".repeat(40);
     assert.throws(() => parseApprovedManifest(JSON.stringify(m)), undefined, path);
   }
 });
 
 test("noindex no se puede omitir en la fuente incluso si se editara el manifest", () => {
-  const m = clone(loadApprovedVisualBaseline());
+  const m = clone(loadHistoricalV11Manifest());
   const changed = Buffer.from(historicalRead("index.html").toString("utf8")
     .replace('<meta name="robots" content="noindex,nofollow">', ""));
   m.files["index.html"] = gitBlobSha1(changed);
