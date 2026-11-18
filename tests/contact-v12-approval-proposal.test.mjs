@@ -9,7 +9,7 @@ test("CONTACT-V12 approval file remains a non-authorizing PROPOSAL",()=>{
  assert.equal(proposal.approval_evidence,null);
  assert.equal(proposal.source_commit,"9e766cb38f1ffd9f4b3460f5e6a46fa914d4edb9");
  assert.equal(proposal.production_deployment,"6d864aac-84a2-4492-acb1-f869105c709f");
- assert.throws(()=>parseApprovedManifest(JSON.stringify(proposal)),/approved/);
+ assert.throws(()=>parseApprovedManifest(JSON.stringify(proposal)),/aprobada|approved/);
 });
 test("CONTACT-V12 candidate signature derives from complete current assets, never bypasses V11",()=>{
  const proposedApproved={...proposal,status:"approved"};
