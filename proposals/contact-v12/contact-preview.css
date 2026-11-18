@@ -82,7 +82,7 @@ body[data-theme="dark"] .tile--contact{
 body[data-theme="dark"] .tile--contact::before{border-color:rgba(233,228,217,.6)}
 body[data-theme="dark"] .tile--contact .contact-v12-title{color:#f4f0eb}
 body[data-theme="dark"] .tile--contact .contact-v12-computer{
-  filter:invert(1) hue-rotate(180deg) saturate(1.1);
+  filter:none;
 }
 body[data-theme="dark"] .tile--contact .tile-arrow{
   border-color:#d5d5d5;background:transparent;color:#f8f8f8;
