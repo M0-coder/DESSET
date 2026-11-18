@@ -651,7 +651,7 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
   right:clamp(43px,14cqw,67px);
   padding:0;
   color:#f4f0e9;
-  font-size:clamp(9px,3.45cqw,16px);
+  font-size:clamp(10px,4.15cqw,18px);
   line-height:1.15;
   letter-spacing:-.035em;
   white-space:nowrap;
@@ -676,6 +676,7 @@ body[data-theme="dark"] .tile--theme{
   background-color:#211e1d;
   background-image:radial-gradient(rgba(251,245,235,.13) .38px,transparent .78px),linear-gradient(155deg,#1b1919,#2a2625);
 }
+body[data-theme="dark"] .tile--theme .theme-v13-gear circle{fill:#211e1d}
 body[data-theme="dark"] .tile--theme .tile-arrow{background:transparent;color:#f4f0e9;border-color:#f4f0e9}
 .tile--theme:hover .tile-arrow,.tile--theme:focus-visible .tile-arrow{color:#f4f0e9;border-color:#f4f0e9}
 @media(max-width:640px){
