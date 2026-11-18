@@ -500,9 +500,10 @@ body[data-theme="dark"] .tile--intro {
   width:52%;
   max-width:52%;
   font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;
-  font-size:clamp(17px,6.35cqw,37px);
+  font-size:clamp(17px,7.2cqw,39px);
   line-height:1.02;
   font-weight:900;
+  -webkit-text-stroke:.3px currentColor;
   letter-spacing:-.052em;
   color:#1d1b1a;
   margin:0;
@@ -524,7 +525,7 @@ body[data-theme="dark"] .tile--intro {
 .tile--contact .contact-v12-cross{
   position:absolute;
   z-index:3;
-  top:52%;
+  top:42%;
   left:49.8%;
   width:6px;
   height:6px;
@@ -560,18 +561,18 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 }
 /* Widths just above the tablet breakpoint have a tighter contact tile. */
 @media(min-width:1001px) and (max-width:1150px){
-  .tile--contact .contact-v12-cross{left:44%}
+  .tile--contact .contact-v12-cross{left:50%}
 }
 @media(max-width:1000px){
-  .tile--contact .contact-v12-title{font-size:clamp(15px,6cqw,28px)}
+  .tile--contact .contact-v12-title{font-size:clamp(15px,6.8cqw,31px)}
   .tile--contact .contact-v12-computer{right:clamp(32px,7cqw,49px);width:clamp(82px,37cqw,157px)}
-  .tile--contact .contact-v12-cross{left:44%}
+  .tile--contact .contact-v12-cross{left:50%}
 }
 @media(max-width:640px){
   .board[data-view="sections"] .tile--contact{justify-content:center}
-  .tile--contact .contact-v12-title{font-size:clamp(17px,6.0cqw,28px)}
+  .tile--contact .contact-v12-title{font-size:clamp(17px,7cqw,30px)}
   .tile--contact .contact-v12-computer{width:38%;height:85%;right:49px}
-  .tile--contact .contact-v12-cross{left:40%;transform:scale(.82)}
+  .tile--contact .contact-v12-cross{left:52%;transform:scale(.82)}
 }
 @media(max-height:400px){
   .tile--contact .contact-v12-title{font-size:clamp(12px,5cqw,19px)}
