@@ -21,11 +21,12 @@ rmSync(out,{recursive:true,force:true});
 for(const file of ["src/app.mjs","styles-compact.css","404.html",
   "assets/deliver-assets-mark.png","assets/desset-eye.gif","assets/desset-eye-still.png","assets/roles-geometry-v2.svg"]){copy(file);}
 copy("proposals/final-bento-v3/rider-city-v3.svg","assets/rider-city-v3.svg");
+copy("proposals/final-bento-v3/rider-city-mobile-v3.svg","assets/rider-city-mobile-v3.svg");
 copy("proposals/final-bento-v3/business-dashboard-v3.svg","assets/business-dashboard-v3.svg");
 let html=read("index.html");
 html=one(html,
   '<img src="./assets/roles-geometry-v2.svg" width="960" height="720" alt="Diagrama conceptual de la relación entre Customer, Business, Rider y Control">',
-  '<img src="./assets/rider-city-v3.svg" class="v3-rider-scene" width="960" height="600" alt="Ilustración conceptual DESSET: repartidor, ciudad y ruta representada en un teléfono; no muestra seguimiento real">',
+  '<picture class="v3-art-picture"><source media="(max-width: 640px)" srcset="./assets/rider-city-mobile-v3.svg"><img src="./assets/rider-city-v3.svg" class="v3-rider-scene" width="960" height="600" alt="Ilustración conceptual DESSET: repartidor, ciudad y ruta representada en un teléfono; no muestra seguimiento real"></picture>',
   "replace diagram");
 html=one(html,'aria-label="Conocer la visión del ecosistema DELIVER ASSETS"','aria-label="Conocer cómo está previsto que funcione DESSET"',"hero aria");
 html=one(html,
@@ -76,7 +77,7 @@ if(JSON.stringify(before)!==JSON.stringify(after))throw Error("NO-GO: changed ap
 write("candidate.json",JSON.stringify({
   name:"DESSET-FINAL-BENTO-V3",source_sha:"9f48d62cdadb43135fc9c2072cdc9e31f695c9ab",
   approved_source_preserved:true,publication_authorized:false,merge_authorized:false,
-  source_sha256:before,output_files:["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/rider-city-v3.svg","assets/business-dashboard-v3.svg"],interactive:true,
+  source_sha256:before,output_files:["index.html","styles.css","styles-compact.css","src/app.mjs","src/content.mjs","assets/rider-city-v3.svg","assets/rider-city-mobile-v3.svg","assets/business-dashboard-v3.svg"],interactive:true,
   warning:"Illustrations are editorial concepts; not operational claims"
 },null,2)+"\n");
 console.log("FINAL-BENTO-V3 local candidate "+out+" (NO DEPLOY; original unchanged)");

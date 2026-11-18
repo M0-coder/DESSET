@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="540" viewBox="0 0 390 540" role="img" aria-labelledby="mTitle mDesc">
+<title id="mTitle">DESSET — movilidad urbana</title><desc id="mDesc">Repartidor y teléfono con ruta ilustrativa en la ciudad; no es seguimiento real ni un servicio activo.</desc>
+<defs><linearGradient id="mbg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#131318"/><stop offset="1" stop-color="#070608"/></linearGradient><pattern id="mHalftone" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#fff" opacity=".21"/></pattern></defs>
+<style><![CDATA[
+.m-road{stroke-dasharray:12 15;animation:mstep 2.6s linear infinite}@keyframes mstep{to{stroke-dashoffset:-108}}
+@media(prefers-reduced-motion:reduce){.m-road{animation:none}}
+]]></style>
+<rect width="390" height="540" fill="url(#mbg)"/><circle cx="156" cy="186" r="128" fill="#f5312c"/>
+<g fill="#202024" stroke="#cfcac9" stroke-opacity=".35" stroke-width="2">
+<path d="M0 214h39v-74h34v74h27V91h45v123h19V150h47v64h24v-91h51v91h26v-50h47v50h31v175H0Z"/>
+</g><path d="M0 214H390V394H0Z" fill="url(#mHalftone)"/>
+<path d="M-80 503Q102 450 208 429T461 365" fill="none" stroke="#8e090b" stroke-width="95"/>
+<path d="M-80 503Q102 450 208 429T461 365" fill="none" stroke="#f12e29" stroke-width="65"/>
+<path class="m-road" d="M-80 503Q102 450 208 429T461 365" fill="none" stroke="#fff4e4" stroke-width="5"/>
+<!-- compact rider -->
+<g transform="translate(8 179)">
+<ellipse cx="140" cy="231" rx="135" ry="21" fill="#000" opacity=".4"/>
+<circle cx="72" cy="210" r="40" fill="#0b0d11" stroke="#9d9ca1" stroke-width="8"/><circle cx="227" cy="210" r="40" fill="#0b0d11" stroke="#9d9ca1" stroke-width="8"/>
+<path d="M72 210l47-82h54l54 82H72l48-45 107 45" fill="none" stroke="#ff3328" stroke-width="12" stroke-linejoin="round"/>
+<path d="M129 127q-28-64 31-92t78 40l-16 91-84-7z" fill="#111216" stroke="#c7b9bd" stroke-width="3"/>
+<path d="M151 101l-21 60-15 25" stroke="#050509" stroke-width="22" fill="none"/><path d="M170 147l20 65 39 1" stroke="#08080a" stroke-width="25" fill="none" stroke-linecap="round"/>
+<circle cx="182" cy="28" r="38" fill="#080a0e" stroke="#f8f3ec" stroke-width="4"/><path d="M151 22q31-50 58-9l4 19-53 14z" fill="#18181a" stroke="#ff3229" stroke-width="5"/>
+<rect x="34" y="99" width="98" height="98" rx="13" fill="#e62d26" stroke="#090909" stroke-width="6"/><text x="83" y="156" text-anchor="middle" fill="#fff" font-family="Arial" font-size="16" font-weight="900">DESSET</text>
+<circle cx="235" cy="188" r="10" fill="#ffc62f"/>
+</g>
+<!-- compact conceptual phone -->
+<g transform="translate(274 105) rotate(8 51 138)">
+<rect x="1" y="1" width="105" height="270" rx="21" fill="#090a0d" stroke="#eee5df" stroke-width="5"/>
+<rect x="8" y="17" width="91" height="245" rx="12" fill="#f6f1e9"/>
+<path d="M8 31Q8 17 22 17h63q14 0 14 14v52H8z" fill="#0e0e10"/>
+<text x="54" y="54" text-anchor="middle" font-family="Arial" font-weight="900" font-size="12" fill="#ff3328">DESSET</text>
+<path d="M15 108h77M15 148h77M15 186h77M22 91v159M49 91v159M75 91v159" stroke="#b1aca7" stroke-width="2"/>
+<path d="M25 226l25-45-5-35 37-26" stroke="#ff342b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<g fill="#ff3328" stroke="#fff" stroke-width="2"><circle cx="25" cy="226" r="9"/><circle cx="45" cy="146" r="9"/><circle cx="82" cy="120" r="9"/></g>
+</g>
+</svg>

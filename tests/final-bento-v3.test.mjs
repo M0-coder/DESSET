@@ -19,6 +19,7 @@ test("FINAL BENTO V3 builds real interactive candidate and never mutates approve
  const runner=read("reports/final-bento-v3/src/app.mjs");
  const rider=read("reports/final-bento-v3/assets/rider-city-v3.svg");
  const business=read("reports/final-bento-v3/assets/business-dashboard-v3.svg");
+ const riderMobile=read("reports/final-bento-v3/assets/rider-city-mobile-v3.svg");
  const manifest=JSON.parse(read("reports/final-bento-v3/candidate.json"));
  assert.equal(manifest.publication_authorized,false);
  assert.equal(manifest.merge_authorized,false);
@@ -26,6 +27,7 @@ test("FINAL BENTO V3 builds real interactive candidate and never mutates approve
  assert.match(html,/<meta name="robots" content="noindex,nofollow">/);
  assert.match(html,/content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"/);
  assert.match(html,/assets\/rider-city-v3\.svg/);
+ assert.match(html,/assets\/rider-city-mobile-v3\.svg/);
  assert.match(html,/assets\/business-dashboard-v3\.svg/);
  assert.match(html,/PIDE · MIRA · RECIBE/);
  assert.match(html,/PARA TU<br>NEGOCIO\./);
@@ -47,6 +49,8 @@ test("FINAL BENTO V3 builds real interactive candidate and never mutates approve
  assert.match(css,/\.tile--visual \.v3-flow/);
  assert.match(css,/\.tile--apps\.v3-business-tile/);
  assert.match(css,/@media\(max-width:640px\)/);
+ assert.match(riderMobile,/viewBox="0 0 390 540"/);
+ assert.match(riderMobile,/prefers-reduced-motion:reduce/);
  for(const svg of [rider,business]){
    assert.match(svg,/viewBox="0 0 960 600"/);
    assert.match(svg,/prefers-reduced-motion:reduce/);

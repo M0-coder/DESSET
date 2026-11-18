@@ -13,6 +13,7 @@
 .tile--intro .text-action{font-family:Arial,Helvetica,sans-serif;font-weight:900;text-decoration:none}
 .tile--intro .intro-bottom{font-weight:700}
 .tile--visual{container-type:inline-size;background:#08080b;isolation:isolate;overflow:hidden}
+.tile--visual .v3-art-picture{position:absolute;inset:0;display:block;overflow:hidden}
 .tile--visual .v3-rider-scene,.tile--visual img.v3-rider-scene{display:block;position:absolute;inset:0;width:100%;height:100%;padding:0;object-fit:cover;object-position:48% 50%;background:#08080b;filter:none!important;opacity:1!important}
 .tile--visual::after{content:"";position:absolute;inset:62% 0 0;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.93),rgba(0,0,0,.05))}
 .tile--visual .visual-statement{z-index:3;top:clamp(10px,2.2cqw,18px);left:clamp(10px,2.2cqw,18px);font-size:clamp(9px,1.8cqw,12px);padding:clamp(7px,1.2cqw,10px) clamp(7px,1.4cqw,12px);border-radius:8px;border:1px solid #747276;border-left:4px solid #ff3328}
@@ -61,7 +62,7 @@ body[data-theme="dark"] .tile--services .tile-title,body[data-theme="dark"] .til
 }
 @media(max-width:640px){
  .tile{border-radius:15px}
- .tile--visual .v3-rider-scene,.tile--visual img.v3-rider-scene{object-position:44% center;padding:0;object-fit:cover}
+ .tile--visual .v3-rider-scene,.tile--visual img.v3-rider-scene{object-position:center center;padding:0;object-fit:cover}
  .tile--visual .v3-flow{font-size:clamp(12px,6.6cqw,20px);bottom:clamp(11px,3cqw,19px);gap:6px}
  .tile--visual .v3-flow-bars{width:74%;height:6px;gap:3px}
  .tile--visual .visual-statement{display:none}

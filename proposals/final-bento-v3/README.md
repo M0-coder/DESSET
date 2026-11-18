@@ -5,7 +5,7 @@
 ## Qué se ha codificado
 - HTML generado a partir del **sitio actual** `index.html`, conservando todos los botones, modales, navegación INICIO/EXPLORAR, canales y semántica.
 - CSS acumulativo `final.css` delimitado al candidato; colores, titular principal, superficies marfil, contraste, tamaños, acentos rojos, bandas azul/amarillo/rojo, tarjetas de evidencia, estado, modo oscuro y negocios.
-- Dos ilustraciones **SVG locales** creadas como aproximación vectorial de la imagen: ruta urbana con repartidor y teléfono; laptop Business con barras y gráfico circular. Son **editoriales**, no capturas reales de pedidos o datos empresariales. No se incrusta toda la captura como una página muerta.
+- Tres ilustraciones **SVG locales** creadas como aproximación vectorial de la imagen: ruta urbana con repartidor y teléfono (escritorio y variante móvil específica); laptop Business con barras y gráfico circular. Son **editoriales**, no capturas reales de pedidos o datos empresariales. No se incrusta toda la captura como una página muerta.
 - Animaciones de ruta y datos discretas; CSS `prefers-reduced-motion`.
 - Texto introductorio revisado, diálogo de «PIDE · MIRA · RECIBE» y diálogo Business con funciones previstas documentadas. Sin disponibilidad ficticia de apps, pedidos, cobros ni cobertura.
 
