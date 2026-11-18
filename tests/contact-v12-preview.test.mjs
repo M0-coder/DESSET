@@ -53,6 +53,9 @@ test("CONTACT-V12: vector illustration self-contained, retro green spectrum and 
 
 test("CONTACT-V12: scoped CSS never changes grid, global elements or other tiles",()=>{
   const css=read("proposals/contact-v12/contact-preview.css").toString("utf8");
+  assert.match(css,/\.tile--contact::before\{/);
+  assert.match(css,/inset:clamp\(5px,1\.5cqw,9px\)/);
+  assert.match(css,/pointer-events:none/);
   assert.match(css,/\.tile--contact \.contact-v12-title/);
   assert.match(css,/\.tile--contact \.contact-v12-computer/);
   assert.match(css,/\.tile--contact \.contact-v12-cross/);
