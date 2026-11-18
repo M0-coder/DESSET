@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { inspectVisualBaseline } from "./visual-baseline.mjs";
+import { publishedV12Read } from "../tests/helpers/theme-v13-history.mjs";
 import { visualApprovalDigest, visualApprovalSentence } from "./visual-approval.mjs";
 
 const proposal=JSON.parse(readFileSync(new URL("../proposals/contact-v12/approval-proposal.json",import.meta.url),"utf8"));
@@ -9,7 +10,7 @@ assert.equal(proposal.status,"proposal","NO-GO: candidate document cannot claim 
 assert.equal(proposal.approval_evidence,null,"NO-GO: do not create fake evidence");
 assert.equal(proposal.source_commit,"9e766cb38f1ffd9f4b3460f5e6a46fa914d4edb9");
 const planned={...proposal,status:"approved"};
-const inspection=inspectVisualBaseline(planned);
+const inspection=inspectVisualBaseline(planned,publishedV12Read(p=>readFileSync(new URL("../"+p,import.meta.url))));
 assert.deepEqual(inspection.diffs,[],"NO-GO: proposed hashes do not match local candidate");
 const digest=visualApprovalDigest(planned);
 assert.equal(digest,"19e9497ce3f9d825b19469e265b9fb316476a838ec20d1f87136c0f8b0577ad2",
