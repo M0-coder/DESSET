@@ -64,7 +64,7 @@
     <path d="M345 118c8-36 57-55 91-27 13 11 20 27 21 44-36-16-72-16-112-4Z" fill="#050606"/>
     <path d="M300 178c43-21 104-15 139 18l-27 119-132-8Z" fill="#202527"/>
     <path d="M303 194h102v84H303Z" fill="#050606" stroke="#ffc400" stroke-width="4"/>
-    <text x="354" y="230" fill="#ffc400" font-family="Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle" font-size="21">DESSET</text>
+    <text x="354" y="230" fill="#ffc400" font-family="Arial, sans-serif" font-size="21" font-weight="900" text-anchor="middle">DESSET</text>
     <path d="M300 200 216 222l-8 105 96 13Z" fill="#090a0b" stroke="#ffc400" stroke-width="5"/>
   </g>
 </svg>

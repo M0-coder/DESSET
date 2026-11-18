@@ -51,6 +51,7 @@ test("HERITAGE-V2: old artwork builds a local-only DESSET preview without alteri
   assert.match(rider,/RUTA PREVISTA/);
   assert.doesNotMatch(rider,/RUTA ACTIVA/);
   assert.match(rider,/>DESSET<\/text>/);
+  assert.doesNotMatch(rider,/font-size="30" font-weight="900" text-anchor="middle" font-size=/);
   assert.match(rider,/prefers-reduced-motion: reduce/);
   assert.match(rider,/heritage-route-flow/);
   assert.doesNotMatch(rider,/<script\b|<foreignObject\b|\bon[a-z]+\s*=|(?:href|xlink:href)\s*=\s*["'](?:https?:|javascript:|data:)/i);
