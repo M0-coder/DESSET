@@ -13,14 +13,15 @@ on:
 
 permissions:
   contents: read
+  issues: read
 
 jobs:
   candidate-review:
-    name: candidate-review-no-approval
+    name: candidate-owner-signed-no-deploy
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
-      - name: Checkout unapproved candidate
+      - name: Checkout owner-approved candidate without deployment
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           persist-credentials: false
@@ -43,8 +44,13 @@ jobs:
           set -euo pipefail
           npm run security:audit
           npm run mutation:smoke
-      - name: Print exact pending owner SHA256 (cannot authorize itself)
-        run: node proposals/hero-v11/implementation-approval-request.mjs
+      - name: Verify owner comment and exact signed design SHA256
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node proposals/hero-v11/implementation-approval-request.mjs
+          node scripts/approved-baseline-gate.mjs
       - name: Chrome real-document audit at 13 viewports (candidate only)
         run: |
           set -euo pipefail
