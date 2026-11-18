@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import { gitBlobSha1, parseApprovedManifest } from "../../scripts/visual-baseline.mjs";
 import { readFileSync } from "node:fs";
+import { restorePublishedV12Html,restorePublishedV12Css } from "./theme-v13-history.mjs";
 
 const originalContact = "      <button class=\"tile tile--contact tile--button\" type=\"button\" data-detail=\"contact\">\n        <span class=\"tile-label\">CONTACTO / 01</span>\n        <span class=\"tile-title\">CANALES<br>OFICIALES.</span>\n        <span class=\"tile-arrow\" aria-hidden=\"true\">↗</span>\n      </button>";
 const contactOpen = '      <button class="tile tile--contact tile--button" type="button" data-detail="contact">';
@@ -12,6 +13,7 @@ export const HISTORICAL_V11_HTML_SHA = "f964d7cddde9abaf321f3db6d3b942228131ce5b
 export const HISTORICAL_V11_CSS_SHA = "b6e054daa3d9af66abb19324683f0f9b3c0500bf";
 
 export function restoreHistoricalV11Html(html) {
+  html=restorePublishedV12Html(html);
   const start = html.indexOf(contactOpen);
   assert.ok(start >= 0 && html.indexOf(contactOpen, start + contactOpen.length) === -1, "NO-GO: one contact card only");
   const end = html.indexOf(contactClose, start + contactOpen.length);
@@ -27,6 +29,7 @@ export function restoreHistoricalV11Html(html) {
 }
 
 export function restoreHistoricalV11Css(css) {
+  css=restorePublishedV12Css(css);
   const index = css.indexOf(marker);
   assert.ok(index > 0 && css.indexOf(marker,index+marker.length) === -1, "NO-GO: contact style marker not unique");
   const original = css.slice(0,index);
