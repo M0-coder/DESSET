@@ -16,7 +16,12 @@ assert.equal(html.split(v11Heading).length, 2, "V11 heading must be unique");
 assert.equal(css.split(markerV11).length, 2, "V11 overlay must be unique");
 const htmlV10 = html.replace(v11Heading, v10Heading);
 const cssV10 = css.slice(0, css.indexOf(markerV11));
-assert.equal(manifest.baseline_id, "DESSET-V10-HERO-2026-11-17");
+assert.equal(manifest.baseline_id, "DESSET-V11-HERO-2026-11-17");
+// Frozen original V10 blobs: reconstruct them without weakening the current V11 gate.
+const historicalV10 = Object.freeze({
+  html: "14bf6c243937d988e76d886c53deade7c0448fb5",
+  css: "a41f70d21e9d9a432d0943b0264617c67661cbfe"
+});
 
 test("V10 preserves original monospace typography and only appends scoped finishing CSS", () => {
   const at = cssV10.indexOf(marker);
@@ -40,7 +45,7 @@ test("V10 preserves original monospace typography and only appends scoped finish
   assert.doesNotMatch(pilot, /\.board\s*\{|\.brand-symbol\s*\{|\.tile--visual\s*\{/);
   assert.doesNotMatch(pilot, /(^|\n)\s*\.intro-eye\s*\{/m,
     "Eye adjustments must be scoped to the first card, never global");
-  assert.equal(gitBlobSha1(Buffer.from(cssV10)), manifest.files["styles.css"],
+  assert.equal(gitBlobSha1(Buffer.from(cssV10)), historicalV10.css,
     "the authorized V10 stylesheet must match its approved baseline exactly");
 });
 
@@ -56,11 +61,13 @@ test("candidate adds city and label only to the first card, preserving 10-tile a
   const originalHtml = htmlV10.replace("\n" + label, "").replace(skyline, "");
   assert.equal(gitBlobSha1(Buffer.from(originalHtml)), "041a24329386946b28f0ca889a68f31ce2f42987",
     "Everything outside the two new first-card elements must match historical V9 HTML");
-  assert.equal(gitBlobSha1(Buffer.from(htmlV10)), manifest.files["index.html"],
+  assert.equal(gitBlobSha1(Buffer.from(htmlV10)), historicalV10.html,
     "The approved V10 HTML must match the new baseline exactly");
   assert.doesNotMatch(html, /DESSET®|DESSET&reg;|DESSET&#174;/i);
   assert.equal((html.match(/class="tile tile--/g) || []).length, 10);
   assert.match(htmlV10, /COMERCIO<br>Y <span class="brand-word">LOGÍSTICA<\/span>\.<br><span>UNA MISMA VISIÓN\.<\/span>/);
+  assert.equal(gitBlobSha1(Buffer.from(html)), manifest.files["index.html"], "V11 current HTML matches signed baseline");
+  assert.equal(gitBlobSha1(Buffer.from(css)), manifest.files["styles.css"], "V11 current CSS matches signed baseline");
   assert.ok(html.includes(v11Heading), "new headline must match approved reference candidate");
   assert.match(html, /data-detail="project">CONOCER EL PROYECTO/);
   assert.match(html, /<picture class="intro-eye">/);
