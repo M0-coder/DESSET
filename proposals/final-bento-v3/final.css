@@ -1,0 +1,85 @@
+/* DESSET FINAL-BENTO-V3 • faithful coded adaptation of founder's image.
+   All declarations apply ONLY to the locally generated candidate; approved CSS is unchanged.
+   No remote fonts, images, scripts, tracking or simulated transactions. */
+:root{--v3-cream:#f6f2ea;--v3-ink:#0d0d0e}
+.board{gap:4px;background:#080808}
+.tile{border:1px solid rgba(12,11,11,.78);background:var(--v3-cream);box-shadow:inset 0 0 0 1px rgba(255,255,255,.34);border-radius:clamp(13px,1.5vw,22px)}
+.tile--intro{background-color:#f6f2ea;background-image:radial-gradient(rgba(16,15,13,.04) .55px,transparent 1px);background-size:7px 7px}
+.tile--intro .intro-wordmark{font-size:clamp(18px,5.85cqw,39px)}
+.tile--intro .intro-main .intro-title-heavy{font-size:clamp(16px,7.15cqw,51px)}
+.tile--intro .intro-main .intro-title-vision{font-size:clamp(14px,5.4cqw,39px)}
+.tile--intro .intro-lead{font-family:Arial,Helvetica,sans-serif;line-height:1.43}
+.tile--intro .intro-lead::before{content:"";display:block;width:36px;height:4px;border-radius:5px;background:#ff3328;margin:0 0 clamp(8px,1.5cqw,14px)}
+.tile--intro .text-action{font-family:Arial,Helvetica,sans-serif;font-weight:900;text-decoration:none}
+.tile--intro .intro-bottom{font-weight:700}
+.tile--visual{container-type:inline-size;background:#08080b;isolation:isolate;overflow:hidden}
+.tile--visual .v3-art-picture{position:absolute;inset:0;display:block;overflow:hidden}
+.tile--visual .v3-rider-scene,.tile--visual img.v3-rider-scene{display:block;position:absolute;inset:0;width:100%;height:100%;padding:0;object-fit:cover;object-position:48% 50%;background:#08080b;filter:none!important;opacity:1!important}
+.tile--visual::after{content:"";position:absolute;inset:62% 0 0;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.93),rgba(0,0,0,.05))}
+.tile--visual .visual-statement{z-index:3;top:clamp(10px,2.2cqw,18px);left:clamp(10px,2.2cqw,18px);font-size:clamp(9px,1.8cqw,12px);padding:clamp(7px,1.2cqw,10px) clamp(7px,1.4cqw,12px);border-radius:8px;border:1px solid #747276;border-left:4px solid #ff3328}
+.tile--visual .v3-flow{position:absolute;z-index:3;left:0;right:0;bottom:clamp(10px,2.8cqw,26px);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:clamp(8px,1.3cqw,13px);color:#faf5ed;font-family:Arial,Helvetica,sans-serif;font-weight:900;font-style:italic;font-size:clamp(13px,6.4cqw,43px);letter-spacing:-.052em;line-height:1;text-shadow:0 2px 9px #000;white-space:nowrap}
+.tile--visual .v3-flow-bars{width:58%;height:clamp(6px,1.5cqw,13px);display:grid;grid-template-columns:repeat(3,1fr);gap:6px;transform:skew(-20deg)}
+.v3-flow-bars i{display:block;background:#1551D8}.v3-flow-bars i:nth-child(2){background:#FFC62F}.v3-flow-bars i:nth-child(3){background:#FF3328}
+.tile--contact{background-color:#f6f2ea;box-shadow:inset 0 0 0 1px #090909}
+.tile--contact .contact-v12-title{font-size:clamp(17px,7.35cqw,41px)}
+.tile--status{background:#f6f2ea}
+.tile--theme{background:#242428;color:#fff;background-image:radial-gradient(rgba(255,51,40,.13) .8px,transparent 1px);background-size:8px 8px;background-position:100% 0}
+.tile--theme .theme-symbol{color:#f7f2ee}
+.tile--theme .theme-caption{font-size:clamp(10px,1.12vw,17px);font-weight:700}
+.tile--theme .tile-arrow{border:1px solid #69686a;border-radius:50%}
+.tile--services,.tile--company,.tile--journal,.tile--model{background:#f6f2ea}
+.tile--services .tile-title,.tile--company .tile-title,.tile--journal .tile-title,.tile--model .tile-title{font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:-.059em;line-height:1.04}
+.tile--services .tile-title{font-size:clamp(18px,2.05vw,37px)}
+.tile--company .tile-title{font-size:clamp(18px,1.9vw,34px)}
+.tile--journal .tile-title{font-size:clamp(20px,2.08vw,38px)}
+.tile--model .tile-title{font-size:clamp(21px,2.3vw,41px)}
+.tile--journal .tile-title::after,.tile--model .tile-title::after{content:"";display:block;width:47px;height:5px;background:#ff3328;border-radius:5px;margin-top:17px}
+.tile--journal .mini-strip span{font-family:Arial,Helvetica,sans-serif;font-weight:900;box-shadow:inset 0 -3px rgba(0,0,0,.08)}
+.tile--journal .mini-strip span:nth-child(1){background:linear-gradient(140deg,#efeeec,#d9d6d4)}
+.tile--journal .mini-strip span:nth-child(2){background:linear-gradient(145deg,#c6dbff,#a9c9fd)}
+.tile--journal .mini-strip span:nth-child(3){background:linear-gradient(145deg,#ececec,#c6c6c6);border-bottom:4px solid #ffc62f}
+.tile--journal .tile-arrow,.tile--model .tile-arrow{border:1px solid #999;background:transparent;color:#131313}
+.tile--model .tile-sub{font-family:Arial,Helvetica,sans-serif;max-width:86%;font-size:clamp(11px,1.08vw,17px);color:#4a4a4a;line-height:1.38}
+.tile--model::after{content:"";position:absolute;z-index:0;left:20%;bottom:-18%;width:56%;height:37%;transform:rotate(-7deg);pointer-events:none;opacity:.5;background:radial-gradient(ellipse at center,rgba(2,2,2,.65),transparent 70%)}
+.tile--apps.v3-business-tile{background:#08080a;color:white;justify-content:flex-start;padding:clamp(14px,2vw,30px);isolation:isolate;position:relative;overflow:hidden}
+.tile--apps.v3-business-tile .v3-business-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:55% center;z-index:-2;pointer-events:none;opacity:1;filter:none!important}
+.tile--apps.v3-business-tile::before{content:"";position:absolute;inset:0;background:linear-gradient(95deg,rgba(4,5,7,.97),rgba(4,5,7,.77) 41%,rgba(4,5,7,.12) 81%);z-index:-1;pointer-events:none}
+.tile--apps .v3-business-kicker{color:#f8e4d7;font-size:clamp(9px,.8vw,13px);font-weight:700}
+.tile--apps .v3-business-title{margin-top:auto;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:clamp(22px,3.05vw,53px);font-weight:900;font-style:italic;line-height:.99;letter-spacing:-.055em;text-shadow:0 2px 13px rgba(0,0,0,.5)}
+.tile--apps .v3-business-title::after{content:"";width:48px;height:5px;display:block;margin:clamp(10px,1.2vw,18px) 0;background:#ff3328;border-radius:4px}
+.tile--apps .v3-business-desc{color:white;font-weight:700;font-size:clamp(9px,.89vw,15px);letter-spacing:-.025em;line-height:1.2;white-space:nowrap;margin-bottom:clamp(20px,4vh,40px)}
+.tile--apps.v3-business-tile .tile-arrow{z-index:2;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.7);color:white}
+body[data-theme="dark"] .tile--visual img.v3-rider-scene,body[data-theme="dark"] .tile--apps img.v3-business-art{filter:none!important;opacity:1!important}
+body[data-theme="dark"] .tile--apps.v3-business-tile,body[data-theme="dark"] .tile--visual{background:#07080b;color:white}
+body[data-theme="dark"] .tile--intro,body[data-theme="dark"] .tile--contact,body[data-theme="dark"] .tile--services,body[data-theme="dark"] .tile--company,body[data-theme="dark"] .tile--journal,body[data-theme="dark"] .tile--model,body[data-theme="dark"] .tile--status{background:#323238;color:#f6f2ee}
+body[data-theme="dark"] .tile--model .tile-sub{color:#e3ddd9}
+body[data-theme="dark"] .tile--services .tile-title,body[data-theme="dark"] .tile--company .tile-title{color:var(--ink)}
+@media(max-width:1000px){
+ .tile--visual .visual-statement{font-size:clamp(8px,1.75cqw,11px)}
+ .tile--services .tile-title,.tile--company .tile-title,.tile--journal .tile-title,.tile--model .tile-title{font-size:clamp(16px,2.5vw,26px)}
+ .tile--apps .v3-business-title{font-size:clamp(18px,3.6vw,31px)}
+ .tile--apps .v3-business-desc{font-size:clamp(8px,1.25vw,12px)}
+}
+@media(max-width:640px){
+ .tile{border-radius:15px}
+ .tile--visual .v3-rider-scene,.tile--visual img.v3-rider-scene{object-position:center center;padding:0;object-fit:cover}
+ .tile--visual .v3-flow{font-size:clamp(12px,6.6cqw,20px);bottom:clamp(11px,3cqw,19px);gap:6px}
+ .tile--visual .v3-flow-bars{width:74%;height:6px;gap:3px}
+ .tile--visual .visual-statement{display:none}
+ .tile--intro .intro-lead::before{width:17px;height:3px;margin-bottom:5px}
+ .tile--intro .intro-lead{font-size:clamp(8px,2.05cqw,11px)}
+ .tile--intro .intro-main .intro-title-heavy{font-size:clamp(12px,5.85cqw,24px)}
+ .tile--intro .intro-main .intro-title-vision{font-size:clamp(11px,5cqw,20px)}
+ .tile--services .tile-title,.tile--company .tile-title{font-size:clamp(13px,3.65vw,20px)}
+ .board[data-view="sections"] .tile--journal .tile-title{font-size:clamp(17px,5vw,25px)}
+ .board[data-view="sections"] .tile--model .tile-title{font-size:clamp(15px,4.1vw,23px)}
+ .board[data-view="sections"] .tile--model .tile-sub{font-size:9px}
+ .board[data-view="sections"] .tile--apps .v3-business-title{font-size:clamp(17px,5.5vw,29px)}
+ .board[data-view="sections"] .tile--apps .v3-business-kicker{font-size:8px}
+ .board[data-view="sections"] .tile--apps .v3-business-desc{font-size:clamp(7px,1.9vw,9px);white-space:normal;margin-bottom:36px}
+}
+@media(max-width:360px) and (max-height:640px){
+ .tile--visual .v3-flow{font-size:10px}.tile--apps .v3-business-title{font-size:16px}
+ .tile--intro .intro-lead::before{display:none}
+}
+@media(prefers-reduced-motion:reduce){.tile--visual *,.tile--apps *{animation:none!important}}

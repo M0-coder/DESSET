@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="bizTitle bizDesc">
+<title id="bizTitle">DESSET Business: entorno de gestión ilustrativo</title>
+<desc id="bizDesc">Una computadora portátil con interfaz conceptual para catálogo, pedidos y gestión comercial. No representa ingresos ni métricas reales.</desc>
+<defs><linearGradient id="bizBg" x1="0" x2="1" y1="1" y2="0"><stop stop-color="#070809"/><stop offset=".42" stop-color="#150708"/><stop offset=".78" stop-color="#600a0c"/><stop offset="1" stop-color="#111114"/></linearGradient><linearGradient id="bizScreen" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#16181f"/><stop offset="1" stop-color="#030407"/></linearGradient><linearGradient id="bizMetal" x1="0" x2=".5" y1="0" y2="1"><stop stop-color="#9ea1a7"/><stop offset=".6" stop-color="#333339"/><stop offset="1" stop-color="#bbb9bb"/></linearGradient><pattern id="bizDots" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.7" fill="#ff3328" opacity=".58"/></pattern><clipPath id="bizLaptopClip"><rect x="0" y="0" width="960" height="600" rx="0"/></clipPath></defs>
+<style><![CDATA[
+.biz-graph{animation:biz-fade 4s ease-in-out infinite}.biz-active{animation:biz-beat 3.8s ease-in-out infinite}
+@keyframes biz-fade{50%{opacity:.7}}@keyframes biz-beat{50%{opacity:.65}}
+@media(prefers-reduced-motion:reduce){.biz-graph,.biz-active{animation:none}}
+]]></style>
+<rect width="960" height="600" fill="url(#bizBg)"/>
+<path d="M250 0H960V530C620 510 700 300 250 0Z" fill="url(#bizDots)" opacity=".56"/>
+<path d="M0 445C300 350 470 530 760 600H0Z" fill="#ff3328" opacity=".12"/>
+<path d="M0 430C360 370 610 560 960 600" stroke="#ef271f" stroke-width="3" fill="none" opacity=".35"/>
+<g clip-path="url(#bizLaptopClip)" transform="translate(255 105) rotate(-5 420 260)">
+  <path d="M110 54Q110 14 151 14H765Q802 14 802 57V475H108Z" fill="#030304" stroke="#c4babb" stroke-width="6"/>
+  <rect x="124" y="33" width="661" height="418" rx="14" fill="url(#bizScreen)" stroke="#353438" stroke-width="3"/>
+  <rect x="124" y="33" width="661" height="72" rx="14" fill="#121316"/>
+  <rect x="126" y="91" width="659" height="14" fill="#121316"/>
+  <text x="173" y="79" fill="#ff3328" font-size="34" font-weight="900" font-family="Arial,Helvetica,sans-serif">DESSET</text>
+  <rect x="685" y="56" width="58" height="12" rx="6" fill="#464950"/><circle cx="760" cy="62" r="6" fill="#8c8e93"/>
+  <rect x="143" y="122" width="101" height="315" rx="12" fill="#101216" stroke="#3d4047" stroke-width="2"/>
+  <g fill="none" stroke="#f1ece6" stroke-width="6" stroke-linejoin="round"><path d="M164 167l19-16 19 16v25h-38zM165 231h38v27h-38zM165 318h37M165 318v-25h37M164 368h41l-20 23-20-23z"/></g>
+  <rect x="265" y="122" width="317" height="315" rx="12" fill="#171b21" stroke="#323840" stroke-width="2"/>
+  <text x="286" y="149" font-family="Arial" font-size="18" fill="#eff2f7" font-weight="800">RESUMEN</text>
+  <rect x="282" y="166" width="285" height="207" rx="10" fill="#0d1016"/>
+  <g class="biz-graph"><rect x="558" y="284" width="20" height="43" rx="3" fill="#1551D8" stroke="#88aaff" stroke-opacity=".3"/><rect x="588" y="245" width="20" height="82" rx="3" fill="#1551D8" stroke="#88aaff" stroke-opacity=".3"/><rect x="618" y="206" width="20" height="121" rx="3" fill="#1551D8" stroke="#88aaff" stroke-opacity=".3"/><rect x="648" y="160" width="20" height="167" rx="3" fill="#1551D8" stroke="#88aaff" stroke-opacity=".3"/><rect x="678" y="180" width="20" height="147" rx="3" fill="#225ff5" stroke="#88aaff" stroke-opacity=".3"/><rect x="708" y="125" width="20" height="202" rx="3" fill="#225ff5" stroke="#88aaff" stroke-opacity=".3"/></g>
+  <path d="M281 335h270" stroke="#d2d3d4" stroke-opacity=".25" stroke-width="3"/>
+  <rect x="282" y="390" width="278" height="23" rx="10" fill="#2d3035"/><rect x="293" y="397" width="178" height="9" rx="4" fill="#7b828b"/>
+  <rect x="601" y="122" width="163" height="164" rx="14" fill="#151a1f" stroke="#47464a" stroke-width="2"/>
+  <g class="biz-graph"><circle cx="754" cy="247" r="49" fill="none" stroke="#ffc62f" stroke-width="25" stroke-dasharray="113 320" stroke-dashoffset="0" transform="rotate(-90 754 247)"/><circle cx="754" cy="247" r="49" fill="none" stroke="#ff3328" stroke-width="25" stroke-dasharray="72 320" stroke-dashoffset="-118" transform="rotate(-90 754 247)"/><circle cx="754" cy="247" r="49" fill="none" stroke="#1551d8" stroke-width="25" stroke-dasharray="49 320" stroke-dashoffset="-195" transform="rotate(-90 754 247)"/></g>
+  <circle cx="754" cy="247" r="24" fill="#151a1f"/><text x="632" y="148" font-family="Arial" font-size="16" fill="#eee" font-weight="800">GESTIÓN</text>
+  <rect x="601" y="306" width="163" height="131" rx="14" fill="#13171d"/>
+  <g fill="#454950"><rect x="619" y="329" width="125" height="15" rx="6"/><rect x="619" y="366" width="125" height="15" rx="6"/><rect x="619" y="402" width="125" height="15" rx="6"/></g>
+  <g fill="#8898a5"><rect x="619" y="334" width="70" height="7" rx="3"/><rect x="619" y="371" width="95" height="7" rx="3"/><rect x="619" y="407" width="84" height="7" rx="3"/></g>
+  <path d="M84 475H838L930 546Q934 562 912 564H12Q-10 561 2 545Z" fill="url(#bizMetal)" stroke="#e5d9d4" stroke-width="5"/>
+  <path d="M126 486H802L861 535H64Z" fill="#17191d"/>
+  <g stroke="#44474f" stroke-width="8" stroke-dasharray="29 11"><path d="M163 504H775M131 521H820"/></g>
+  <rect x="376" y="536" width="140" height="14" rx="7" fill="#6b7078" opacity=".8"/>
+</g>
+</svg>
