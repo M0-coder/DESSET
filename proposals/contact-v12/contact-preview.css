@@ -104,7 +104,7 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 }
 @media(max-height:400px){
   .tile--contact .contact-v12-title{font-size:clamp(12px,5cqw,19px)}
-  .tile--contact .contact-v12-computer{height:87%}
+  .tile--contact .contact-v12-computer{height:87%;right:max(50px,10cqw)}
   .tile--contact .contact-v12-cross{display:none}
   .tile--contact .tile-arrow{width:23px;height:23px;font-size:15px}
 }
