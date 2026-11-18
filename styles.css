@@ -679,6 +679,10 @@ body[data-theme="dark"] .tile--theme{
 body[data-theme="dark"] .tile--theme .theme-v13-gear circle{fill:#211e1d}
 body[data-theme="dark"] .tile--theme .tile-arrow{background:transparent;color:#f4f0e9;border-color:#f4f0e9}
 .tile--theme:hover .tile-arrow,.tile--theme:focus-visible .tile-arrow{color:#f4f0e9;border-color:#f4f0e9}
+/* Tablet Bento gives this tile just one grid row: clear the moon from the action arrow. */
+@media(min-width:641px) and (max-width:1000px){
+  .tile--theme .theme-v13-moon{top:clamp(7px,2.5cqw,12px)}
+}
 @media(max-width:640px){
   .tile--theme .theme-caption{left:clamp(10px,5.8cqw,15px);bottom:clamp(14px,9cqw,28px);font-size:clamp(8px,4.1cqw,11px);right:clamp(32px,13cqw,49px)}
   .tile--theme .theme-v13-moon{top:clamp(19px,10cqw,29px);width:clamp(20px,12cqw,35px);right:clamp(24px,13cqw,30px)}
