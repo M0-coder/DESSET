@@ -90,7 +90,7 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 @media(max-width:1000px){
   .tile--contact .contact-v12-title{font-size:clamp(15px,6cqw,28px)}
   .tile--contact .contact-v12-computer{right:clamp(32px,7cqw,49px);width:clamp(82px,37cqw,157px)}
-  .tile--contact .contact-v12-cross{left:49%}
+  .tile--contact .contact-v12-cross{left:44%}
 }
 @media(max-width:640px){
   .board[data-view="sections"] .tile--contact{justify-content:center}
