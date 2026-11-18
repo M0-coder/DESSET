@@ -5,7 +5,7 @@
 ## Objetivo editorial y visual
 Reemplazar la explicación redundante de cuatro roles en la tarjeta superior por una secuencia logística legible: **01 Pedido → 02 Comercio → 03 Reparto → 04 Entrega**. CONTROL pasa a ser una capa secundaria de supervisión, no un quinto paso. La tarjeta inferior cambia a **«DESSET PARA TU NEGOCIO»** con capacidades *previstas*, no funcionalidades anunciadas como disponibles.
 
-La ilustración usa el mismo azul, amarillo, negro y rojo de DESSET; un SVG local animado, sin scripts, red ni fuentes externas. Detiene el movimiento con `prefers-reduced-motion: reduce`. La ciudad dibujada es geométrica, **no un mapa real de Huacho** ni seguimiento real de pedidos.
+La ilustración usa el mismo azul, amarillo, negro y rojo de DESSET; dos SVG locales animados (escritorio y móvil), sin scripts, red ni fuentes externas. Detiene el movimiento con `prefers-reduced-motion: reduce`. La ciudad dibujada es geométrica, **no un mapa real de Huacho** ni seguimiento real de pedidos.
 
 ## Uso local, sin producción
 ```bash

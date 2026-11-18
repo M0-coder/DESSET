@@ -23,9 +23,10 @@ if(process.env.CLOUDFLARE_API_TOKEN||process.env.DESSET_RELEASE_APPROVED){
 rmSync(output,{recursive:true,force:true});
 for(const p of ["styles-compact.css","src/app.mjs","404.html","assets/deliver-assets-mark.png","assets/desset-eye.gif","assets/desset-eye-still.png","assets/roles-geometry-v2.svg"])copy(p);
 copy("proposals/operation-flow-v1/flow-operation-v1.svg","assets/flow-operation-v1.svg");
+copy("proposals/operation-flow-v1/flow-operation-mobile-v1.svg","assets/flow-operation-mobile-v1.svg");
 let html=read("index.html");
 html=once(html,'<img src="./assets/roles-geometry-v2.svg" width="960" height="720" alt="Diagrama conceptual de la relación entre Customer, Business, Rider y Control">',
-  '<img src="./assets/flow-operation-v1.svg" class="flow-graphic" width="720" height="380" alt="Recorrido ilustrativo: el cliente solicita, el comercio prepara, el repartidor recoge y el cliente recibe; Control supervisa el proceso">',"hero SVG");
+  '<picture class="flow-picture"><source media="(max-width:640px)" srcset="./assets/flow-operation-mobile-v1.svg"><img src="./assets/flow-operation-v1.svg" class="flow-graphic" width="720" height="380" alt="Recorrido ilustrativo: el cliente solicita, el comercio prepara, el repartidor recoge y el cliente recibe; Control supervisa el proceso"></picture>',"hero SVG");
 html=once(html,'MOVIMIENTO / SISTEMA','DEL PEDIDO A LA ENTREGA',"hero caption");
 const lowerOriginal='        <span class="tile-label">ECOSISTEMA DIGITAL</span>\n        <span class="tile-title">CUATRO ROLES.<br>UNA ARQUITECTURA.</span>\n        <span class="app-strip" aria-hidden="true"><span>CU</span><span>BU</span><span>RI</span><span>CO</span></span>';
 const lowerNew='        <span class="tile-label">COMERCIOS / INTEGRACIÓN</span>\n        <span class="tile-title">DESSET PARA<br>TU NEGOCIO.</span>\n        <span class="tile-sub">Conexión comercial y logística proyectada para negocios.</span>\n        <div class="business-benefits" aria-hidden="true"><span>PEDIDOS</span><span>GESTIÓN</span><span>ENTREGAS</span></div>';
@@ -34,6 +35,7 @@ writeFileSync(resolve(output,"index.html"),html);
 let css=read("styles.css");
 const appendCss=[
   "/* OPERATION-FLOW-V1: additive, preview-only selectors. Production CSS is unchanged. */",
+  ".tile--visual .flow-picture{display:block;width:100%;height:100%;min-height:0}",
   ".tile--visual .flow-graphic{width:100%;height:100%;object-fit:contain;object-position:center;filter:none;opacity:1;padding:0 2px 7px}",
   'body[data-theme="dark"] .tile--visual .flow-graphic{filter:none;opacity:1}',
   ".business-benefits{display:flex;align-items:flex-end;gap:6px;flex-wrap:wrap;margin-top:auto;padding-right:32px}",
@@ -67,6 +69,6 @@ const business=[
 content=replaceObject(content,"ecosystem","contact",ecosystem);
 content=replaceObject(content,"apps",null,business);
 writeFileSync(resolve(output,"src/content.mjs"),content);
-const meta={source:"main",scope:["tarjeta visual superior","tarjeta inferior comercial","dos diálogos"],production_authorized:false,merge_authorized:false,files_written:["index.html","styles.css","src/content.mjs","assets/flow-operation-v1.svg"],originals_unchanged:true};
+const meta={source:"main",scope:["tarjeta visual superior","tarjeta inferior comercial","dos diálogos"],production_authorized:false,merge_authorized:false,files_written:["index.html","styles.css","src/content.mjs","assets/flow-operation-v1.svg","assets/flow-operation-mobile-v1.svg"],originals_unchanged:true};
 writeFileSync(resolve(output,"candidate.json"),JSON.stringify(meta,null,2)+"\n");
 console.log("OPERATION-FLOW-V1 offline candidate: "+output+"; NO MERGE / NO DEPLOY.");

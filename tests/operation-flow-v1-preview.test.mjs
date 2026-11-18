@@ -23,8 +23,10 @@ test("OPERATION-FLOW-V1: offline preview does not modify approved website files"
   const css=read("reports/operation-flow-v1/styles.css");
   const content=read("reports/operation-flow-v1/src/content.mjs");
   const svg=read("reports/operation-flow-v1/assets/flow-operation-v1.svg");
+  const mobileSvg=read("reports/operation-flow-v1/assets/flow-operation-mobile-v1.svg");
   assert.match(html,/<meta name="robots" content="noindex,nofollow">/);
   assert.match(html,/flow-operation-v1\.svg/);
+  assert.match(html,/flow-operation-mobile-v1\.svg/);
   assert.match(html,/DEL PEDIDO A LA ENTREGA/);
   assert.match(html,/DESSET PARA<br>TU NEGOCIO/);
   assert.doesNotMatch(html,/CUATRO ROLES\.<br>UNA ARQUITECTURA/);
@@ -33,11 +35,14 @@ test("OPERATION-FLOW-V1: offline preview does not modify approved website files"
   assert.match(html,/class="contact-v12-computer"/);
   assert.match(html,/src="\.\/assets\/desset-eye\.gif"/);
   assert.match(css,/\.tile--visual \.flow-graphic/);
+  assert.match(css,/\.tile--visual \.flow-picture/);
   assert.match(css,/@media\(max-width:640px\)/);
   assert.match(content,/kicker:"RECORRIDO LOGÍSTICO"/);
   assert.match(content,/kicker:"PARA COMERCIOS"/);
   assert.match(svg,/viewBox="0 0 720 380"/);
   assert.match(svg,/prefers-reduced-motion:reduce/);
+  assert.match(mobileSvg,/viewBox="0 0 360 460"/);
+  assert.match(mobileSvg,/prefers-reduced-motion:reduce/);
   assert.match(svg,/offset-distance/);
   for(const word of ["PEDIDO","COMERCIO","REPARTO","ENTREGA","CONTROL"])
     assert.ok(svg.includes(word),word);
