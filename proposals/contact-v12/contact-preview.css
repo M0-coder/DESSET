@@ -33,7 +33,7 @@
   position:absolute;
   z-index:1;
   top:50%;
-  right:clamp(32px,7.5cqw,64px);
+  right:clamp(46px,11.5cqw,78px);
   transform:translateY(-50%);
   width:clamp(92px,38cqw,215px);
   height:91%;
