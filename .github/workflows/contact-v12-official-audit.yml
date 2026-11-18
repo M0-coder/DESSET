@@ -30,6 +30,10 @@ jobs:
         run: |
           node --check scripts/contact-v12-browser.mjs
           node --test tests/contact-v12-integration.test.mjs
+      - name: Validate unsigned proposal and exact candidate SHA256 (no authorization)
+        run: |
+          node --test tests/contact-v12-approval-proposal.test.mjs
+          node scripts/contact-v12-approval-proposal.mjs
       - name: Instrumented Chrome audit with 26 captures and no deployment
         run: |
           google-chrome --version
