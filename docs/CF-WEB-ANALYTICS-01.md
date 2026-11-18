@@ -1,6 +1,19 @@
-# CF-WEB-ANALYTICS-01 — Preparación controlada y no publicada
+# CF-WEB-ANALYTICS-01 — Estado observado y antecedentes de preparación
 
-**Estado:** PROPUESTA / NO-GO para despliegue sin autorización específica del propietario. No activar RUM ni crear un nuevo sitio ni mover DNS.
+> **Actualización observacional 17/11/2026 — sin autorización implícita.** Esta página contiene un borrador histórico (más abajo), que describe una configuración anterior. **El estado actual debe leerse en esta sección**, no en las instrucciones originales de preparación.
+
+## Estado contrastado al 17/11/2026
+
+- Cloudflare zona `desset.lat`: `settings/rum.value = on`; Web Analytics Site existente con `auto_install = true` y `ruleset.enabled = true`. **La afirmación histórica de que la analítica estaba apagada ya no describe la configuración observada.**
+- Proyecto Pages `desset-institucional`: despliegue de producción `b118e080-24c8-412a-8ae7-ab52af7506f3` (SUCCESS), commit `c27b11586ba7dfbd6a02a65087299a261d5173d0`. El `main` posterior `0f7fda9568de3749e5bd2b38d74ee4ce798f4991` solo corrige la comprobación de `curl` del workflow e incorpora pruebas; **no es un nuevo despliegue**.
+- `scripts/cloudflare-headers.mjs` declara CSP compatible con el beacon automático y `connect-src 'self'`. **No hay evidencia independiente todavía** de la inyección real, del estado de envío `/cdn-cgi/rum`, de las cabeceras HTTP servidas ni de volumen de datos recolectados.
+- **Autorización de activación original: NOT_VERIFIED.** La presencia de RUM activo en la API no demuestra quién lo activó ni que exista autorización previa. No cambiar ni desactivar la zona automáticamente.
+- **Privacidad: revisión P1.** Reconciliar inventario de tratamiento, información al visitante y condición jurídica aplicable antes de emitir conformidad. No afirmar incumplimiento sin hechos suficientes.
+- **Acción segura:** auditar en lectura la configuración y el historial autorizativo; si es necesario cambiar algo, presentar impacto, alternativa, rollback y obtener autorización expresa separada. No cambiar DNS, diseño, código público ni publicar por esta actualización.
+
+## Archivo histórico de propuesta (no describe el estado actual)
+
+**Estado de este bloque histórico:** PROPUESTA original / NO-GO para despliegues sin autorización. La configuración de RUM fue observada como activa el 17/11/2026 (véase la actualización anterior). No modificar RUM, crear sitios o mover DNS desde este documento.
 
 ## Referencia canónica
 
@@ -10,9 +23,9 @@
 - PR histórico SEO #28 en `main` no implica nueva publicación ni activación de analítica.
 - La versión fuente `index.html` (Bento original), estilos, scripts visuales, ilustraciones, textos y manifiesto aprobado permanecen **intactos**.
 
-## Problema observado
+## Problema descrito por el borrador original (histórico)
 
-Cloudflare Web Analytics está apagado y no existen Web Analytics Sites asociados. La CSP original tiene `script-src 'self'` tanto en el HTML fuente como en las cabeceras; sin compatibilidad preparada, la inyección del beacon puede ser bloqueada.
+El borrador inicial registraba Cloudflare Web Analytics como apagado y sin sitios Web Analytics asociados; **esa descripción quedó obsoleta**. La CSP original tiene `script-src 'self'` tanto en el HTML fuente como en las cabeceras; sin compatibilidad preparada, la inyección del beacon puede ser bloqueada.
 
 Documentación oficial:
 - https://developers.cloudflare.com/web-analytics/get-started/
@@ -29,7 +42,7 @@ Para el modo **automático de dominio proxied** de Cloudflare:
 - Modificar la CSP del **paquete final** y de `_headers` con política común, nunca `index.html` fuente ni BODY. Ambos CSP se aplican por navegador y ambos deben permitir el beacon.
 - `scripts/release-package-gate.mjs` debe comprobar que el BODY generado es **idéntico byte a byte** al original y que la fuente mantiene `noindex`; los gates del manifiesto y Cloudflare deben validar la CSP exacta.
 
-## Verificación técnica — antes de integrar
+## Procedimiento de verificación planteado en la propuesta original (histórico)
 
 1. `npm ci --ignore-scripts --no-audit --no-fund`.
 2. `npm run check`, `npm run security:audit`, `npm run mutation:smoke`, `npm run test:coverage`.
