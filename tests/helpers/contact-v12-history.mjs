@@ -1,7 +1,8 @@
 // Historical V11 snapshot reconstruction for legacy regressions.
 // Never used by the production approval gate. Fail-closed if the V12 delta changes.
 import assert from "node:assert/strict";
-import { gitBlobSha1 } from "../../scripts/visual-baseline.mjs";
+import { gitBlobSha1, parseApprovedManifest } from "../../scripts/visual-baseline.mjs";
+import { readFileSync } from "node:fs";
 
 const originalContact = "      <button class=\"tile tile--contact tile--button\" type=\"button\" data-detail=\"contact\">\n        <span class=\"tile-label\">CONTACTO / 01</span>\n        <span class=\"tile-title\">CANALES<br>OFICIALES.</span>\n        <span class=\"tile-arrow\" aria-hidden=\"true\">↗</span>\n      </button>";
 const contactOpen = '      <button class="tile tile--contact tile--button" type="button" data-detail="contact">';
@@ -37,4 +38,16 @@ export function restoreHistoricalV11Css(css) {
 export function historicalV11Read(read) {
   return path => path === "index.html" ? Buffer.from(restoreHistoricalV11Html(read(path).toString("utf8"))) :
     path === "styles.css" ? Buffer.from(restoreHistoricalV11Css(read(path).toString("utf8"))) : read(path);
+}
+
+// V11 authorization evidence remains a frozen historical fixture; never substitutes for current gate.
+export function loadHistoricalV11Manifest() {
+  const bytes = readFileSync(new URL("../fixtures/visual-baseline-v11.json",import.meta.url));
+  const m = parseApprovedManifest(bytes.toString("utf8"));
+  assert.equal(m.baseline_id,"DESSET-V11-HERO-2026-11-17");
+  assert.equal(m.source_commit,"5f1d5b711889868a1e14ab75a74448f91b34a59b");
+  assert.equal(m.approval_evidence,"https://github.com/M0-coder/DESSET/issues/55#issuecomment-6964660907");
+  assert.equal(m.files["index.html"],HISTORICAL_V11_HTML_SHA);
+  assert.equal(m.files["styles.css"],HISTORICAL_V11_CSS_SHA);
+  return m;
 }
