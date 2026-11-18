@@ -76,16 +76,52 @@ function measure(){
   const title=tile.querySelector(".tile-title");
   const arrow=tile.querySelector(".tile-arrow");
   const pc=tile.querySelector(".contact-v12-computer");
+  const cross=tile.querySelector(".contact-v12-cross");
+  const labelRange=document.createRange();
+  labelRange.selectNodeContents(title);
   const rect=e=>{
     const r=e.getBoundingClientRect();
     return {x:r.x,y:r.y,right:r.right,bottom:r.bottom,width:r.width,height:r.height};
   };
   const t=rect(tile),h=rect(title),a=rect(arrow);
   const image=pc?rect(pc):null;
+  const ink=rect(labelRange);
+  const crossBox=cross?rect(cross):null;
+  // Image object-fit:contain: measure the visible art, not its transparent layout box.
+  const ratio=pc?.naturalWidth&&pc?.naturalHeight?pc.naturalWidth/pc.naturalHeight:0;
+  const visibleWidth=image&&ratio?Math.min(image.width,image.height*ratio):0;
+  const visibleHeight=ratio?visibleWidth/ratio:0;
+  const computerInk=image&&ratio?{
+    x:image.x+(image.width-visibleWidth)/2,
+    y:image.y+(image.height-visibleHeight)/2,
+    right:image.x+(image.width+visibleWidth)/2,
+    bottom:image.y+(image.height+visibleHeight)/2
+  }:null;
+  const intersects=(one,two,padding=0)=>one&&two &&
+    one.x<two.right+padding&&one.right>two.x-padding&&
+    one.y<two.bottom+padding&&one.bottom>two.y-padding;
+  const inkOverlap=Boolean(intersects(ink,computerInk,2));
+  const computerArrowOverlap=Boolean(intersects(computerInk,a,2));
+  const titleArrowOverlap=Boolean(intersects(ink,a,2));
+  const crossArt=crossBox?{
+    x:crossBox.x-7,y:crossBox.y-7,
+    right:crossBox.right+7,bottom:crossBox.bottom+7
+  }:null;
+  const crossShown=cross?getComputedStyle(cross).display!=="none":false;
+  const crossOverlap=crossShown&&Boolean(intersects(crossArt,ink,2) || intersects(crossArt,computerInk,2) ||
+    intersects(crossArt,a,2));
+  const insetBorder=getComputedStyle(tile,"::before");
+  const baseColor=getComputedStyle(tile).backgroundColor;
+  const titleColor=getComputedStyle(title).color;
   const visible=getComputedStyle(tile).display!=="none" && tile.getClientRects().length>0;
   return {
     viewport:[innerWidth,innerHeight],visible,view:document.querySelector(".board").dataset.view,
     tile:t,title:h,arrow:a,image,
+    titleInk:ink,computerInk,crossArt,crossShown,
+    titleComputerOverlap:inkOverlap,computerArrowOverlap,titleArrowOverlap,crossOverlap,
+    hasInsetBorder:insetBorder.content!=="none" &&
+      insetBorder.borderTopStyle==="solid" && parseFloat(insetBorder.borderTopWidth)>=1,
+    theme:document.body.dataset.theme,titleColor,baseColor,
     labelPresent:tile.textContent.includes("CONTACTO / 01"),
     expectedText:tile.textContent.includes("CANALES")&&tile.textContent.includes("OFICIALES."),
     buttonDetail:tile.getAttribute("data-detail"),
@@ -149,6 +185,12 @@ try{
       assert.ok(!m.titleClipped && !m.arrowClipped,
         "NO-GO: title or button clipped "+mode+" "+width+"x"+height+": "+JSON.stringify(m));
       if(mode==="candidate"){
+        assert.equal(m.theme,"light","NO-GO: candidate wrong initial theme");
+        assert.ok(m.hasInsetBorder,"NO-GO: original reference's fine inset border missing");
+        assert.ok(!m.titleComputerOverlap&&!m.computerArrowOverlap&&
+          !m.titleArrowOverlap&&!m.crossOverlap,
+          "NO-GO: overlapping text, illustration, cross or arrow "+
+          width+"x"+height+": "+JSON.stringify(m));
         assert.equal(m.labelPresent,false,"NO-GO: redundant Contacto / 01 present");
         assert.ok(m.computer?.complete && m.computer.naturalWidth>0 && m.computer.naturalHeight>0 &&
           Math.abs(m.computer.naturalWidth/m.computer.naturalHeight - 180/130)<0.02,
@@ -159,6 +201,19 @@ try{
       // The card must still open exactly its existing official channels dialog.
       const dialog=await evaluate(send,"(function(){document.querySelector('.tile--contact').click();const d=document.querySelector('#detailDialog');const ok=d.open && d.querySelector('#detailTitle')?.textContent?.length>0;d.close();return ok;})()");
       assert.ok(dialog,"NO-GO: contact dialog no longer works "+mode+" "+width+"x"+height);
+      if(mode==="candidate" && ((width===1440&&height===900)||
+          (width===390&&height===844)||(width===320&&height===256))){
+        const dark=await evaluate(send,
+          "(function(){document.querySelector('#themeButton').click();const t=document.querySelector('.tile--contact');const h=t.querySelector('.contact-v12-title');const b=getComputedStyle(t,'::before');return {theme:document.body.dataset.theme,bg:getComputedStyle(t).backgroundColor,text:getComputedStyle(h).color,border:b.borderTopColor,visible:getComputedStyle(t).display!=='none',imageLoaded:t.querySelector('img')?.complete};})()");
+        assert.ok(dark.theme==="dark"&&dark.visible&&dark.imageLoaded&&
+          dark.text==="rgb(244, 240, 235)"&&dark.bg==="rgb(53, 53, 53)" &&
+          dark.border==="rgba(233, 228, 217, 0.6)",
+          "NO-GO: dark-mode contact palette or fine border failed "+JSON.stringify(dark));
+        const darkPng=await send("Page.captureScreenshot",{format:"png",fromSurface:true});
+        await writeFile(join("reports/contact-v12-evidence",
+          "candidate-dark-"+width+"x"+height+".png"),Buffer.from(darkPng.data,"base64"));
+        await evaluate(send,"document.querySelector('#themeButton').click()");
+      }
       const capture=await send("Page.captureScreenshot",{format:"png",fromSurface:true});
       const filename=mode+"-"+width+"x"+height+".png";
       await writeFile(join("reports/contact-v12-evidence",filename),Buffer.from(capture.data,"base64"));
@@ -174,4 +229,4 @@ try{
 }finally{
   await finishBrowserAudit({ws,browser,server,temporary},primaryError);
 }
-console.log("CONTACT-V12 PREVIEW PASS: 13 viewports, 26 screenshots, contact dialog preserved.");
+console.log("CONTACT-V12 PREVIEW PASS: 13 viewports, 29 screenshots incl 3 dark-mode shots, zero overlap, contact dialog preserved.");
