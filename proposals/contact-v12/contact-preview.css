@@ -1,0 +1,96 @@
+/*
+ * DESSET CONTACT-V12 — SOLO PREVISUALIZACIÓN, NO PUBLICABLE.
+ * Candidata para la tarjeta «CANALES OFICIALES» basada en la imagen
+ * entregada por el fundador (17/11/2026). No reemplaza CSS ni hashes V11.
+ * Sin fuentes remotas, JS, navegación ni dependencia de Cloudflare.
+ */
+.tile--contact{
+  container-type:inline-size;
+  justify-content:center;
+  background-color:#f3eee4;
+  background-image:radial-gradient(rgba(41,35,27,.065) .42px,transparent .8px);
+  background-size:7px 7px;
+  box-shadow:inset 0 0 0 1px rgba(27,25,23,.42);
+  isolation:isolate;
+}
+.tile--contact .contact-v12-title{
+  position:relative;
+  z-index:2;
+  display:block;
+  width:52%;
+  max-width:52%;
+  font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;
+  font-size:clamp(17px,6.35cqw,37px);
+  line-height:1.02;
+  font-weight:900;
+  letter-spacing:-.052em;
+  color:#1d1b1a;
+  margin:0;
+  padding:0;
+  white-space:nowrap;
+}
+.tile--contact .contact-v12-computer{
+  position:absolute;
+  z-index:1;
+  top:50%;
+  right:clamp(32px,7.5cqw,64px);
+  transform:translateY(-50%);
+  width:clamp(92px,38cqw,215px);
+  height:91%;
+  object-fit:contain;
+  object-position:center;
+  pointer-events:none;
+}
+.tile--contact .contact-v12-cross{
+  position:absolute;
+  z-index:3;
+  top:52%;
+  left:49.8%;
+  width:6px;
+  height:6px;
+  background:#ff3328;
+  box-shadow:0 -7px 0 #ff3328,0 7px 0 #ff3328,-7px 0 0 #ff3328,7px 0 0 #ff3328;
+  pointer-events:none;
+}
+.tile--contact .tile-arrow{
+  z-index:4;
+  right:clamp(11px,3.4cqw,19px);
+  bottom:clamp(10px,2.9cqw,18px);
+  width:clamp(26px,7.2cqw,34px);
+  height:clamp(26px,7.2cqw,34px);
+  border:1.5px solid #242220;
+  border-radius:8px;
+  background:transparent;
+  color:#181817;
+  font-family:Arial,"Helvetica Neue",sans-serif;
+  font-size:clamp(17px,5cqw,23px);
+}
+body[data-theme="dark"] .tile--contact{
+  background-color:#353535;
+  background-image:none;
+  box-shadow:inset 0 0 0 1px #858585;
+}
+body[data-theme="dark"] .tile--contact .contact-v12-title{color:#f4f0eb}
+body[data-theme="dark"] .tile--contact .contact-v12-computer{
+  filter:invert(1) hue-rotate(180deg) saturate(1.1);
+}
+body[data-theme="dark"] .tile--contact .tile-arrow{
+  border-color:#d5d5d5;background:transparent;color:#f8f8f8;
+}
+@media(max-width:1000px){
+  .tile--contact .contact-v12-title{font-size:clamp(15px,6cqw,28px)}
+  .tile--contact .contact-v12-computer{right:clamp(32px,7cqw,49px);width:clamp(82px,37cqw,157px)}
+  .tile--contact .contact-v12-cross{left:49%}
+}
+@media(max-width:640px){
+  .board[data-view="sections"] .tile--contact{justify-content:center}
+  .tile--contact .contact-v12-title{font-size:clamp(17px,6.0cqw,28px)}
+  .tile--contact .contact-v12-computer{width:38%;height:85%;right:39px}
+  .tile--contact .contact-v12-cross{left:49%;transform:scale(.82)}
+}
+@media(max-height:400px){
+  .tile--contact .contact-v12-title{font-size:clamp(12px,5cqw,19px)}
+  .tile--contact .contact-v12-computer{height:87%}
+  .tile--contact .contact-v12-cross{display:none}
+  .tile--contact .tile-arrow{width:23px;height:23px;font-size:15px}
+}
