@@ -150,8 +150,9 @@ try{
         "NO-GO: title or button clipped "+mode+" "+width+"x"+height+": "+JSON.stringify(m));
       if(mode==="candidate"){
         assert.equal(m.labelPresent,false,"NO-GO: redundant Contacto / 01 present");
-        assert.ok(m.computer?.complete&&m.computer.naturalWidth===180&&m.computer.naturalHeight===130,
-          "NO-GO: computer image unavailable "+width+"x"+height+": "+JSON.stringify(m.computer));
+        assert.ok(m.computer?.complete && m.computer.naturalWidth>0 && m.computer.naturalHeight>0 &&
+          Math.abs(m.computer.naturalWidth/m.computer.naturalHeight - 180/130)<0.02,
+          "NO-GO: retro computer SVG unavailable or distorted "+width+"x"+height+": "+JSON.stringify(m.computer));
         assert.ok(m.image.x>=m.tile.x-2 && m.image.right<=m.tile.right+2,
           "NO-GO: computer outside contact tile "+width+"x"+height);
       }else assert.ok(m.labelPresent,"NO-GO: baseline changed");
