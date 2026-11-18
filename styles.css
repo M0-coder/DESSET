@@ -587,8 +587,8 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
   justify-content:space-between;
   isolation:isolate;
   background-color:#292522;
-  background-image:radial-gradient(rgba(251,245,235,.16) .38px,transparent .78px),linear-gradient(155deg,#221f1e,#332e2b);
-  background-size:5px 5px,auto;
+  background-image:radial-gradient(rgba(246,235,219,.038) .3px,transparent .8px),radial-gradient(rgba(0,0,0,.095) .52px,transparent 1px),linear-gradient(155deg,#221f1e,#332e2b);
+  background-size:3.3px 4.6px,7.6px 6.1px,auto;
   color:#f4f0e9;
 }
 .tile--theme::before{
@@ -596,15 +596,15 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
   position:absolute;
   z-index:1;
   inset:2px;
-  border:1px solid rgba(238,231,218,.46);
+  border:1px solid rgba(238,231,218,.20);
   border-radius:inherit;
   pointer-events:none;
 }
 .tile--theme .theme-symbol{
   position:absolute;
   z-index:2;
-  top:clamp(13px,4.2cqw,25px);
-  left:clamp(15px,4.8cqw,30px);
+  top:clamp(20px,7.6cqw,34px);
+  left:clamp(17px,7.2cqw,31px);
   display:block;
   width:clamp(19px,8.2cqw,34px);
   height:clamp(19px,8.2cqw,34px);
@@ -622,7 +622,7 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 }
 .tile--theme .theme-v13-moon{
   position:absolute;
-  top:clamp(14px,4.8cqw,25px);
+  top:clamp(20px,7cqw,32px);
   right:clamp(32px,11cqw,50px);
   display:block;
   width:clamp(24px,11.7cqw,48px);
@@ -646,12 +646,12 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 .tile--theme .theme-caption{
   position:absolute;
   z-index:3;
-  bottom:clamp(12px,3.6cqw,23px);
-  left:clamp(12px,3.6cqw,23px);
+  bottom:clamp(23px,10cqw,39px);
+  left:clamp(12px,6.9cqw,29px);
   right:clamp(43px,14cqw,67px);
   padding:0;
   color:#f4f0e9;
-  font-size:clamp(10px,4.15cqw,18px);
+  font-size:clamp(10px,4.4cqw,18px);
   line-height:1.15;
   letter-spacing:-.035em;
   white-space:nowrap;
@@ -659,7 +659,7 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 .tile--theme .tile-arrow{
   z-index:4;
   right:clamp(10px,3.6cqw,18px);
-  bottom:clamp(9px,3.3cqw,17px);
+  bottom:clamp(17px,9.6cqw,38px);
   display:grid;
   place-items:center;
   width:clamp(24px,9.2cqw,38px);
@@ -674,21 +674,21 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 }
 body[data-theme="dark"] .tile--theme{
   background-color:#211e1d;
-  background-image:radial-gradient(rgba(251,245,235,.13) .38px,transparent .78px),linear-gradient(155deg,#1b1919,#2a2625);
+  background-image:radial-gradient(rgba(246,235,219,.035) .3px,transparent .8px),radial-gradient(rgba(0,0,0,.095) .52px,transparent 1px),linear-gradient(155deg,#1b1919,#2a2625);
 }
 body[data-theme="dark"] .tile--theme .theme-v13-gear circle{fill:#211e1d}
 body[data-theme="dark"] .tile--theme .tile-arrow{background:transparent;color:#f4f0e9;border-color:#f4f0e9}
 .tile--theme:hover .tile-arrow,.tile--theme:focus-visible .tile-arrow{color:#f4f0e9;border-color:#f4f0e9}
 @media(max-width:640px){
-  .tile--theme .theme-caption{font-size:clamp(8px,3.2cqw,11px);right:clamp(32px,13cqw,49px)}
-  .tile--theme .theme-v13-moon{width:clamp(20px,12cqw,35px);right:clamp(24px,13cqw,30px)}
+  .tile--theme .theme-caption{left:clamp(10px,5.8cqw,15px);bottom:clamp(14px,9cqw,28px);font-size:clamp(8px,4.1cqw,11px);right:clamp(32px,13cqw,49px)}
+  .tile--theme .theme-v13-moon{top:clamp(19px,10cqw,29px);width:clamp(20px,12cqw,35px);right:clamp(24px,13cqw,30px)}
   .tile--theme .theme-v13-star--one{top:16%;right:30%}
   .tile--theme .theme-v13-star--two{top:46%;right:29%}
   .tile--theme .theme-v13-star--three{top:8%;right:5%}
 }
 @media(max-height:400px){
-  .tile--theme .theme-symbol{top:7px;left:8px;width:17px;height:17px}
+  .tile--theme .theme-symbol{top:12px;left:10px;width:17px;height:17px}
   .tile--theme .theme-v13-sky{display:none}
-  .tile--theme .theme-caption{bottom:7px;left:8px;right:35px;font-size:8px}
-  .tile--theme .tile-arrow{bottom:5px;right:7px;width:22px;height:22px;font-size:15px}
+  .tile--theme .theme-caption{bottom:10px;left:10px;right:35px;font-size:8px}
+  .tile--theme .tile-arrow{bottom:8px;right:7px;width:22px;height:22px;font-size:15px}
 }
