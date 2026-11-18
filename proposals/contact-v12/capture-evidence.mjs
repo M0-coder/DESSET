@@ -207,10 +207,10 @@ try{
         // .tile--button has a 160ms background-color transition; inspect its settled state.
         await wait(240);
         const dark=await evaluate(send,
-          "(function(){const t=document.querySelector('.tile--contact');const h=t.querySelector('.contact-v12-title');const b=getComputedStyle(t,'::before');return {theme:document.body.dataset.theme,bg:getComputedStyle(t).backgroundColor,text:getComputedStyle(h).color,border:b.borderTopColor,visible:getComputedStyle(t).display!=='none',imageLoaded:t.querySelector('img')?.complete};})()");
+          "(function(){const t=document.querySelector('.tile--contact');const h=t.querySelector('.contact-v12-title');const b=getComputedStyle(t,'::before');return {theme:document.body.dataset.theme,bg:getComputedStyle(t).backgroundColor,text:getComputedStyle(h).color,border:b.borderTopColor,visible:getComputedStyle(t).display!=='none',imageLoaded:t.querySelector('img')?.complete,imageFilter:getComputedStyle(t.querySelector('.contact-v12-computer')).filter};})()");
         assert.ok(dark.theme==="dark"&&dark.visible&&dark.imageLoaded&&
           dark.text==="rgb(244, 240, 235)"&&dark.bg==="rgb(53, 53, 53)" &&
-          dark.border==="rgba(233, 228, 217, 0.6)",
+          dark.border==="rgba(233, 228, 217, 0.6)" && dark.imageFilter==="none",
           "NO-GO: dark-mode contact palette or fine border failed "+JSON.stringify(dark));
         const darkPng=await send("Page.captureScreenshot",{format:"png",fromSurface:true});
         await writeFile(join("reports/contact-v12-evidence",
