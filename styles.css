@@ -603,8 +603,8 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 .tile--theme .theme-symbol{
   position:absolute;
   z-index:2;
-  top:clamp(10px,3.3cqw,22px);
-  left:clamp(10px,3.3cqw,22px);
+  top:clamp(13px,4.2cqw,25px);
+  left:clamp(15px,4.8cqw,30px);
   display:block;
   width:clamp(19px,8.2cqw,34px);
   height:clamp(19px,8.2cqw,34px);
@@ -622,8 +622,8 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 }
 .tile--theme .theme-v13-moon{
   position:absolute;
-  top:clamp(9px,2.7cqw,18px);
-  right:clamp(15px,5.4cqw,30px);
+  top:clamp(14px,4.8cqw,25px);
+  right:clamp(32px,11cqw,50px);
   display:block;
   width:clamp(24px,11.7cqw,48px);
   height:auto;
@@ -642,7 +642,7 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 }
 .tile--theme .theme-v13-star--one{top:16%;right:24%}
 .tile--theme .theme-v13-star--two{top:49%;right:26%}
-.tile--theme .theme-v13-star--three{top:10%;right:5%}
+.tile--theme .theme-v13-star--three{top:11%;right:4%}
 .tile--theme .theme-caption{
   position:absolute;
   z-index:3;
@@ -681,7 +681,7 @@ body[data-theme="dark"] .tile--theme .tile-arrow{background:transparent;color:#f
 .tile--theme:hover .tile-arrow,.tile--theme:focus-visible .tile-arrow{color:#f4f0e9;border-color:#f4f0e9}
 @media(max-width:640px){
   .tile--theme .theme-caption{font-size:clamp(8px,3.2cqw,11px);right:clamp(32px,13cqw,49px)}
-  .tile--theme .theme-v13-moon{width:clamp(20px,12cqw,35px);right:clamp(10px,5cqw,20px)}
+  .tile--theme .theme-v13-moon{width:clamp(20px,12cqw,35px);right:clamp(24px,13cqw,30px)}
   .tile--theme .theme-v13-star--one{top:16%;right:30%}
   .tile--theme .theme-v13-star--two{top:46%;right:29%}
   .tile--theme .theme-v13-star--three{top:8%;right:5%}
