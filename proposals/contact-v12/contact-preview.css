@@ -13,6 +13,15 @@
   box-shadow:inset 0 0 0 1px rgba(27,25,23,.42);
   isolation:isolate;
 }
+.tile--contact::before{
+  content:"";
+  position:absolute;
+  inset:clamp(5px,1.5cqw,9px);
+  border:1px solid rgba(48,45,40,.52);
+  border-radius:clamp(9px,3.1cqw,18px);
+  z-index:3;
+  pointer-events:none;
+}
 .tile--contact .contact-v12-title{
   position:relative;
   z-index:2;
@@ -70,6 +79,7 @@ body[data-theme="dark"] .tile--contact{
   background-image:none;
   box-shadow:inset 0 0 0 1px #858585;
 }
+body[data-theme="dark"] .tile--contact::before{border-color:rgba(233,228,217,.6)}
 body[data-theme="dark"] .tile--contact .contact-v12-title{color:#f4f0eb}
 body[data-theme="dark"] .tile--contact .contact-v12-computer{
   filter:invert(1) hue-rotate(180deg) saturate(1.1);
