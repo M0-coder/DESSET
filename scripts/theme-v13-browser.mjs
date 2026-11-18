@@ -74,7 +74,7 @@ function measureTheme(){
  if(skyShown){
   if(!inside(mb,tb))errors.push("moon clipped");
   if(intersect(mb,ab,1)||lines.some(r=>intersect(r,mb,1)))errors.push("moon overlaps text/arrow");
-  for(const s of stars){const sb=box(s);if(!inside(sb,tb))errors.push("star clipped");if(lines.some(r=>intersect(r,sb,1)))errors.push("star overlaps caption");}
+  for(const s of stars){const sb=box(s);if(!inside(sb,tb))errors.push("star clipped");if(lines.some(r=>intersect(r,sb,1)))errors.push("star overlaps caption");if(intersect(sb,mb,0))errors.push("star overlaps crescent");}
  }
  if(parseFloat(arrowStyle.borderTopWidth)<1||parseFloat(arrowStyle.borderTopLeftRadius)>12)errors.push("arrow not square");
  if(!arrowStyle.color.includes("244, 240, 233"))errors.push("arrow color unexpected "+arrowStyle.color);
