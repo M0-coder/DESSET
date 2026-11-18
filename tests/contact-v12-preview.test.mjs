@@ -60,6 +60,8 @@ test("CONTACT-V12: scoped CSS never changes grid, global elements or other tiles
   assert.match(css,/\.tile--contact \.contact-v12-computer/);
   assert.match(css,/\.tile--contact \.contact-v12-cross/);
   assert.match(css,/body\[data-theme="dark"\] \.tile--contact/);
+  assert.match(css,/body\[data-theme="dark"\] \.tile--contact \.contact-v12-computer\{\s*filter:none/);
+  assert.doesNotMatch(css,/filter:\s*invert\(/);
   assert.match(css,/@media\(max-width:640px\)/);
   assert.match(css,/@media\(max-height:400px\)/);
   assert.doesNotMatch(css,/@import|@font-face|url\s*\(|!important|position:\s*fixed/);
