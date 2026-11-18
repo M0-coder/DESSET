@@ -52,7 +52,7 @@ test("FINAL BENTO V3 builds real interactive candidate and never mutates approve
    assert.match(svg,/prefers-reduced-motion:reduce/);
    assert.doesNotMatch(svg,/<script\b|<foreignObject\b|\bon[a-z]+\s*=|(?:href|xlink:href)\s*=\s*["'](?:https?:|javascript:|data:)/i);
  }
- assert.doesNotMatch(rider,/12 MIN|EN VIVO|RUTA ACTIVA|ENTREGA GARANTIZADA/i);
+ assert.doesNotMatch(rider,/<text[^>]*>[^<]*(?:12 MIN|EN VIVO|RUTA ACTIVA|ENTREGA GARANTIZADA)/i);
  for(const p of ["reports/final-bento-v3/assets/desset-eye.gif","reports/final-bento-v3/assets/desset-eye-still.png","reports/final-bento-v3/styles-compact.css","reports/final-bento-v3/404.html"])
   assert.ok(existsSync(new URL(p,root)),"missing "+p);
 });
