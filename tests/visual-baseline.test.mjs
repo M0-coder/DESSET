@@ -5,14 +5,14 @@ import {
   gitBlobSha1, htmlBodyFnv64, parseApprovedManifest,
   inspectVisualBaseline, assertApprovedVisualBaseline, loadApprovedVisualBaseline
 } from "../scripts/visual-baseline.mjs";
-import {historicalV11Read} from "./helpers/contact-v12-history.mjs";
+import {historicalV11Read,loadHistoricalV11Manifest} from "./helpers/contact-v12-history.mjs";
 
 const read = path => readFileSync(new URL("../" + path, import.meta.url));
 const clone = x => JSON.parse(JSON.stringify(x));
 const historicalRead = historicalV11Read(read);
 
 test("manifest V11 con aprobación verificada preserva las diez tarjetas y canales oficiales", () => {
-  const m = loadApprovedVisualBaseline();
+  const m = loadHistoricalV11Manifest();
   assert.equal(m.baseline_id, "DESSET-V11-HERO-2026-11-17");
   assert.equal(m.source_commit, "5f1d5b711889868a1e14ab75a74448f91b34a59b");
   assert.equal(m.production_deployment, "b118e080-24c8-412a-8ae7-ab52af7506f3");
@@ -22,13 +22,13 @@ test("manifest V11 con aprobación verificada preserva las diez tarjetas y canal
   assert.equal(m.files["styles.css"], "b6e054daa3d9af66abb19324683f0f9b3c0500bf");
   assert.equal(m.html_body_fnv64, "30c5cb77e9eb795a");
   assert.deepEqual(inspectVisualBaseline(m, historicalRead).diffs, []);
-  // Actual, unapproved V12 is still NO-GO under immutable V11.
+  // The immutable V11 snapshot must continue to reject the later V12 bytes.
   assert.deepEqual(inspectVisualBaseline(m, read).diffs.sort(),["index.html","styles.css","index.html#body"].sort());
   assert.deepEqual(assertApprovedVisualBaseline(m, historicalRead).diffs, []);
 });
 
 test("cada uno de los 9 archivos protegidos rechaza un solo byte cambiado", () => {
-  const m = loadApprovedVisualBaseline();
+  const m = loadHistoricalV11Manifest();
   for (const path of Object.keys(m.files)) {
     const source = historicalRead(path);
     const altered = Buffer.concat([source, Buffer.from("\n")]);
@@ -38,7 +38,7 @@ test("cada uno de los 9 archivos protegidos rechaza un solo byte cambiado", () =
 });
 
 test("cambiar BODY HTML sin aprobar actualizacion hace fallar el gate", () => {
-  const m = loadApprovedVisualBaseline();
+  const m = loadHistoricalV11Manifest();
   const html = historicalRead("index.html").toString("utf8");
   const altered = Buffer.from(html.replace("<body ", '<body data-proposal="1" '));
   assert.notEqual(htmlBodyFnv64(altered.toString("utf8")), m.html_body_fnv64);
@@ -84,7 +84,7 @@ test("noindex no se puede omitir en la fuente incluso si se editara el manifest"
 });
 
 test("manifiesto inusual o incompleto no permite aprobar nuevos activos", () => {
-  const m = loadApprovedVisualBaseline();
+  const m = loadHistoricalV11Manifest();
   for (const change of [
     x => { x.status = "proposal"; },
     x => { x.schema_version = 2; },
@@ -99,13 +99,29 @@ test("manifiesto inusual o incompleto no permite aprobar nuevos activos", () => 
 });
 
 test("candidato visual obtiene diff informativo sin alterar el manifiesto", () => {
-  const m = loadApprovedVisualBaseline();
+  const m = loadHistoricalV11Manifest();
   const before = readFileSync(new URL("../config/visual-baseline-approved.json", import.meta.url), "utf8");
   const report = inspectVisualBaseline(m, p => p === "styles.css" ? Buffer.from("new design candidate") : historicalRead(p));
   assert.deepEqual(report.diffs, ["styles.css"]);
   assert.notEqual(report.actualFiles["styles.css"], m.files["styles.css"]);
   const after = readFileSync(new URL("../config/visual-baseline-approved.json", import.meta.url), "utf8");
   assert.equal(after, before);
+});
+
+
+test("CONTACT-V12: active owner-approved manifest matches files and rejects mutations", () => {
+  const actual=loadApprovedVisualBaseline();
+  assert.equal(actual.baseline_id,"DESSET-V12-CONTACT-2026-11-17");
+  assert.equal(actual.status,"approved");
+  assert.equal(actual.source_commit,"9e766cb38f1ffd9f4b3460f5e6a46fa914d4edb9");
+  assert.equal(actual.approval_evidence,"https://github.com/M0-coder/DESSET/issues/58#issuecomment-6968083138");
+  assert.deepEqual(assertApprovedVisualBaseline(actual).diffs,[]);
+  const html=read("index.html").toString("utf8");
+  const forged=Buffer.from(html.replace('CANALES<br>OFICIALES.','CANALES<br>ALTERADOS.'));
+  assert.notEqual(gitBlobSha1(forged),actual.files["index.html"]);
+  assert.throws(()=>assertApprovedVisualBaseline(actual,p=>p==="index.html"?forged:read(p)),/BENTO NO APROBADO/);
+  const cssChanged=Buffer.concat([read("styles.css"),Buffer.from("\n/* unapproved mutation */\n")]);
+  assert.throws(()=>assertApprovedVisualBaseline(actual,p=>p==="styles.css"?cssChanged:read(p)),/BENTO NO APROBADO/);
 });
 
 test("el inspector de candidatos no autoriza despliegue ni modifica baseline", () => {
