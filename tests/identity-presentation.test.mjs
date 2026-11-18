@@ -31,7 +31,8 @@ test("identity is descriptive, not a claim of launched services",()=>{
 test("company tile remains the only entry point, other Bento content is unmodified",()=>{
   const html=read("index.html");
   assert.match(html,/data-detail="company"[\s\S]*?IDENTIDAD\./);
-  assert.match(html,/COMERCIO<br>Y <span class="brand-word">LOGÍSTICA<\/span>\.<br><span>UNA MISMA VISIÓN\.<\/span>/);
+  assert.match(html,/class="intro-title-heavy">COMERCIO Y<br>LOGÍSTICA\.<\/span>/);
+  assert.match(html,/class="intro-title-vision">UNA MISMA VISIÓN\.<\/span>/);
   assert.match(html,/data-detail="project">CONOCER EL PROYECTO/);
 });
 

@@ -1,0 +1,66 @@
+name: DESSET HERO V11 - Candidate Review No Deploy
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "tests/site.test.mjs"
+      - "tests/hero-v11-implementation.test.mjs"
+      - "proposals/hero-v11/implementation-approval-request.mjs"
+      - ".github/workflows/hero-v11-candidate-review.yml"
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  candidate-review:
+    name: candidate-owner-signed-no-deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout owner-approved candidate without deployment
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Node pinned version
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - name: Exact dependency install without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Syntax and isolated first-tile scope tests
+        run: |
+          set -euo pipefail
+          node --check src/app.mjs
+          node --check src/content.mjs
+          node --check proposals/hero-v11/implementation-approval-request.mjs
+          node --test tests/site.test.mjs tests/hero-v11-implementation.test.mjs
+      - name: Security and negative role mutation checks (no deploy)
+        run: |
+          set -euo pipefail
+          npm run security:audit
+          npm run mutation:smoke
+      - name: Verify owner comment and exact signed design SHA256
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node proposals/hero-v11/implementation-approval-request.mjs
+          node scripts/approved-baseline-gate.mjs
+      - name: Chrome real-document audit at 13 viewports (candidate only)
+        run: |
+          set -euo pipefail
+          google-chrome --version
+          npm run browser:audit
+      - name: Upload candidate screenshots, never deployable artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-hero-v11-implementation-review-only
+          path: reports/browser/
+          if-no-files-found: warn
+          retention-days: 14

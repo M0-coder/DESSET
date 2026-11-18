@@ -39,7 +39,8 @@ test("long-form content has an accessible project-only scroll, without typograph
   assert.match(js,/dialogContent\.scrollTop=0/);
   assert.match(js,/p\.append\(note\)/);
   assert.match(html,/data-detail="project">CONOCER EL PROYECTO/);
-  assert.match(html,/COMERCIO<br>Y <span class="brand-word">LOGÍSTICA<\/span>\.<br><span>UNA MISMA VISIÓN\.<\/span>/);
+  assert.match(html,/class="intro-title-heavy">COMERCIO Y<br>LOGÍSTICA\.<\/span>/);
+  assert.match(html,/class="intro-title-vision">UNA MISMA VISIÓN\.<\/span>/);
 });
 
 test("V5 physically constrains only the project dialog and keeps its reader scrollable",()=>{
