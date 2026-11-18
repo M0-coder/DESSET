@@ -49,7 +49,7 @@ jobs:
           set -euo pipefail
           google-chrome --version
           node proposals/contact-v12/capture-evidence.mjs
-          test "$(find reports/contact-v12-evidence -name '*.png' | wc -l)" -eq 26
+          test "$(find reports/contact-v12-evidence -name '*.png' | wc -l)" -eq 29
       - name: Attach screenshots for review not publication
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
