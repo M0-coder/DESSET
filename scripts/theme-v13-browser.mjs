@@ -117,7 +117,9 @@ try{
   }
   assert.ok(ready,"NO-GO: site did not load "+width+"x"+height);
   await delay(120);
-  
+  // The approved compact fallback deliberately scrolls at heights <=400 CSS px.
+  // Bring the live toggle into view rather than falsely reporting an offscreen tile as clipped.
+  if(height<=400)await evaluate(send,"document.querySelector('.tile--theme').scrollIntoView({block:'center',behavior:'auto'})");
   for(const theme of ["light","dark"]){
    if(theme==="dark"){await evaluate(send,"document.querySelector('#themeButton').click()");await delay(220)}
    const m=await evaluate(send,"("+measureTheme.toString()+")()");
