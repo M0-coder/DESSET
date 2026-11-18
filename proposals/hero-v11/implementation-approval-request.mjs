@@ -1,15 +1,19 @@
 /**
- * HERO-V11: read-only confirmation of the now SIGNED visual manifest.
+ * HERO-V11: read-only confirmation of the immutable historically SIGNED V11 manifest.
  * Historical filename preserved to avoid breaking review references.
  * Never writes the manifest, merges a PR, or publishes anything.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { loadApprovedVisualBaseline, assertApprovedVisualBaseline } from "../../scripts/visual-baseline.mjs";
+import { assertApprovedVisualBaseline } from "../../scripts/visual-baseline.mjs";
+import { loadHistoricalV11Manifest, historicalV11Read } from "../../tests/helpers/contact-v12-history.mjs";
 import { visualApprovalDigest, verifyVisualApproval } from "../../scripts/visual-approval.mjs";
 
-const manifest = loadApprovedVisualBaseline();
-const bytes = readFileSync(new URL("../../config/visual-baseline-approved.json", import.meta.url));
+// Historical HERO-V11 evidence must remain independently valid after V12 becomes current.
+// Never mistake the frozen fixture for authorization of current production.
+const manifest = loadHistoricalV11Manifest();
+const bytes = readFileSync(new URL("../../tests/fixtures/visual-baseline-v11.json", import.meta.url));
+const historicalRead = historicalV11Read(path => readFileSync(new URL("../../" + path, import.meta.url)));
 assert.equal(manifest.baseline_id, "DESSET-V11-HERO-2026-11-17",
   "NO-GO: reference is not signed V11");
 assert.equal(manifest.source_commit, "5f1d5b711889868a1e14ab75a74448f91b34a59b");
@@ -20,7 +24,7 @@ assert.equal(manifest.approval_evidence,
 const digest = visualApprovalDigest(manifest);
 assert.equal(digest, "e35904f0682fd466f8fe5aa24513f9b7648048ae041d4e7dc27887cae1da2e1f",
   "NO-GO: SHA-256 of signed design changed");
-const integrity = assertApprovedVisualBaseline(manifest);
+const integrity = assertApprovedVisualBaseline(manifest, historicalRead);
 const evidence = await verifyVisualApproval(manifest, bytes);
 assert.equal(evidence.kind, "verified-founder-github-comment");
 assert.equal(evidence.issue, 55);

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "baseline_id": "DESSET-V11-HERO-2026-11-17",
+  "status": "approved",
+  "source_commit": "5f1d5b711889868a1e14ab75a74448f91b34a59b",
+  "production_deployment": "b118e080-24c8-412a-8ae7-ab52af7506f3",
+  "approval_evidence": "https://github.com/M0-coder/DESSET/issues/55#issuecomment-6964660907",
+  "hash_algorithm": "git-blob-sha1",
+  "html_body_fnv64": "30c5cb77e9eb795a",
+  "files": {
+    "index.html": "f964d7cddde9abaf321f3db6d3b942228131ce5b",
+    "styles.css": "b6e054daa3d9af66abb19324683f0f9b3c0500bf",
+    "styles-compact.css": "9168641a76a22a00af9c7051875a0c21dffb0cf9",
+    "src/app.mjs": "e73c3ff7267057e8f384909bf62003e049d9a257",
+    "src/content.mjs": "d82ce7c1909ba2cf29f00ca50428ee8ddfb14a57",
+    "assets/deliver-assets-mark.png": "fa6cb4ea5c5331c4cf47dfd157214e972f809356",
+    "assets/roles-geometry-v2.svg": "71401c4d0f93eeefcde393f18e82e165e50d8f90",
+    "assets/desset-eye.gif": "0932bbfaca6fe9ab8fc27d27fdc370f1fe21ecf2",
+    "assets/desset-eye-still.png": "64dff28bd7d441cef7d5aa2cd2c48c92a4cf7e79"
+  }
+}

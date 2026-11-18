@@ -53,7 +53,8 @@ test("external navigation is isolated, accessible and cannot execute injected HT
 
 test("only existing contact tile text changes, links use bounded responsive grid",()=>{
   const html=read("index.html"),css=read("styles.css");
-  assert.match(html,/data-detail="contact"[\s\S]*?<span class="tile-title">CANALES<br>OFICIALES\.<\/span>/);
+  assert.match(html,/data-detail="contact"[\s\S]*?<span class="tile-title contact-v12-title">CANALES<br>OFICIALES\.<\/span>/);
+  assert.doesNotMatch(html,/CONTACTO \/ 01/);
   assert.match(html,/data-detail="company"[\s\S]*?IDENTIDAD\./);
   assert.match(html,/data-detail="project">CONOCER EL PROYECTO/);
   assert.match(css,/\.detail-dialog--channels \.dialog-content--channels\{justify-content:flex-start;overflow-x:hidden;overflow-y:auto;/);
