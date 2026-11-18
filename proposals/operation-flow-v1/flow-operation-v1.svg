@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="380" viewBox="0 0 720 380" role="img" aria-labelledby="flowTitle flowDesc">
+<title id="flowTitle">DESSET: del pedido a la entrega</title>
+<desc id="flowDesc">Secuencia conceptual: el cliente solicita, el comercio prepara, un repartidor recoge y el cliente recibe. Control supervisa el proceso. Animación ilustrativa, no seguimiento real.</desc>
+<style><![CDATA[
+  .mono{font-family:Consolas,Menlo,"Liberation Mono",monospace}
+  .stage{font-size:18px;font-weight:800;letter-spacing:-.7px}
+  .sub{font-size:12px;font-weight:700;letter-spacing:.5px}
+  .count{font-size:12px;font-weight:800}
+  .route-trace{stroke:#ffb800;stroke-width:5;stroke-linecap:round;stroke-dasharray:8 18;animation:trace 1.2s linear infinite}
+  .parcel{offset-path:path("M103 238 C176 238 203 205 263 205 S363 270 445 270 S548 214 627 214");offset-distance:0%;offset-rotate:0deg;animation:parcel-travel 8s cubic-bezier(.32,.04,.72,.96) infinite}
+  .signal{transform-box:fill-box;transform-origin:center;animation:signal-pulse 2.5s ease-in-out infinite}
+  @keyframes trace{to{stroke-dashoffset:-52}}
+  @keyframes parcel-travel{0%{offset-distance:0%;opacity:1}85%{offset-distance:100%;opacity:1}92%{offset-distance:100%;opacity:1}100%{offset-distance:100%;opacity:0}}
+  @keyframes signal-pulse{0%,100%{opacity:.25;transform:scale(.82)}50%{opacity:.75;transform:scale(1.25)}}
+  @media (prefers-reduced-motion:reduce){.route-trace,.parcel,.signal{animation:none}.parcel{offset-distance:58%;opacity:1}.signal{opacity:.28}}
+]]></style>
+<rect width="720" height="380" fill="#F0EEEA"/>
+<g fill="none" stroke="#D3D0CB" stroke-width="2" opacity=".92">
+  <path d="M5 93H707M5 311H707M34 73V327M185 74V327M360 73V327M532 74V327M700 73V327" stroke-dasharray="5 9"/>
+  <path d="M0 280L105 315 221 304 333 338 479 314 720 339"/>
+  <path d="M0 106L115 82 219 115 351 79 525 99 720 72"/>
+</g>
+<g fill="#D8D5D0" opacity=".52">
+  <path d="M16 104h26v54H16zM47 124h19v34H47zM175 82h23v60h-23zM204 109h26v33h-26zM325 73h30v44h-30zM362 87h20v30h-20zM509 90h26v52h-26zM544 110h27v32h-27zM656 70h31v50h-31z"/>
+</g>
+<g class="mono" transform="translate(515 20)">
+  <rect width="185" height="46" rx="13" fill="#252525"/>
+  <rect width="5" height="46" rx="2" fill="#FF3328"/>
+  <circle class="signal" cx="24" cy="23" r="12" fill="#FF3328" opacity=".28"/>
+  <circle cx="24" cy="23" r="5" fill="#FF3328"/>
+  <text x="43" y="21" font-size="13" font-weight="800" fill="white">CONTROL</text>
+  <text x="43" y="35" font-size="10" fill="#DDD">SUPERVISA EL FLUJO</text>
+</g>
+<path d="M103 238 C176 238 203 205 263 205 S363 270 445 270 S548 214 627 214" fill="none" stroke="#303030" stroke-width="19" stroke-linecap="round" opacity=".18"/>
+<path d="M103 238 C176 238 203 205 263 205 S363 270 445 270 S548 214 627 214" fill="none" stroke="#F8F6F2" stroke-width="13" stroke-linecap="round"/>
+<path class="route-trace" d="M103 238 C176 238 203 205 263 205 S363 270 445 270 S548 214 627 214" fill="none"/>
+<g class="mono">
+  <g transform="translate(44 138)">
+    <rect width="122" height="108" rx="14" fill="#1551D8"/>
+    <text class="count" x="12" y="20" fill="white">01 / CLIENTE</text>
+    <g transform="translate(44 28)" fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"><rect x="0" y="0" width="22" height="33" rx="4"/><path d="M8 27h6M5 5h12"/></g>
+    <text class="stage" x="12" y="79" fill="white">PEDIDO</text>
+    <text class="sub" x="12" y="96" fill="white">SOLICITA</text>
+  </g>
+  <g transform="translate(202 103)">
+    <rect width="127" height="111" rx="14" fill="#FFC62F"/>
+    <text class="count" x="12" y="21" fill="#141414">02 / BUSINESS</text>
+    <g transform="translate(48 30)" fill="none" stroke="#111" stroke-width="2.7" stroke-linejoin="round"><path d="M0 11h27v26H0zM-3 11l6-10h22l6 10M8 37V23h10v14M0 11h27"/></g>
+    <text class="stage" x="12" y="80" fill="#111">COMERCIO</text>
+    <text class="sub" x="12" y="98" fill="#111">PREPARA</text>
+  </g>
+  <g transform="translate(380 184)">
+    <rect width="131" height="104" rx="14" fill="#111111"/>
+    <text class="count" x="12" y="20" fill="#F7F7F7">03 / RIDER</text>
+    <g transform="translate(44 28)" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="25" r="7"/><circle cx="41" cy="25" r="7"/><path d="M5 25l12-16h13l11 16H5M19 9l-5-6h12M29 14h13"/></g>
+    <text class="stage" x="12" y="76" fill="white">REPARTO</text>
+    <text class="sub" x="12" y="93" fill="white">RECOGE</text>
+  </g>
+  <g transform="translate(562 105)">
+    <rect width="129" height="111" rx="14" fill="#1551D8"/>
+    <text class="count" x="12" y="20" fill="white">04 / CLIENTE</text>
+    <g transform="translate(48 31)" stroke="white" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M0 8l17-7 17 7v22l-17 8L0 30zM0 8l17 8 17-8M17 16v22"/><path d="M8 23l6 6 12-13"/></g>
+    <text class="stage" x="12" y="80" fill="white">ENTREGA</text>
+    <text class="sub" x="12" y="98" fill="white">RECIBE</text>
+  </g>
+</g>
+<g class="parcel">
+  <circle r="14" fill="#FFC62F" opacity=".28"/>
+  <rect x="-9" y="-9" width="18" height="18" rx="3" fill="#FFC62F" stroke="#181818" stroke-width="2"/>
+  <path d="M-8 -3L0 1 8-3M0 1V8" fill="none" stroke="#181818" stroke-width="1.6"/>
+</g>
+<g fill="#202020" opacity=".6"><path d="M160 283h34l-8 8h-34zM317 310h34l-8 8h-34zM508 285h34l-8 8h-34z"/></g>
+<text class="mono" x="25" y="352" fill="#424242" font-size="12" font-weight="700">SECUENCIA ILUSTRATIVA · NO ES SEGUIMIENTO EN VIVO</text>
+</svg>
