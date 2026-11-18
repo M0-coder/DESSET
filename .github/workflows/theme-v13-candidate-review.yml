@@ -1,0 +1,50 @@
+name: DESSET THEME-V13 - Reference Candidate Review (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "tests/theme-v13-candidate.test.mjs"
+      - "scripts/theme-v13-browser.mjs"
+      - ".github/workflows/theme-v13-candidate-review.yml"
+permissions:
+  contents: read
+jobs:
+  theme-v13-local-audit:
+    name: theme-v13-browser-no-deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout candidate only
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Exact Node 22
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: "22.16.0"
+          cache: npm
+      - name: Dependency install without scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Validate isolated change, no visual authorization
+        run: |
+          node --check src/app.mjs
+          node --check scripts/theme-v13-browser.mjs
+          node --test tests/theme-v13-candidate.test.mjs
+      - name: Static security and mutation smoke without secrets
+        run: |
+          npm run security:audit
+          npm run mutation:smoke
+      - name: Chrome browser assertions and 26 local captures
+        run: |
+          google-chrome --version
+          node scripts/theme-v13-browser.mjs
+      - name: Preserve audit screenshots and failure evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-theme-v13-local-reference-review
+          path: reports/theme-v13-candidate/
+          if-no-files-found: warn
+          retention-days: 14
