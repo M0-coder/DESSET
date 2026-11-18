@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "baseline_id": "DESSET-V12-CONTACT-2026-11-17",
+  "status": "proposal",
+  "source_commit": "9e766cb38f1ffd9f4b3460f5e6a46fa914d4edb9",
+  "production_deployment": "6d864aac-84a2-4492-acb1-f869105c709f",
+  "approval_evidence": null,
+  "hash_algorithm": "git-blob-sha1",
+  "html_body_fnv64": "b3a8824548c1cafa",
+  "files": {
+    "index.html": "77b81ec013ed229cff6e064823ce99b4b3b52c4a",
+    "styles.css": "70ee2931257ee6e50f72656def5f19f379a8d5a7",
+    "styles-compact.css": "9168641a76a22a00af9c7051875a0c21dffb0cf9",
+    "src/app.mjs": "e73c3ff7267057e8f384909bf62003e049d9a257",
+    "src/content.mjs": "d82ce7c1909ba2cf29f00ca50428ee8ddfb14a57",
+    "assets/deliver-assets-mark.png": "fa6cb4ea5c5331c4cf47dfd157214e972f809356",
+    "assets/roles-geometry-v2.svg": "71401c4d0f93eeefcde393f18e82e165e50d8f90",
+    "assets/desset-eye.gif": "0932bbfaca6fe9ab8fc27d27fdc370f1fe21ecf2",
+    "assets/desset-eye-still.png": "64dff28bd7d441cef7d5aa2cd2c48c92a4cf7e79"
+  }
+}
