@@ -34,6 +34,20 @@ jobs:
         run: |
           node --test tests/contact-v12-approval-proposal.test.mjs
           node scripts/contact-v12-approval-proposal.mjs
+      - name: Static security and role mutation smoke (local only)
+        run: |
+          node scripts/verify.mjs
+          npm run security:audit
+          npm run mutation:smoke
+          node --test tests/visual-approval.test.mjs tests/browser-cleanup.test.mjs
+      - name: Cloudflare preview safety and negative package controls (local only)
+        env:
+          DESSET_CLOUDFLARE_STAGE: "LOCAL_TEST_ONLY"
+          DESSET_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          npm run cloudflare:negative
+          npm run cloudflare:stage
+          npm run cloudflare:gate
       - name: Instrumented Chrome audit with 26 captures and no deployment
         run: |
           google-chrome --version
