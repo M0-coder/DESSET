@@ -1,0 +1,62 @@
+name: DESSET CONTACT V12 - Reference Preview No Deploy
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "proposals/contact-v12/**"
+      - "tests/contact-v12-preview.test.mjs"
+      - ".github/workflows/contact-v12-preview.yml"
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  contact-preview:
+    name: contact-preview-readonly
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout reference candidate without credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Pin Node toolchain
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - name: Install locked dependencies without scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Assert unchanged V11 baseline and candidate-only scope
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node --check proposals/contact-v12/build-preview.mjs
+          node --check proposals/contact-v12/capture-evidence.mjs
+          node --test tests/contact-v12-preview.test.mjs
+          node scripts/approved-baseline-gate.mjs
+      - name: Security and mutation smoke without any publication
+        run: |
+          set -euo pipefail
+          npm run security:audit
+          npm run mutation:smoke
+      - name: "Offline visual review: V11 vs CONTACT V12 (13 viewports)"
+        run: |
+          set -euo pipefail
+          google-chrome --version
+          node proposals/contact-v12/capture-evidence.mjs
+          test "$(find reports/contact-v12-evidence -name '*.png' | wc -l)" -eq 26
+      - name: Attach screenshots for review not publication
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: desset-contact-v12-preview-only
+          path: |
+            reports/contact-v12-evidence/
+            reports/contact-v12-preview/
+          if-no-files-found: warn
+          retention-days: 14
