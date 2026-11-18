@@ -5,6 +5,7 @@ import {
   gitBlobSha1, htmlBodyFnv64, inspectVisualBaseline,
   assertApprovedVisualBaseline, loadApprovedVisualBaseline
 } from "../scripts/visual-baseline.mjs";
+import {restoreHistoricalV11Html,restoreHistoricalV11Css,historicalV11Read} from "./helpers/contact-v12-history.mjs";
 
 const read = p => readFileSync(new URL("../" + p, import.meta.url));
 const text = p => read(p).toString("utf8");
@@ -17,12 +18,12 @@ const marker = "/* HERO-V11 — IMPLEMENTACIÓN CANDIDATA";
 
 test("HERO-V11: el HTML real solo reemplaza el h1 del primer Bento", () => {
   const manifest = loadApprovedVisualBaseline();
-  const actual = text("index.html");
+  const actual = restoreHistoricalV11Html(text("index.html"));
   assert.equal(actual.split(newHeading).length, 2, "Exigir un solo título V11 exacto");
   const reconstructedV10 = actual.replace(newHeading, oldHeading);
   assert.equal(gitBlobSha1(Buffer.from(reconstructedV10)), "14bf6c243937d988e76d886c53deade7c0448fb5",
     "NO-GO: otra modificación accidental de la web pública");
-  assert.equal(gitBlobSha1(read("index.html")), manifest.files["index.html"],
+  assert.equal(gitBlobSha1(Buffer.from(actual)), manifest.files["index.html"],
     "NO-GO: el nuevo HTML debe corresponder al manifiesto V11 autorizado");
   assert.match(actual, /name="robots" content="noindex,nofollow"/);
   assert.match(actual, /src="\.\/assets\/desset-eye\.gif"/);
@@ -32,12 +33,12 @@ test("HERO-V11: el HTML real solo reemplaza el h1 del primer Bento", () => {
 
 test("HERO-V11: los estilos V10 anteriores al bloque editorial son byte a byte idénticos", () => {
   const manifest = loadApprovedVisualBaseline();
-  const css = text("styles.css");
+  const css = restoreHistoricalV11Css(text("styles.css"));
   assert.equal(css.split(marker).length, 2, "Un bloque candidato, sin duplicados");
   const before = css.slice(0, css.indexOf(marker));
   assert.equal(gitBlobSha1(Buffer.from(before)), "a41f70d21e9d9a432d0943b0264617c67661cbfe",
     "NO-GO: no modificar ni reorganizar la hoja aprobada V10");
-  assert.equal(gitBlobSha1(read("styles.css")), manifest.files["styles.css"],
+  assert.equal(gitBlobSha1(Buffer.from(css)), manifest.files["styles.css"],
     "NO-GO: el CSS V11 completo debe coincidir con el nuevo manifiesto");
   const extra = css.slice(css.indexOf(marker));
   for (const fragment of [
@@ -80,9 +81,12 @@ test("HERO-V11: el manifiesto aprobado V11 pasa y sigue rechazando cambios no fi
   assert.equal(manifest.source_commit, "5f1d5b711889868a1e14ab75a74448f91b34a59b");
   assert.equal(manifest.approval_evidence,
     "https://github.com/M0-coder/DESSET/issues/55#issuecomment-6964660907");
-  assert.deepEqual(inspectVisualBaseline(manifest).diffs, []);
-  assert.deepEqual(assertApprovedVisualBaseline(manifest).diffs, []);
-  assert.equal(htmlBodyFnv64(text("index.html")), manifest.html_body_fnv64);
+  assert.deepEqual(inspectVisualBaseline(manifest, historicalV11Read(read)).diffs, []);
+  // The ACTUAL current V12 files must still be rejected until a signed V12 baseline exists.
+  assert.ok(inspectVisualBaseline(manifest).diffs.includes("index.html"));
+  assert.ok(inspectVisualBaseline(manifest).diffs.includes("styles.css"));
+  assert.deepEqual(assertApprovedVisualBaseline(manifest, historicalV11Read(read)).diffs, []);
+  assert.equal(htmlBodyFnv64(restoreHistoricalV11Html(text("index.html"))), manifest.html_body_fnv64);
   const tampered = structuredClone(manifest);
   tampered.files["styles.css"] = "a41f70d21e9d9a432d0943b0264617c67661cbfe";
   assert.throws(() => assertApprovedVisualBaseline(tampered), /BENTO NO APROBADO/,
