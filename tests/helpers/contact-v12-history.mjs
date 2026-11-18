@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { gitBlobSha1 } from "../../scripts/visual-baseline.mjs";
 
-const originalContact = "      <button class=\"tile tile--contact tile--button\" type=\"button\" data-detail=\"contact\">\\n        <span class=\"tile-label\">CONTACTO / 01</span>\\n        <span class=\"tile-title\">CANALES<br>OFICIALES.</span>\\n        <span class=\"tile-arrow\" aria-hidden=\"true\">↗</span>\\n      </button>";
+const originalContact = "      <button class=\"tile tile--contact tile--button\" type=\"button\" data-detail=\"contact\">\n        <span class=\"tile-label\">CONTACTO / 01</span>\n        <span class=\"tile-title\">CANALES<br>OFICIALES.</span>\n        <span class=\"tile-arrow\" aria-hidden=\"true\">↗</span>\n      </button>";
 const contactOpen = '      <button class="tile tile--contact tile--button" type="button" data-detail="contact">';
 const contactClose = '      </button>';
 const marker = '\n/* CONTACT-V12 — implementation on the official web source; SHA authorization required for merge/release. */\n';
