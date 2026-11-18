@@ -99,8 +99,8 @@ body[data-theme="dark"] .tile--contact .tile-arrow{
 @media(max-width:640px){
   .board[data-view="sections"] .tile--contact{justify-content:center}
   .tile--contact .contact-v12-title{font-size:clamp(17px,6.0cqw,28px)}
-  .tile--contact .contact-v12-computer{width:38%;height:85%;right:39px}
-  .tile--contact .contact-v12-cross{left:43%;transform:scale(.82)}
+  .tile--contact .contact-v12-computer{width:38%;height:85%;right:49px}
+  .tile--contact .contact-v12-cross{left:40%;transform:scale(.82)}
 }
 @media(max-height:400px){
   .tile--contact .contact-v12-title{font-size:clamp(12px,5cqw,19px)}
