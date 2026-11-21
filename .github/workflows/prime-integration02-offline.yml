@@ -1,0 +1,36 @@
+name: DESSET Prime integration02 offline-only checks
+on:
+  push:
+    branches:
+      - integration/prime02-staging-package-no-deploy
+  pull_request:
+    branches:
+      - integration/prime01-offline-gate-no-deploy
+
+permissions:
+  contents: read
+
+jobs:
+  offline-gates:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact proposed branch (no credentials)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Use fixed Node version
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22.16.0'
+      - name: Parse offline scripts
+        run: |
+          node --check scripts/prime-integration-preflight.mjs
+          node --check scripts/prime-staging-package.mjs
+      - name: All Prime bridge tests (no network and no deployment)
+        run: node --test tests/prime-integration-preflight.test.mjs tests/prime-staging-package.test.mjs
+      - name: Assert no release action in rehearsal
+        run: |
+          test ! -e dist-prime-production
+          grep -Fq "release_decision:'NO-GO'" scripts/prime-staging-package.mjs
+          grep -Fq "production_deployment_authorized:false" scripts/prime-staging-package.mjs
