@@ -1,0 +1,14 @@
+{
+  "schema": "desset-prime-integrity-lock-v1",
+  "repository": "M0-coder/DESSET-prime",
+  "pr": 11,
+  "source_sha": "fcac31dafa51c80b6d03ab8569cb7cef211c3719",
+  "ci_run": 44838906681,
+  "artifact_id": 14680420212,
+  "manifest_sha256": "a2d893f86cc35f20e15e335978e54ad8876290f8abb042431a75e2ad6ca0992f",
+  "package_files": 30,
+  "package_bytes": 2376763,
+  "official_base_sha": "9f48d62cdadb43135fc9c2072cdc9e31f695c9ab",
+  "official_production_deployment_at_review": "b107eff2-6511-4e04-a780-fbd28e93e4e9",
+  "policy": "NO-GO"
+}
